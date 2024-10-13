@@ -11,7 +11,7 @@ class UserProfile (
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "profile_id", updatable = false, nullable = false)
     var profileId: UUID? = null,
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     var user: User = User(),
     @Column(nullable = false)

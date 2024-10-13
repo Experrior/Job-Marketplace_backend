@@ -11,7 +11,7 @@ class Settings(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "settings_id", updatable = false, nullable = false)
     var settingsId: UUID? = null,
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     var user: User,
     @Column(nullable = false)
