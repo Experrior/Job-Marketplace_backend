@@ -17,8 +17,8 @@ class UserProfileController(private val userProfileService: UserProfileService) 
 
     @QueryMapping
     fun currentUserProfile(@AuthenticationPrincipal principal: Jwt): UserProfile? {
-        val kcUserId = principal.subject
-        return userProfileService.getProfileByKcUserId(kcUserId)
+        val userId = UUID.fromString(principal.subject)
+        return userProfileService.getProfileByUserId(userId)
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -30,23 +30,27 @@ class UserProfileController(private val userProfileService: UserProfileService) 
     @Secured
     @MutationMapping
     fun createUserProfile(
+        @AuthenticationPrincipal principal: Jwt,
         @Argument resumePath: String,
         @Argument profilePicturePath: String
     ): UserProfile? {
-        return userProfileService.createProfile(resumePath, profilePicturePath)
+        val userId = UUID.fromString(principal.subject)
+        return userProfileService.createProfile(userId, resumePath, profilePicturePath)
     }
 
     @MutationMapping
-    fun updateUserProfile(
-        @Argument profileId: UUID,
+    fun updateCurrentUserProfile(
+        @AuthenticationPrincipal principal: Jwt,
         @Argument resumePath: String? = null,
         @Argument profilePicturePath: String? = null
     ): UserProfile? {
-        return userProfileService.updateUserProfile(profileId, resumePath, profilePicturePath)
+        val userId = UUID.fromString(principal.subject)
+        return userProfileService.updateUserProfile(userId, resumePath, profilePicturePath)
     }
 
     @MutationMapping
-    fun deleteUserProfile(@Argument profileId: UUID): Boolean {
-        return userProfileService.deleteProfileById(profileId)
+    fun deleteCurrentProfile(@AuthenticationPrincipal principal: Jwt): Boolean {
+        val userId = UUID.fromString(principal.subject)
+        return userProfileService.deleteProfileByUserId(userId)
     }
 }

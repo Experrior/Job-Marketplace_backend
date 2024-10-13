@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.Instant
+import java.util.*
 
 @Service
 class UserSyncService(
@@ -16,12 +17,12 @@ class UserSyncService(
 
     fun syncUsers(users: List<UserRepresentation>) {
         val newUsers = users.filter { keycloakUser ->
-            !userService.existsByKeycloakUserId(keycloakUser.id)
+            !userService.existsByUserId(UUID.fromString(keycloakUser.id))
         }.map { keycloakUser ->
             val role = keycloakUserService.fetchUserClientRole(keycloakUser.id)
 
             User(
-                keycloakUserId = keycloakUser.id,
+                userId = UUID.fromString(keycloakUser.id),
                 email = keycloakUser.email ?: "",
                 firstName = keycloakUser.firstName ?: "",
                 lastName = keycloakUser.lastName ?: "",

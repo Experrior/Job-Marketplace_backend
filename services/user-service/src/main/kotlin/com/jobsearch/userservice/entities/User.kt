@@ -8,11 +8,8 @@ import java.util.*
 @Entity(name = "users")
 class User(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id", updatable = false, nullable = false)
     val userId: UUID? = null,
-    @Column(nullable = false, unique = true)
-    var keycloakUserId: String = "",
     @Column(nullable = false)
     var email: String = "",
     @Column(nullable = false)

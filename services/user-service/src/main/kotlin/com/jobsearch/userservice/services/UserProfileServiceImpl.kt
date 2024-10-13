@@ -13,18 +13,17 @@ class UserProfileServiceImpl(
     private val userProfileRepository: UserProfileRepository,
     private val userService: UserService
 ) : UserProfileService{
-    override fun getProfileByKcUserId(kcUserId: String): UserProfile? {
-        val user = userService.findByKeycloakUserId(kcUserId)
+    override fun getProfileByUserId(userId: UUID): UserProfile {
+        val user = userService.getUserById(userId)
         return userProfileRepository.findByUser(user)
-            ?: throw ProfileNotFoundException("Profile not found for user with keycloak id: $kcUserId")
+            ?: throw ProfileNotFoundException("Profile not found for user with id: $userId")
     }
 
     override fun getAllProfiles(limit: Int, offset: Int): List<UserProfile> {
         return userProfileRepository.findAll();
     }
 
-    override fun createProfile(resumePath: String, profilePicturePath: String): UserProfile {
-        val userId = userService.getUserIdFromAuthentication()
+    override fun createProfile(userId: UUID, resumePath: String, profilePicturePath: String): UserProfile {
         val user = userService.getUserById(userId)
 
         if(!userService.isUserEligibleForProfile(user))
@@ -42,8 +41,8 @@ class UserProfileServiceImpl(
         return userProfileRepository.save(userProfile)
     }
 
-    override fun updateUserProfile(profileId: UUID, resumePath: String?, profilePicturePath: String?): UserProfile {
-        val profile = getProfileById(profileId)
+    override fun updateUserProfile(userId: UUID, resumePath: String?, profilePicturePath: String?): UserProfile {
+        val profile = getProfileByUserId(userId)
         resumePath?.let { profile.resumePath = it }
         profilePicturePath?.let { profile.profilePicturePath = it }
 
@@ -55,10 +54,11 @@ class UserProfileServiceImpl(
             .orElseThrow {ProfileNotFoundException("Profile not found by id: $profileId")}
     }
 
-    override fun deleteProfileById(profileId: UUID): Boolean {
+    override fun deleteProfileByUserId(userId: UUID): Boolean {
         return try {
-            val profile = getProfileById(profileId)
+            val profile = getProfileByUserId(userId)
             userProfileRepository.delete(profile)
+
             true
         } catch (e: ProfileNotFoundException) {
             false

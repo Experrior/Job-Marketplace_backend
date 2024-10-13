@@ -87,6 +87,6 @@ type Query{
 
 type Mutation {
     createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
-    updateUserProfile(profileId: ID!, resumePath: String, profilePicturePath: String): UserProfile
-    deleteUserProfile(profileId: ID!): Boolean
+    updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
+    deleteCurrentProfile: Boolean
 }

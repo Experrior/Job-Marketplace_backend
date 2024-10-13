@@ -11,9 +11,6 @@ interface UserService {
     fun save(user: User)
     fun saveAll(users: List<User>)
     fun getCompanyIdByName(companyName: String?): UUID?
-    fun findByKeycloakUserId(keycloakUserId: String): User
-    fun existsByKeycloakUserId(keycloakUserId: String): Boolean
     fun isUserEligibleForProfile(user: User): Boolean
-    fun getUserIdFromAuthentication(): UUID
-    fun getUserIdByKeycloakUserId(keycloakUserId: String): UUID
+    fun existsByUserId(userId: UUID): Boolean
 }
