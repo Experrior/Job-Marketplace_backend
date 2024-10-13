@@ -6,49 +6,36 @@ import java.time.Instant
 import java.util.*
 
 @Entity(name = "user_settings")
-class Settings() {  // Primary no-arg constructor
-
+class Settings(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "settingsId", updatable = false, nullable = false)
-    var settingsId: UUID? = null
-
+    @Column(name = "settings_id", updatable = false, nullable = false)
+    var settingsId: UUID? = null,
     @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
-    lateinit var user: User
-
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    var user: User,
     @Column(nullable = false)
-    var offersNotification: Boolean = false
-
+    var offersNotification: Boolean = false,
     @Column(nullable = false)
-    var newsletterNotification: Boolean = false
-
+    var newsletterNotification: Boolean = false,
     @Column(nullable = false)
-    var recruiterMessages: Boolean = false
-
+    var recruiterMessages: Boolean = false,
     @Column(nullable = false)
-    var pushNotification: Boolean = false
-
+    var pushNotification: Boolean = false,
     @Column(nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
+){
+    protected constructor() : this(
+        user = User(),
+        offersNotification = false,
+        newsletterNotification = false,
+        recruiterMessages = false,
+        pushNotification = false
+    )
 
-    constructor(
-        user: User,
-        offersNotification: Boolean,
-        newsletterNotification: Boolean,
-        recruiterMessages: Boolean,
-        pushNotification: Boolean
-    ) : this() {
-        this.user = user
-        this.offersNotification = offersNotification
-        this.newsletterNotification = newsletterNotification
-        this.recruiterMessages = recruiterMessages
-        this.pushNotification = pushNotification
-        this.updatedAt = Timestamp.from(Instant.now())
-    }
-
-    @PreUpdate
-    fun onUpdate() {
-        updatedAt = Timestamp.from(Instant.now())
+    @PrePersist
+    fun onCreate() {
+        val currentTimestamp = Timestamp.from(Instant.now())
+        updatedAt = currentTimestamp
     }
 }

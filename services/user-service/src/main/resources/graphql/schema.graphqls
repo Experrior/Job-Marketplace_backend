@@ -1,0 +1,92 @@
+type User{
+    userId: ID!
+    keycloakUserId: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+    role: String!
+    isBlocked: Boolean!
+    emailVerified: Boolean!
+    employeeVerified: Boolean!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type UserProfile{
+    profileId: ID!
+    user: User
+    resumePath: String
+    profilePicturePath: String
+    updatedAt: String
+}
+
+type Settings {
+    settingsId: ID!
+    user: User
+    offersNotification: Boolean
+    newsletterNotification: Boolean
+    recruiterMessages: Boolean
+    pushNotification: Boolean
+    updatedAt: String
+}
+
+type Skill {
+    skillId: ID!
+    profile: UserProfile
+    skillName: String
+    proficiencyLevel: String
+    updatedAt: String
+}
+
+type Education {
+    institutionId: ID!
+    userProfileId: UserProfile!
+    institutionName: String!
+    degree: String!
+    startDate: String!
+    endDate: String!
+    updatedAt: String!
+}
+
+type Experience {
+    experienceId: ID!
+    userProfileId: UserProfile!
+    companyName: String!
+    role: String!
+    startDate: String!
+    endDate: String!
+    updatedAt: String!
+}
+
+type Query{
+    ### User ###
+    userById(userId: ID!): User
+    allUsers(limit: Int, offset: Int): [User]
+
+    ### UserProfile ###
+    currentUserProfile: UserProfile
+    userProfileById(profileId: ID!): UserProfile
+    allUserProfiles(limit: Int, offset: Int): [UserProfile]
+
+    ### UserSettings ###
+    userSettingsById(settingsId: ID!): Settings
+    allUserSettings(limit: Int, offset: Int): [Settings]
+
+    ### Skill ###
+    skillById(skillId: ID!): Skill
+    allSkills(profileId: Int!, limit: Int, offset: Int): [Skill]
+
+    ### Education ###
+    educationById(institutionId: ID!): Education
+    allEducations(profileId: Int!, limit: Int, offset: Int): [Education]
+
+    ### Experience ###
+    experienceById(experienceId: ID!): Experience
+    allExperiences(profileId: Int!, limit: Int, offset: Int): [Experience]
+}
+
+type Mutation {
+    createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
+    updateUserProfile(profileId: ID!, resumePath: String, profilePicturePath: String): UserProfile
+    deleteUserProfile(profileId: ID!): Boolean
+}
