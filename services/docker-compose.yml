@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
-      - keycloak_network
+      - microservices_network
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0
@@ -33,14 +33,21 @@ services:
     depends_on:
       - postgres
     networks:
-      - keycloak_network
-#    volumes:
-#      - ./user-service/target/user-service-0.0.1-SNAPSHOT-keycloak-listener.jar:/opt/keycloak/providers/keycloak-listener.jar
+      - microservices_network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - microservices_network
 
 volumes:
   postgres_data:
     driver: local
 
 networks:
-  keycloak_network:
+  microservices_network:
     driver: bridge
