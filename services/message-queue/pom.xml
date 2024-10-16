@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>message-queue</name>
     <description>message-queue</description>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -71,11 +72,13 @@
 
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.jobsearch.messagequeue.MessageQueueApplication</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

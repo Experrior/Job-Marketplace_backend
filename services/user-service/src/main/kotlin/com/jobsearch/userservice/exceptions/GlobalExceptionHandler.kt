@@ -61,6 +61,15 @@ class GlobalExceptionHandler {
             HttpStatus.NOT_FOUND
         )
     }
+    @ExceptionHandler(InvalidTokenException::class)
+    fun handleInvalidTokenException(
+        ex: InvalidTokenException
+    ): ResponseEntity<String> {
+        return ResponseEntity(
+            ex.message,
+            HttpStatus.BAD_REQUEST
+        )
+    }
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String?>> {

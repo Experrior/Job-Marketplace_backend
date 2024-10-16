@@ -22,7 +22,8 @@ import java.util.stream.Collectors
 @Service
 class RegistrationServiceImpl(
     private val userService: UserService,
-    private val kcProvider: KeycloakProvider
+    private val kcProvider: KeycloakProvider,
+    private val verificationService: VerificationService
 ): RegistrationService {
     private val logger = LoggerFactory.getLogger(RegistrationServiceImpl::class.java)
 
@@ -63,7 +64,7 @@ class RegistrationServiceImpl(
         val user = userService.getUserFromRepresentation(kcUserRepresentation, keycloakUserId, companyId)
         userService.save(user)
 
-//        sendVerificationEmail(user.keycloakUserId)
+        verificationService.sendVerificationEmail(user)
 
         return user.userId ?: throw IllegalStateException("User ID is null")
     }
@@ -90,11 +91,6 @@ class RegistrationServiceImpl(
         }
 
         return kcUser
-    }
-
-    fun sendVerificationEmail(userId: String) {
-        val usersResource = kcProvider.getInstance().realm(realm).users()
-        usersResource[userId].sendVerifyEmail()
     }
 
     private fun extractUserId(response: Response): String {

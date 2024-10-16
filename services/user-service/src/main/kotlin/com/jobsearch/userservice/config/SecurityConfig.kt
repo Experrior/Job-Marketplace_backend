@@ -23,10 +23,10 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize("/register/**", permitAll)
                 authorize("/login", permitAll)
+                authorize("/verify-email", permitAll)
                 authorize("/recruiter", hasRole(UserRole.RECRUITER.name))
                 authorize("/applicant", hasRole(UserRole.APPLICANT.name))
-//                authorize("/graphql", authenticated)
-//                authorize("/protected", authenticated)
+                authorize("/protected", authenticated)
                 authorize(anyRequest, authenticated)
 
             }

@@ -1,4 +1,4 @@
-package org.jobsearch.messagequeue
+package com.jobsearch.messagequeue
 
 import org.springframework.amqp.core.AmqpTemplate
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory
@@ -23,8 +23,7 @@ class RabbitMQConfig(
 
     @Bean
     fun simpleRabbitListenerContainerFactory(): SimpleRabbitListenerContainerFactory {
-        val factory =
-            SimpleRabbitListenerContainerFactory()
+        val factory = SimpleRabbitListenerContainerFactory()
         factory.setConnectionFactory(connectionFactory)
         factory.setMessageConverter(jacksonConverter())
         return factory

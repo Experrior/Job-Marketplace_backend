@@ -20,7 +20,7 @@ class EmailSendingServiceImpl(
     lateinit var hostName: String
 
     override fun sendVerificationEmail(emailRequest: EmailRequest) {
-        val verificationUrl = "http://$hostName/user-service/auth/registrationConfirm?token=${emailRequest.message}"
+        val verificationUrl = "http://$hostName/user-service/verify-email?token=${emailRequest.message}"
         sendEmail(emailRequest.to, "Email Verification", "verification-email.html", "verificationLink", verificationUrl)
     }
 
@@ -36,7 +36,7 @@ class EmailSendingServiceImpl(
             helper.setTo(to)
             helper.setSubject(subject)
             var content = loadTemplate(templateName)
-            content = content.replace(placeholder, link)
+            content = content.replace("\${$placeholder}", link)
             helper.setText(content, true)
             mailSender.send(mail)
         } catch (e: MessagingException) {

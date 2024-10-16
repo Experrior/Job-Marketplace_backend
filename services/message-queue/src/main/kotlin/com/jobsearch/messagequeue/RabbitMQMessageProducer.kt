@@ -1,4 +1,4 @@
-package org.jobsearch.messagequeue
+package com.jobsearch.messagequeue
 
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.AmqpTemplate
