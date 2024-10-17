@@ -138,6 +138,25 @@
 			<version>${keycloak.version}</version>
 			<scope>provided</scope>  <!-- Provided scope -->
 		</dependency>
+
+<!--		Security		-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
 <!--		Eureka			-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

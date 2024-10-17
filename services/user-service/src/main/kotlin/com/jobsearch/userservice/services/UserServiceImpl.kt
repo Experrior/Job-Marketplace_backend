@@ -8,6 +8,9 @@ import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.UserRepository
 import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -15,7 +18,7 @@ import java.util.*
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-): UserService{
+): UserService, UserDetailsService{
     private val logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
 
     override fun getUserById(userId: UUID): User {
@@ -40,8 +43,8 @@ class UserServiceImpl(
         )
     }
 
-    override fun save(user: User) {
-        userRepository.save(user)
+    override fun save(user: User): User {
+        return userRepository.save(user)
     }
 
     override fun saveAll(users: List<User>) {
@@ -68,6 +71,10 @@ class UserServiceImpl(
         return userRepository.existsById(userId)
     }
 
+    override fun existsByEmail(email: String): Boolean {
+        return userRepository.existsByEmail(email)
+    }
+
     private fun getUserRole(userRepresentation: UserRepresentation): UserRole{
         val clientRoles: Map<String, List<String>>? = userRepresentation.clientRoles
         val jobsearchRoles: List<String>? = clientRoles?.get("jobsearch")
@@ -75,7 +82,13 @@ class UserServiceImpl(
         return UserRole.valueOf(userRole)
     }
 
+    override fun loadUserByUsername(username: String): UserDetails {
+        return userRepository.findUserDetailsByEmail(username)
+            ?: throw UsernameNotFoundException("Email not found: $username")
+    }
 
-
-
+    override fun getUserByEmail(email: String): User {
+        return userRepository.findByEmail(email)
+            ?: throw UsernameNotFoundException("Email not found: $email")
+    }
 }

@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
     ): ResponseEntity<String> {
         return ResponseEntity(
             "Invalid email or password",
-            HttpStatus.FORBIDDEN
+            HttpStatus.UNAUTHORIZED
         )
     }
     @ExceptionHandler(UserNotFoundException::class)
@@ -42,7 +42,6 @@ class GlobalExceptionHandler {
             HttpStatus.NOT_FOUND
         )
     }
-
     @ExceptionHandler(UserNotVerifiedException::class)
     fun handleUserNotVerifiedException(
         ex: UserNotVerifiedException
@@ -50,6 +49,15 @@ class GlobalExceptionHandler {
         return ResponseEntity(
             "User not verified",
             HttpStatus.FORBIDDEN
+        )
+    }
+    @ExceptionHandler(UserAlreadyExistsException::class)
+    fun handleUserAlreadyExistsException(
+        ex: UserAlreadyExistsException
+    ): ResponseEntity<String> {
+        return ResponseEntity(
+            "User already exists",
+            HttpStatus.CONFLICT
         )
     }
     @ExceptionHandler(CompanyNotFoundException::class)
