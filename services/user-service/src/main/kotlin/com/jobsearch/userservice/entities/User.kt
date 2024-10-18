@@ -61,4 +61,8 @@ class User(
     override fun getUsername(): String {
         return this.email
     }
+
+    fun setPassword(newPassword: String){
+        this.password = newPassword
+    }
 }

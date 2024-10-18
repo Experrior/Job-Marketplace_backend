@@ -1,6 +1,6 @@
 package com.jobsearch.userservice.requests
 
-import com.jobsearch.userservice.company.ValidCompany
+import com.jobsearch.userservice.validators.ValidCompany
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern

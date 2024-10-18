@@ -25,7 +25,7 @@ class EmailSendingServiceImpl(
     }
 
     override fun sendResetPasswordEmail(emailRequest: EmailRequest) {
-        val resetPasswordUrl = "http://$hostName/user-service/auth/resetPassword?token=${emailRequest.message}"
+        val resetPasswordUrl = "http://$hostName/user-service/updatePassword?token=${emailRequest.message}"
         sendEmail(emailRequest.to, "Password Reset", "reset-password-email.html", "resetPasswordLink", resetPasswordUrl)
     }
 

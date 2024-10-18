@@ -1,4 +1,4 @@
-package com.jobsearch.userservice.company
+package com.jobsearch.userservice.validators
 
 import com.jobsearch.userservice.entities.Company
 import jakarta.validation.ConstraintValidator

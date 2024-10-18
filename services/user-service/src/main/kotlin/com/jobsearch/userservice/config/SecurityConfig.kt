@@ -33,6 +33,8 @@ class SecurityConfig(
                 authorize("/login", permitAll)
                 authorize("/verify-email", permitAll)
                 authorize("/token/**", permitAll)
+                authorize("/resetPassword", permitAll)
+                authorize("/updatePassword", permitAll)
                 authorize("/recruiter", hasRole(UserRole.RECRUITER.name))
                 authorize("/applicant", hasRole(UserRole.APPLICANT.name))
                 authorize("/protected", authenticated)
