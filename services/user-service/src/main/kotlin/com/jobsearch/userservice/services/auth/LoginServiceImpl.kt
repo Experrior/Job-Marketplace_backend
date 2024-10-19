@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import javax.naming.AuthenticationException
 
 @Service
 class LoginServiceImpl(
@@ -29,15 +28,13 @@ class LoginServiceImpl(
             setSecurityContext(authentication)
 
             generateTokenResponse(authentication)
-        }catch (e: UserNotVerifiedException){
-            throw UserNotVerifiedException()
-        }catch (e: UsernameNotFoundException){
-            throw InvalidCredentialsException()
-        }catch (e: InvalidCredentialsException){
-            throw InvalidCredentialsException()
-        }catch (e: Exception){
-            logger.error(e.message)
-            throw AuthenticationException("Invalid login credentials or authentication failed.")
+        } catch (e: UsernameNotFoundException) {
+            throw InvalidCredentialsException("Invalid email or password.")
+        } catch (e: BadCredentialsException) {
+            throw InvalidCredentialsException("Invalid email or password.")
+        } catch (e: Exception) {
+            logger.debug("Unexpected exception during login: ${e.message}", e)
+            throw InvalidCredentialsException(e.message ?: "Invalid email or password")
         }
     }
 
@@ -51,8 +48,8 @@ class LoginServiceImpl(
             verifyUserEmail(user)
 
             return authentication
-        }catch (e: BadCredentialsException){
-            throw InvalidCredentialsException()
+        } catch (e: BadCredentialsException) {
+            throw InvalidCredentialsException("Invalid email or password.")
         }
     }
 
@@ -71,7 +68,6 @@ class LoginServiceImpl(
             refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds()
         )
     }
-
 
     private fun verifyUserEmail(user: User) {
         if (!user.isEmailVerified) {

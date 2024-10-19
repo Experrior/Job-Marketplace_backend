@@ -8,7 +8,6 @@ import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Controller
 import java.util.*
 
@@ -16,9 +15,10 @@ import java.util.*
 class UserProfileController(private val userProfileService: UserProfileService) {
 
     @QueryMapping
-    fun currentUserProfile(@AuthenticationPrincipal principal: Jwt): UserProfile? {
-        val userId = UUID.fromString(principal.subject)
-        return userProfileService.getProfileByUserId(userId)
+    fun currentUserProfile(
+        @AuthenticationPrincipal userId: String
+        ): UserProfile? {
+        return userProfileService.getProfileByUserId(UUID.fromString(userId))
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -30,27 +30,26 @@ class UserProfileController(private val userProfileService: UserProfileService) 
     @Secured
     @MutationMapping
     fun createUserProfile(
-        @AuthenticationPrincipal principal: Jwt,
+        @AuthenticationPrincipal userId: String,
         @Argument resumePath: String,
         @Argument profilePicturePath: String
     ): UserProfile? {
-        val userId = UUID.fromString(principal.subject)
-        return userProfileService.createProfile(userId, resumePath, profilePicturePath)
+        return userProfileService.createProfile(UUID.fromString(userId), resumePath, profilePicturePath)
     }
 
     @MutationMapping
     fun updateCurrentUserProfile(
-        @AuthenticationPrincipal principal: Jwt,
+        @AuthenticationPrincipal userId: String,
         @Argument resumePath: String? = null,
         @Argument profilePicturePath: String? = null
     ): UserProfile? {
-        val userId = UUID.fromString(principal.subject)
-        return userProfileService.updateUserProfile(userId, resumePath, profilePicturePath)
+        return userProfileService.updateUserProfile(UUID.fromString(userId), resumePath, profilePicturePath)
     }
 
     @MutationMapping
-    fun deleteCurrentProfile(@AuthenticationPrincipal principal: Jwt): Boolean {
-        val userId = UUID.fromString(principal.subject)
-        return userProfileService.deleteProfileByUserId(userId)
+    fun deleteCurrentProfile(
+        @AuthenticationPrincipal userId: String
+    ): Boolean {
+        return userProfileService.deleteProfileByUserId(UUID.fromString(userId))
     }
 }

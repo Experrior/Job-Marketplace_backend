@@ -1,3 +1,3 @@
 package com.jobsearch.userservice.exceptions
 
-class InvalidCredentialsException: RuntimeException()
+class InvalidCredentialsException(message: String) : RuntimeException(message)

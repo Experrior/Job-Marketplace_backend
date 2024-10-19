@@ -10,6 +10,7 @@ import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -82,8 +83,9 @@ class UserServiceImpl(
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
+        logger.error("LoadUserByUsername throw an exception")
         return userRepository.findUserDetailsByEmail(username)
-            ?: throw UserNotFoundException("Email not found: $username")
+            ?: throw UsernameNotFoundException("Email not found: $username")
     }
 
     override fun getUserByEmail(email: String): User {

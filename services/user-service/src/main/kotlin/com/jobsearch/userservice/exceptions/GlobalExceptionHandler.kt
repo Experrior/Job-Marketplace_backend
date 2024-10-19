@@ -29,7 +29,7 @@ class GlobalExceptionHandler {
         ex: InvalidCredentialsException
     ): ResponseEntity<String> {
         return ResponseEntity(
-            "Invalid email or password",
+            ex.message,
             HttpStatus.UNAUTHORIZED
         )
     }

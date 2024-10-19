@@ -1,11 +1,9 @@
 package com.jobsearch.userservice.config
 
 import com.jobsearch.userservice.entities.UserRole
-import com.jobsearch.userservice.services.UserServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -21,8 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 class SecurityConfig(
-    private val userServiceImpl: UserServiceImpl,
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    private val customHeaderAuthenticationFilter: CustomHeaderAuthenticationFilter
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -35,16 +32,16 @@ class SecurityConfig(
                 authorize("/token/**", permitAll)
                 authorize("/resetPassword", permitAll)
                 authorize("/updatePassword", permitAll)
+                authorize("/error", permitAll)
                 authorize("/recruiter", hasRole(UserRole.RECRUITER.name))
                 authorize("/applicant", hasRole(UserRole.APPLICANT.name))
-                authorize("/protected", authenticated)
                 authorize(anyRequest, authenticated)
-
             }
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
+            anonymous { disable() }
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(customHeaderAuthenticationFilter)
         }
         return http.build()
     }
@@ -58,10 +55,5 @@ class SecurityConfig(
     @Throws(Exception::class)
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
         return authenticationConfiguration.authenticationManager
-    }
-
-    @Throws(Exception::class)
-    fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userServiceImpl).passwordEncoder(passwordEncoder())
     }
 }
