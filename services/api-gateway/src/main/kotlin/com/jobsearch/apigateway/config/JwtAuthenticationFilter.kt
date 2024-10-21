@@ -39,7 +39,7 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
     }
 
     private fun processToken(exchange: ServerWebExchange, chain: WebFilterChain, token: String): Mono<Void> {
-        val roles = jwtTokenProvider.getRoles(token)
+        val roles = jwtTokenProvider.getRoles(token).map { "ROLE_$it" }
         val userId = jwtTokenProvider.getUserIdFromToken(token)
 
         val modifiedRequest = exchange.request.mutate()

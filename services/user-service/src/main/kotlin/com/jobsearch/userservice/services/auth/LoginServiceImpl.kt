@@ -28,6 +28,8 @@ class LoginServiceImpl(
             setSecurityContext(authentication)
 
             generateTokenResponse(authentication)
+        } catch (e: UserNotVerifiedException) {
+            throw InvalidCredentialsException("User is not verified.")
         } catch (e: UsernameNotFoundException) {
             throw InvalidCredentialsException("Invalid email or password.")
         } catch (e: BadCredentialsException) {

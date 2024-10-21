@@ -83,7 +83,6 @@ class UserServiceImpl(
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
-        logger.error("LoadUserByUsername throw an exception")
         return userRepository.findUserDetailsByEmail(username)
             ?: throw UsernameNotFoundException("Email not found: $username")
     }

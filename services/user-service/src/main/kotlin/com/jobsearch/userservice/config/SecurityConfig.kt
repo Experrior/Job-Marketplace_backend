@@ -3,6 +3,7 @@ package com.jobsearch.userservice.config
 import com.jobsearch.userservice.entities.UserRole
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -11,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
@@ -40,10 +43,18 @@ class SecurityConfig(
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
+            exceptionHandling {
+                authenticationEntryPoint = unauthorizedEntryPoint()
+            }
             anonymous { disable() }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(customHeaderAuthenticationFilter)
         }
         return http.build()
+    }
+
+    @Bean
+    fun unauthorizedEntryPoint(): AuthenticationEntryPoint {
+        return HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
     }
 
     @Bean
