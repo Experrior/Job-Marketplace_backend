@@ -1,0 +1,11 @@
+
+    each goroutine
+client: new message (websocket) -> userId,groupId,message
+server: sql insert -> table chat_messages
+server: keep each channel alive (?) forever (?)
+server: sql get all users, send each websocket update
+
+
+one /ws endpoint
+
+json-> post message
