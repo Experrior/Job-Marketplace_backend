@@ -71,6 +71,7 @@ type Query{
     ### UserSettings ###
     userSettingsById(settingsId: ID!): Settings
     allUserSettings(limit: Int, offset: Int): [Settings]
+    currentUserSettings: Settings
 
     ### Skill ###
     skillById(skillId: ID!): Skill
@@ -89,4 +90,19 @@ type Mutation {
     createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
     updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
     deleteCurrentProfile: Boolean
+
+    createUserSettings(
+        settingsRequest: SettingsRequestInput!
+    ): Settings
+    updateCurrentUserSettings(
+        settingsRequest: SettingsRequestInput!
+    ): Settings
+    deleteCurrentUserSettings: Boolean
+}
+
+input SettingsRequestInput {
+    offersNotification: Boolean
+    newsletterNotification: Boolean
+    recruiterMessages: Boolean
+    pushNotification: Boolean
 }

@@ -124,18 +124,20 @@ class GlobalExceptionHandler {
             .message("User profile already exists ${ex.userId}")
             .build()
     }
-//    @GraphQlExceptionHandler
-//    fun handleAuthenticationException(ex: AuthenticationException): GraphQLError {
-//        return GraphqlErrorBuilder.newError()
-//            .message("Authentication failed: ${ex.message}")
-//            .errorType(ErrorType.UNAUTHORIZED)
-//            .build()
-//    }
-//    @GraphQlExceptionHandler
-//    fun handleAccessDeniedException(ex: AccessDeniedException): GraphQLError {
-//        return GraphqlErrorBuilder.newError()
-//            .message("Access denied: ${ex.message}")
-//            .errorType(ErrorType.FORBIDDEN)
-//            .build()
-//    }
+    @GraphQlExceptionHandler(SettingsNotFoundException::class)
+    fun handleSettingsNotFoundException(
+        ex: SettingsNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+    @GraphQlExceptionHandler(SettingsAlreadyExistException::class)
+    fun handleSettingsAlreadyExistException(
+        ex: SettingsAlreadyExistException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
 }

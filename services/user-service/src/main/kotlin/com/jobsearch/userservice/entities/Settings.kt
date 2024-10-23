@@ -38,4 +38,9 @@ class Settings(
         val currentTimestamp = Timestamp.from(Instant.now())
         updatedAt = currentTimestamp
     }
+
+    @PreUpdate
+    fun onUpdate() {
+        updatedAt = Timestamp.from(Instant.now())
+    }
 }
