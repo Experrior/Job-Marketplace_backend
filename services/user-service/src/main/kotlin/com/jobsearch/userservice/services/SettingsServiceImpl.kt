@@ -3,7 +3,6 @@ package com.jobsearch.userservice.services
 import com.jobsearch.userservice.entities.Settings
 import com.jobsearch.userservice.exceptions.SettingsAlreadyExistException
 import com.jobsearch.userservice.exceptions.SettingsNotFoundException
-import com.jobsearch.userservice.exceptions.UserNotEligibleForProfileException
 import com.jobsearch.userservice.repositories.SettingsRepository
 import com.jobsearch.userservice.requests.SettingsRequest
 import org.springframework.stereotype.Service
@@ -25,9 +24,6 @@ class SettingsServiceImpl(
     ): Settings {
         val user = userService.getUserById(userId)
 
-        if(!userService.isUserEligibleForProfile(user))
-            throw UserNotEligibleForProfileException(userId)
-
         if(settingsRepository.existsByUser(user))
             throw SettingsAlreadyExistException("Settings already exist for user with id: $userId")
 
@@ -46,7 +42,9 @@ class SettingsServiceImpl(
         userId: UUID,
         settingsRequest: SettingsRequest
     ): Settings {
-        val settings = getSettingsByUserId(userId) ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
+        val settings = getSettingsByUserId(userId)
+            ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
+
         settingsRequest.offersNotification.let { settings.offersNotification = it }
         settingsRequest.newsletterNotification.let { settings.newsletterNotification = it }
         settingsRequest.recruiterMessages.let { settings.recruiterMessages = it }

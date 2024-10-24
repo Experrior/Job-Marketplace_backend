@@ -140,4 +140,20 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+    @GraphQlExceptionHandler(EducationNotFoundException::class)
+    fun handleEducationNotFoundException(
+        ex: EducationNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+    @GraphQlExceptionHandler(InvalidUUIDException::class)
+    fun handleInvalidUUIDException(
+        ex: InvalidUUIDException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
 }

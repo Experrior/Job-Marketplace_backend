@@ -39,8 +39,8 @@ type Skill {
 }
 
 type Education {
-    institutionId: ID!
-    userProfileId: UserProfile!
+    educationId: ID!
+    userProfile: UserProfile
     institutionName: String!
     degree: String!
     startDate: String!
@@ -78,8 +78,9 @@ type Query{
     allSkills(profileId: Int!, limit: Int, offset: Int): [Skill]
 
     ### Education ###
-    educationById(institutionId: ID!): Education
+    educationById(educationId: ID!): Education
     allEducations(profileId: Int!, limit: Int, offset: Int): [Education]
+    currentUserEducation: [Education]
 
     ### Experience ###
     experienceById(experienceId: ID!): Experience
@@ -98,6 +99,16 @@ type Mutation {
         settingsRequest: SettingsRequestInput!
     ): Settings
     deleteCurrentUserSettings: Boolean
+
+    createEducation(
+        educationRequest: EducationRequestInput!
+    ): Education
+    updateEducation(
+        educationId: ID!
+        educationRequest: EducationRequestInput!
+    ): Education
+    deleteEducationById(educationId: ID!): Boolean
+    deleteAllUserEducations: Boolean
 }
 
 input SettingsRequestInput {
@@ -105,4 +116,11 @@ input SettingsRequestInput {
     newsletterNotification: Boolean
     recruiterMessages: Boolean
     pushNotification: Boolean
+}
+
+input EducationRequestInput {
+    institutionName: String!
+    degree: String!
+    startDate: String!
+    endDate: String!
 }

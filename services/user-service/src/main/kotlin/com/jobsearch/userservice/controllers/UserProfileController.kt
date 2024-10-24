@@ -5,7 +5,6 @@ import com.jobsearch.userservice.services.UserProfileService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
-import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
@@ -27,7 +26,6 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         return userProfileService.getAllProfiles(limit ?: 10, offset ?: 0)
     }
 
-    @Secured
     @MutationMapping
     fun createUserProfile(
         @AuthenticationPrincipal userId: String,
