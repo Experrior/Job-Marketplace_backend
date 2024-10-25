@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.Education
 import com.jobsearch.userservice.exceptions.InvalidUUIDException
 import com.jobsearch.userservice.requests.EducationRequest
 import com.jobsearch.userservice.services.EducationService
+import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -30,14 +31,14 @@ class EducationController(
 
     @MutationMapping
     fun createEducation(@AuthenticationPrincipal userId: String,
-                        @Argument educationRequest: EducationRequest): Education {
+                        @Argument @Valid educationRequest: EducationRequest): Education {
         return educationService.createEducation(UUID.fromString(userId), educationRequest)
     }
 
     @MutationMapping
     fun updateEducation(@AuthenticationPrincipal userId: String,
                         @Argument educationId: String,
-                        @Argument educationRequest: EducationRequest): Education {
+                        @Argument @Valid educationRequest: EducationRequest): Education {
         return educationService.updateEducation(
             UUID.fromString(userId),
             getUUIDFromString(educationId),
