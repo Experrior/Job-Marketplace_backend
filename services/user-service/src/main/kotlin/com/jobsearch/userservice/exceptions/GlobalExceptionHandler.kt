@@ -71,6 +71,15 @@ class GlobalExceptionHandler {
             HttpStatus.NOT_FOUND
         )
     }
+    @ExceptionHandler(CompanyAlreadyExistsException::class)
+    fun handleCompanyAlreadyExistsException(
+        ex: CompanyAlreadyExistsException
+    ): ResponseEntity<String> {
+        return ResponseEntity(
+            ex.message,
+            HttpStatus.CONFLICT
+        )
+    }
     @ExceptionHandler(InvalidTokenException::class)
     fun handleInvalidTokenException(
         ex: InvalidTokenException

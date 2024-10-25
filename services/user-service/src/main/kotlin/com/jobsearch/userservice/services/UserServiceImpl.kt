@@ -1,6 +1,6 @@
 package com.jobsearch.userservice.services
 
-import com.jobsearch.userservice.entities.Company
+import com.jobsearch.userservice.entities.CompanyEnum
 import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.CompanyNotFoundException
@@ -56,7 +56,7 @@ class UserServiceImpl(
             null
         } else {
             try {
-                Company.valueOf(companyName).companyId
+                CompanyEnum.valueOf(companyName).companyId
             }catch (e: IllegalArgumentException){
                 throw CompanyNotFoundException(companyName)
             }

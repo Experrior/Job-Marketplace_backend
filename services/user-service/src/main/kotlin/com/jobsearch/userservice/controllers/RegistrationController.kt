@@ -1,6 +1,7 @@
 package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.entities.UserRole
+import com.jobsearch.userservice.requests.CompanyRegistrationRequest
 import com.jobsearch.userservice.requests.RegistrationRequest
 import com.jobsearch.userservice.services.auth.RegistrationService
 import jakarta.validation.Valid
@@ -39,6 +40,16 @@ class RegistrationController(
 
         return ResponseEntity<String>(
             "Recruiter has been registered successfully. Verify your email!",
+            HttpStatus.CREATED
+        )
+    }
+
+    @PostMapping("/company")
+    fun registerCompany(@RequestBody @Valid registrationRequest: CompanyRegistrationRequest): ResponseEntity<String>{
+        registrationService.registerCompany(registrationRequest)
+
+        return ResponseEntity<String>(
+            "Company has been registered successfully. Verify your email!",
             HttpStatus.CREATED
         )
     }

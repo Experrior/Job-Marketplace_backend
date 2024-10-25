@@ -1,5 +1,6 @@
 package com.jobsearch.userservice.services.auth.tokens
 
+import com.jobsearch.userservice.entities.Company
 import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.entities.VerificationToken
 import com.jobsearch.userservice.exceptions.InvalidTokenException
@@ -12,6 +13,12 @@ class VerificationTokenServiceImpl(
 ): VerificationTokenService {
     override fun generateVerificationToken(user: User): VerificationToken {
         val verificationToken = VerificationToken(user = user)
+
+        return verificationTokenRepository.save(verificationToken)
+    }
+
+    override fun generateVerificationToken(company: Company): VerificationToken {
+        val verificationToken = VerificationToken(company = company)
 
         return verificationTokenRepository.save(verificationToken)
     }

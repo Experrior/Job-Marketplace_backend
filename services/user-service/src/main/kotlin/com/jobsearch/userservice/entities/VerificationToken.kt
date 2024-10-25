@@ -16,7 +16,10 @@ data class VerificationToken(
     var expiryDate: Date = calculateExpiryDate(),
     @OneToOne(targetEntity = User::class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    var user: User? = null
+    var user: User? = null,
+    @OneToOne(targetEntity = Company::class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id")
+    var company: Company? = null
 ){
     companion object {
         private const val EXPIRATION = 24 * 60

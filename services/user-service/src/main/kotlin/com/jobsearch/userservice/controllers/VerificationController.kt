@@ -14,7 +14,7 @@ class VerificationController(
     @GetMapping("/verify-email")
     fun verifyEmail(@RequestParam("token") token: String
     ): ResponseEntity<String> {
-        verificationService.verifyUserByToken(token)
+        verificationService.verifyByToken(token)
 
         return ResponseEntity<String>("Email verified", HttpStatus.OK)
     }
