@@ -3,6 +3,7 @@ package com.jobsearch.userservice.controllers
 import com.jobsearch.userservice.entities.Settings
 import com.jobsearch.userservice.requests.SettingsRequest
 import com.jobsearch.userservice.services.SettingsService
+import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -24,7 +25,7 @@ class SettingsController(
     @MutationMapping
     fun createUserSettings(
         @AuthenticationPrincipal userId: String,
-        @Argument settingsRequest: SettingsRequest
+        @Argument @Valid settingsRequest: SettingsRequest
     ): Settings? {
         return settingsService.createSettings(UUID.fromString(userId), settingsRequest)
     }
@@ -32,7 +33,7 @@ class SettingsController(
     @MutationMapping
     fun updateCurrentUserSettings(
         @AuthenticationPrincipal userId: String,
-        @Argument settingsRequest: SettingsRequest
+        @Argument @Valid settingsRequest: SettingsRequest
     ): Settings? {
         return settingsService.updateSettings(UUID.fromString(userId), settingsRequest)
     }
