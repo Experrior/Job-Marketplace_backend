@@ -1,11 +1,13 @@
 package com.jobsearch.userservice.requests
 
+import com.jobsearch.userservice.validators.PasswordMatches
 import com.jobsearch.userservice.validators.ValidCompany
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
+@PasswordMatches
 data class RegistrationRequest(
     @field:NotBlank(message = "Email is mandatory")
     @field:Email(message = "Email must be valid")
@@ -26,5 +28,7 @@ data class RegistrationRequest(
     @field:Size(min = 8, message = "Password must be at least 8 characters long")
     @field:Pattern(regexp = ".*[A-Z].*", message = "Password must have at least one uppercase letter")
     @field:Pattern(regexp = ".*\\d.*", message = "Password must have at least one digit")
-    val password: String,
-)
+    override val password: String,
+
+    override val confirmPassword: String
+): PasswordConfirmation

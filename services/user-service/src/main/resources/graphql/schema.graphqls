@@ -32,7 +32,7 @@ type Settings {
 
 type Skill {
     skillId: ID!
-    profile: UserProfile
+    userProfile: UserProfile
     skillName: String
     proficiencyLevel: String
     updatedAt: String
@@ -75,7 +75,9 @@ type Query{
 
     ### Skill ###
     skillById(skillId: ID!): Skill
-    allSkills(profileId: Int!, limit: Int, offset: Int): [Skill]
+    userSkills: [Skill]
+    allSkills: [String]
+    allProficiencyLevels: [String]
 
     ### Education ###
     educationById(educationId: ID!): Education
@@ -109,6 +111,10 @@ type Mutation {
     ): Education
     deleteEducationById(educationId: ID!): Boolean
     deleteAllUserEducations: Boolean
+
+    addSkill(skillRequest: SkillRequestInput!): Skill
+    deleteSkillById(skillId: ID!): Boolean
+    deleteAllSkills: Boolean
 }
 
 input SettingsRequestInput {
@@ -123,4 +129,9 @@ input EducationRequestInput {
     degree: String!
     startDate: String!
     endDate: String!
+}
+
+input SkillRequestInput {
+    skillName: String!
+    proficiencyLevel: String!
 }

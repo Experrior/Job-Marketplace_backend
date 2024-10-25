@@ -2,11 +2,13 @@ package com.jobsearch.userservice.exceptions
 
 import graphql.GraphQLError
 import graphql.GraphqlErrorBuilder
+import jakarta.validation.ConstraintViolationException
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
+import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -81,16 +83,53 @@ class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String?>> {
+        val errors = getErrors(ex)
+
+        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+    }
+
+    @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationExceptionsForGraphql(ex: MethodArgumentNotValidException): GraphQLError {
+        val errors = getErrors(ex)
+
+        return GraphqlErrorBuilder.newError()
+            .message("Validation error")
+            .extensions(mapOf("errors" to errors))
+            .build()
+    }
+
+    @GraphQlExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationExceptionForGraphql(ex: ConstraintViolationException): GraphQLError {
+        val errors: MutableMap<String, String?> = HashMap()
+
+        ex.constraintViolations.forEach { violation ->
+            val fieldName = violation.propertyPath.toString()
+            val errorMessage = violation.message
+            errors[fieldName] = errorMessage
+        }
+
+        return GraphqlErrorBuilder.newError()
+            .message("Validation error")
+            .extensions(mapOf("errors" to errors))
+            .build()
+    }
+
+    private fun getErrors(ex: MethodArgumentNotValidException): Map<String, String?> {
         val errors: MutableMap<String, String?> = HashMap()
 
         ex.bindingResult.allErrors.forEach { error ->
-            val fieldName = (error as FieldError).field
+            val fieldName = if (error is FieldError) {
+                error.field
+            } else {
+                (error as ObjectError).objectName
+            }
             val errorMessage = error.defaultMessage
             errors[fieldName] = errorMessage
         }
 
-        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+        return errors
     }
+
 
     @GraphQlExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundExceptionForGraphql(
@@ -151,6 +190,14 @@ class GlobalExceptionHandler {
     @GraphQlExceptionHandler(InvalidUUIDException::class)
     fun handleInvalidUUIDException(
         ex: InvalidUUIDException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+    @GraphQlExceptionHandler(SkillNotFoundException::class)
+    fun handleSkillNotFoundException(
+        ex: SkillNotFoundException
     ): GraphQLError {
         return GraphqlErrorBuilder.newError()
             .message(ex.message)

@@ -11,6 +11,6 @@ data class UpdatePasswordRequest(
     @field:Size(min = 8, message = "Password must be at least 8 characters long")
     @field:Pattern(regexp = ".*[A-Z].*", message = "Password must have at least one uppercase letter")
     @field:Pattern(regexp = ".*\\d.*", message = "Password must have at least one digit")
-    val password: String,
-    val confirmPassword: String
-)
+    override val password: String,
+    override val confirmPassword: String
+): PasswordConfirmation

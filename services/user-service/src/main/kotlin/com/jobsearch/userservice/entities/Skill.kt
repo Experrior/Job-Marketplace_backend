@@ -1,4 +1,5 @@
 package com.jobsearch.userservice.entities
+
 import jakarta.persistence.*
 import java.sql.Timestamp
 import java.time.Instant
@@ -14,17 +15,16 @@ class Skill(
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     var userProfile: UserProfile,
     @Column(nullable = false)
-    var skillName: String = "",
+    var skillName: SkillType = SkillType.JAVA,
     @Column(nullable = false)
-    var proficiencyLevel: String = "Intermediate",
+    var proficiencyLevel: ProficiencyLevel = ProficiencyLevel.BEGINNER,
     @Column(nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
 ){
-    protected constructor() : this(
+    constructor() : this(
         userProfile = UserProfile(),
-        skillName = "",
-        proficiencyLevel = "Intermediate",
-        updatedAt = Timestamp(0)
+        skillName = SkillType.JAVA,
+        proficiencyLevel = ProficiencyLevel.BEGINNER
     )
 
     @PreUpdate

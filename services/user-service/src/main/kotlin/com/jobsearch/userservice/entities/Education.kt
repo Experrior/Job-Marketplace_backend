@@ -7,7 +7,7 @@ import java.time.YearMonth
 import java.util.*
 
 @Entity(name = "user_education")
-class Education(
+data class Education(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "education_id", updatable = false, nullable = false)
