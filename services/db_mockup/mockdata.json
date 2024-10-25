@@ -1,9 +1,9 @@
 {
-  "connection": "postgresql+psycopg://admin:test@172.22.0.2:5432/JobMarketDB",
+  "connection": "postgresql+psycopg2://admin:test@172.22.0.2:5432/JobMarketDB",
   "tables": {
     "app_users": {
-      "user_id": "PK serial",
-      "company": "FK company.company_id",
+      "user_id": "PK UUID",
+      "company": "FK_UUID company.company_id",
       "email": "email UNIQUE",
       "first_name": "first_name",
       "last_name": "last_name",
@@ -16,25 +16,26 @@
       "password_hash": "first_name"
     },
     "skills": {
-      "skill_id": "PK serial",
-      "profile_id": "FK user_profiles.profile_id",
+      "skill_id": "PK UUID",
+      "profile_id": "FK_UUID user_profiles.profile_id",
       "skill_name": "first_name",
       "proficiency_level": "first_name",
       "updated_at": "timestamp"
     },
     "chat_messages": {
-      "message_id": "PK serial",
-      "chat_id": "FK chats.chat_id",
+      "message_id": "PK UUID",
+      "chat_id": "FK_UUID chats.chat_id",
       "content": "long_text",
-      "created_by": "FK app_users.user_id",
+      "created_by": "FK_UUID app_users.user_id",
+      "created_by_display": "first_name",
       "read_by": "first_name",
       "deleted_by": "first_name",
       "created_at": "timestamp",
       "updated_at": "timestamp"
     },
     "job": {
-      "job_id": "PK serial",
-      "company_id": "FK company.company_id",
+      "job_id": "PK UUID",
+      "company_id": "FK_UUID company.company_id",
       "job_title": "first_name",
       "job_description": "long_text",
       "required_skills": "long_text",
@@ -44,16 +45,16 @@
       "created_at": "timestamp"
     },
     "experiences": {
-      "experience_id": "PK serial",
-      "profile_id": "FK user_profiles.profile_id",
-      "company_name": "FK company.company_id",
+      "experience_id": "PK UUID",
+      "profile_id": "FK_UUID user_profiles.profile_id",
+      "company_name": "FK_UUID company.company_id",
       "role": "first_name",
       "start_date": "timestamp",
       "end_date": "timestamp",
       "updated_at": "timestamp"
     },
     "educations": {
-      "education_id": "PK serial",
+      "education_id": "PK UUID",
       "profile_id": "first_name",
       "institution_name": "first_name",
       "degree": "first_name",
@@ -62,7 +63,7 @@
       "updated_at": "timestamp"
     },
     "company": {
-      "company_id": "PK serial",
+      "company_id": "PK UUID",
       "company_name": "first_name",
       "location": "first_name",
       "industry": "first_name",
@@ -72,9 +73,8 @@
       "updated_at": "timestamp"
     },
     "chats": {
-      "chat_id": "PK serial",
+      "chat_id": "PK UUID",
       "name": "first_name",
-      "members": "first_name",
       "created_by": "first_name",
       "deleted_by": "first_name",
       "last_message": "first_name",
@@ -82,16 +82,20 @@
       "created_at": "timestamp",
       "updated_at": "timestamp"
     },
+    "IntermediaryTable: user_chats":{
+      "chat_id": "FK_UUID chats.chat_id",
+      "user_id": "FK_UUID app_users.user_id"
+    },
     "user_profiles": {
-      "profile_id": "PK serial",
-      "user_id": "FK app_users.user_id",
+      "profile_id": "PK UUID",
+      "user_id": "FK_UUID app_users.user_id",
       "resume_path": "first_name",
       "profile_picture_path": "first_name",
       "updated_at": "timestamp"
     },
     "user_settings": {
-      "settings_id": "PK serial",
-      "user_id": "FK app_users.user_id",
+      "settings_id": "PK UUID",
+      "user_id": "FK_UUID app_users.user_id",
       "offers_notification": "bool",
       "newsletter_notification": "bool",
       "recruiter_messages": "bool",
@@ -100,15 +104,16 @@
     }
   },
   "objects_count": {
-    "app_users": 3000,
-    "skills": 5000,
+    "app_users": 200,
+    "skills": 500,
     "chat_messages": 8000,
-    "job": 2500,
-    "experiences": 5000,
-    "educations": 3000,
-    "company": 2000,
-    "chats": 2500,
-    "user_profiles": 4000,
-    "user_settings": 4000
+    "job": 250,
+    "experiences": 100,
+    "educations": 200,
+    "company": 20,
+    "chats": 50,
+    "user_profiles": 500,
+    "user_settings": 500,
+    "user_chats": 10000
   }
 }

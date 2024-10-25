@@ -1,3 +1,0 @@
-FROM postgres:16.1-alpine
-
-# COPY services/db/db_init/* /docker-entrypoint-initdb.d/
