@@ -7,7 +7,6 @@
       "email": "email UNIQUE",
       "first_name": "first_name",
       "last_name": "last_name",
-      "phone": "first_name",
       "role": "first_name",
       "is_blocked": "bool",
       "email_verified": "bool",
@@ -65,6 +64,8 @@
     "company": {
       "company_id": "PK UUID",
       "company_name": "first_name",
+      "email": "email UNIQUE",
+      "logoPath": "first_name",
       "location": "first_name",
       "industry": "first_name",
       "description": "first_name",
