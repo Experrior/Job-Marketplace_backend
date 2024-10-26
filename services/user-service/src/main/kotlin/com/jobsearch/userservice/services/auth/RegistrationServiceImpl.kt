@@ -58,7 +58,9 @@ class RegistrationServiceImpl(
     }
 
     private fun createUserEntity(registrationRequest: RegistrationRequest, hashedPassword: String, userRole: UserRole): User {
-        val companyId = userService.getCompanyIdByName(registrationRequest.company.orEmpty())
+        var companyId: UUID? = null
+        if(registrationRequest.company != null)
+            companyId = companyService.getCompanyIdByName(registrationRequest.company)
 
         return User(
             email = registrationRequest.email,

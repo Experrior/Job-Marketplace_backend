@@ -1,9 +1,7 @@
 package com.jobsearch.userservice.services
 
-import com.jobsearch.userservice.entities.CompanyEnum
 import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.entities.UserRole
-import com.jobsearch.userservice.exceptions.CompanyNotFoundException
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.UserRepository
 import org.keycloak.representations.idm.UserRepresentation
@@ -49,18 +47,6 @@ class UserServiceImpl(
 
     override fun saveAll(users: List<User>) {
         userRepository.saveAll(users)
-    }
-
-    override fun getCompanyIdByName(companyName: String?): UUID? {
-        return if (companyName.isNullOrBlank()) {
-            null
-        } else {
-            try {
-                CompanyEnum.valueOf(companyName).companyId
-            }catch (e: IllegalArgumentException){
-                throw CompanyNotFoundException(companyName)
-            }
-        }
     }
 
     override fun isUserEligibleForProfile(user: User): Boolean {

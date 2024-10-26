@@ -1,8 +1,10 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.Company
+import com.jobsearch.userservice.exceptions.CompanyNotFoundException
 import com.jobsearch.userservice.repositories.CompanyRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class CompanyServiceImpl(
@@ -18,5 +20,10 @@ class CompanyServiceImpl(
 
     override fun save(company: Company): Company {
         return companyRepository.save(company)
+    }
+
+    override fun getCompanyIdByName(name: String): UUID {
+        return companyRepository.findCompanyByName(name).companyId
+            ?: throw CompanyNotFoundException("Company not found with name: $name")
     }
 }

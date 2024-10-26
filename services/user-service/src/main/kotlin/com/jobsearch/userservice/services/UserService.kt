@@ -11,7 +11,6 @@ interface UserService {
     fun getUserFromRepresentation(userRepresentation: UserRepresentation, keycloakUserId: String, companyId: UUID?): User
     fun save(user: User): User
     fun saveAll(users: List<User>)
-    fun getCompanyIdByName(companyName: String?): UUID?
     fun isUserEligibleForProfile(user: User): Boolean
     fun existsByUserId(userId: UUID): Boolean
     fun existsByEmail(email: String): Boolean
