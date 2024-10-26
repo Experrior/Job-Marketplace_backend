@@ -388,7 +388,6 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 						data := a.MessageService.GetAllChats(userId)
 						//send 
 						println("[DEBUG]6")
-						log.Println(data[0])
 						jsonData, _ := json.Marshal(data)
 						if err := conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
 							log.Println("Error sending error message:", err)
@@ -399,7 +398,6 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 						//db query to get chat_id
 						data:= a.MessageService.GetByChat(newReceivedMessage.MessageValue.ChatId)
 						log.Println("[DEBUG]5")
-						log.Println(data[0])
 						jsonData, _ := json.Marshal(data)
 						if err := conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
 							log.Println("Error sending error message:", err)
