@@ -248,38 +248,40 @@ func (a *app) GetUser(writer http.ResponseWriter, request *http.Request) {
 
 }
 
-func (a *app) GetAllMessages(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+// func (a *app) GetAllMessages(w http.ResponseWriter, r *http.Request) {
+// 	vars := mux.Vars(r)
 
-	if vars["id"] == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println("no id sent in url")
-		return
-	}
+// 	if vars["id"] == "" {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		fmt.Println("no id sent in url")
+// 		return
+// 	}
 
-	user, err := a.MessageService.GetByChat(1)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
-		return
-	}
-	userJson, err := json.Marshal(user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
-		return
-	}
+// 	user, err := a.MessageService.GetByChat(1)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 	userJson, err := json.Marshal(user)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		fmt.Println(err)
+// 		return
+// 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	_, _ = w.Write(userJson)
-	return
-}
+// 	w.Header().Add("Content-Type", "application/json")
+// 	_, _ = w.Write(userJson)
+// 	return
+// }
 
 func(a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
-	print("[DEBUG]123")
+
 	//TODO use actual userId
-	data, _ := a.MessageService.GetAllChats(1)
-	print(data)
+	var userId string = r.URL.Query().Get("userId")
+	println("[DEBUG]234 "+userId)
+	data := a.MessageService.GetAllChats(userId)
+	println("[DEBUG]2341 "+data[0].ChatID)
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusOK)
@@ -301,9 +303,6 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 	// Start a new goroutine for each WebSocket connection
 	go func(conn *websocket.Conn) {
 		defer conn.Close()
-
-
-		var userId int
 
 		assignedString = generateRandomString(randomStrLen)
 
@@ -339,7 +338,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
-		userId = newReceivedMessage.MessageValue.CreatedBy
+		var userId = newReceivedMessage.MessageValue.CreatedBy
 		a.Connections.Swap(userId, conn)
 
 
@@ -384,11 +383,11 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 					log.Println("[DEBUG] code:23")
 					log.Println(newReceivedMessage.MessageValue.CreatedBy)
 					if newReceivedMessage.Operation == "getAll" {
-						// var chat_id = newReceivedMessage.MessageValue.ChatId
+						var userId string = newReceivedMessage.MessageValue.CreatedBy
 						//db query to get chat_id
-						data, _ := a.MessageService.GetAllChats(userId)
+						data := a.MessageService.GetAllChats(userId)
 						//send 
-						log.Println("[DEBUG]6")
+						println("[DEBUG]6")
 						log.Println(data[0])
 						jsonData, _ := json.Marshal(data)
 						if err := conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
@@ -398,8 +397,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 					} else if newReceivedMessage.Operation == "get" {
 						// var chat_id = newReceivedMessage.MessageValue.ChatId
 						//db query to get chat_id
-						data, _ := a.MessageService.GetByChat(newReceivedMessage.MessageValue.ChatId)
-						//send 
+						data:= a.MessageService.GetByChat(newReceivedMessage.MessageValue.ChatId)
 						log.Println("[DEBUG]5")
 						log.Println(data[0])
 						jsonData, _ := json.Marshal(data)

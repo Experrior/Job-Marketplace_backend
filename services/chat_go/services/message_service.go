@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"encoding/json"
+	// "encoding/json"
 	"time"
 
 	"gorm.io/gorm"
@@ -21,18 +21,18 @@ type MessageService interface {
 	// Delete(id string) error
 	// DeleteAll() error
 	// Update(user *User) error
-	GetByChat(chatId int) ([]Message, error)
+	GetByChat(chatId string) ([]Message)
 	Create(message *Message) (Message, error)
-	GetAllChats(userId int) ([]int, error)
+	GetAllChats(userId string) ([]user_chats)
 }
 
 type Message struct {
 	
-	MessageId int    `json:"id" gorm:"primaryKey"`
-	ChatId    int    `json:"chatId" gorm:"references:Chat"`
+	MessageId string    `json:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	ChatId    string    `json:"chatId" gorm:"references:Chat;type:uuid"`
 	Content   string `json:"content"`
 
-	CreatedBy int `json:"createdBy" gorm:"references:app_users"`
+	CreatedBy string `json:"createdBy" gorm:"references:app_users;type:uuid"`
 	CreatedByDisplay string `json:"createdByDisplay"`
 	ReadBy    string `json:"readBy" gorm:"references:app_users"`
 	DeletedBy string `json:"deletedBy" gorm:"references:app_users"`
@@ -42,8 +42,8 @@ type Message struct {
 }
 
 type app_users struct {
-	UserID           int       `json:"user_id" gorm:"primaryKey"`
-	CompanyID        int       `json:"company_id" gorm:"references:Company"`
+	UserID           string    `json:"user_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	CompanyID        string    `json:"company_id" gorm:"references:Company;type:uuid"`
 	Email            string    `json:"email" gorm:"unique"`
 	FirstName        string    `json:"first_name"`
 	LastName         string    `json:"last_name"`
@@ -56,6 +56,11 @@ type app_users struct {
 	PasswordHash     string    `json:"password_hash"`
 }
 
+type user_chats struct {
+	UserID           string    `json:"user_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid();references:app_users"`
+	ChatID           string    `json:"chat_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid();"`
+}
+
 
 func (p *DbMessageService) Create(message *Message) (Message, error) {
 	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -66,7 +71,7 @@ func (p *DbMessageService) Create(message *Message) (Message, error) {
 	return *message, result.Error
 }
 
-func (p *DbMessageService) GetByChat(chatId int) (rows []Message, eer error) {
+func (p *DbMessageService) GetByChat(chatId string) (rows []Message) {
 	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
@@ -74,23 +79,25 @@ func (p *DbMessageService) GetByChat(chatId int) (rows []Message, eer error) {
 	var results []Message
 	p.db.Table("chat_messages").Where("chat_id = ?", chatId).Find(&results)
 	println("[DEBUG]4")
-	println(results)
-	ałtuput, err := json.Marshal(results)
-	println(ałtuput)
-	return results, err
+	return results
 }
 
-func (p *DbMessageService) GetAllChats(userId int) (chats []int, eer error) {
-	// _, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	// defer cancel()
 
-	// // safe, will be escaped
-	// var results []Message
-	// p.db.Table("chat_messages").Where("chat_id = ?", chatId).Find(&results)
-	// println("[DEBUG]4")
-	// println(results)
-	// ałtuput, err := json.Marshal(results)
-	// println(ałtuput)
-	return []int {1,2,3,4}, nil
+func (p *DbMessageService) GetAllChats(userId string) (chats []user_chats) {
+	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	// safe, will be escaped
+	var results []user_chats
+	p.db.Table("user_chats").Where("user_id = ?", userId).Find(&results)
+	println("[DEBUG]48")
+
+    // Extract only the ChatID values into a new slice
+    // chatIDs := make([]string, len(results))
+    // for i, chat := range results {
+    //     chatIDs[i] = chat.ChatID
+    // }
+	// println("[DEBUG]65 "+chatIDs[0])
+	return results
 }
 
