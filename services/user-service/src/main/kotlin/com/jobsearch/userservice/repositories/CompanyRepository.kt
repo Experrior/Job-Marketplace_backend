@@ -8,4 +8,5 @@ interface CompanyRepository: JpaRepository<Company, UUID> {
     fun existsByEmail(email: String): Boolean
     fun existsByName(name: String): Boolean
     fun findCompanyByName(name: String): Company
+    fun findCompanyByCompanyId(companyId: UUID): Company?
 }

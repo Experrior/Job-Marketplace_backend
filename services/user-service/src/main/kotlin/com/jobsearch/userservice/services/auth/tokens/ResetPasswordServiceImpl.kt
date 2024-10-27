@@ -1,16 +1,16 @@
 package com.jobsearch.userservice.services.auth.tokens
 
 import com.jobsearch.messagequeue.RabbitMQMessageProducer
-import com.jobsearch.userservice.entities.EmailType
 import com.jobsearch.userservice.entities.ResetPasswordToken
 import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.exceptions.InvalidTokenException
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.ResetPasswordTokenRepository
-import com.jobsearch.userservice.requests.EmailRequest
 import com.jobsearch.userservice.requests.UpdatePasswordRequest
 import com.jobsearch.userservice.services.UserService
 import jakarta.transaction.Transactional
+import org.jobsearch.notificationservice.requests.EmailRequest
+import org.jobsearch.notificationservice.requests.EmailType
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -65,7 +65,7 @@ class ResetPasswordServiceImpl(
         return EmailRequest(
             to = to,
             message = token,
-            emailType = EmailType.RESET_PASSWORD_EMAIL
+            emailType = EmailType.RESET_PASSWORD
         )
     }
 

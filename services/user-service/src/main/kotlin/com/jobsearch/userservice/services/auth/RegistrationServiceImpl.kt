@@ -32,6 +32,9 @@ class RegistrationServiceImpl(
             val savedUser = userService.save(user)
 
             verificationService.sendVerificationEmail(savedUser)
+            if(userRole == UserRole.RECRUITER)
+                verificationService.sendEmployeeVerificationEmail(savedUser, getCompanyEmail(savedUser.companyId!!))
+
             return savedUser.userId
         }catch (e: UserAlreadyExistsException){
             throw UserAlreadyExistsException()
@@ -98,5 +101,9 @@ class RegistrationServiceImpl(
         }else if (companyService.existsByName(name)) {
             throw CompanyAlreadyExistsException("Company with name $name already exists")
         }
+    }
+
+    private fun getCompanyEmail(companyId: UUID): String {
+        return companyService.findCompanyById(companyId).email
     }
 }

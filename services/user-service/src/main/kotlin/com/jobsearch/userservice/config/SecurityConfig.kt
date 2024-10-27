@@ -31,7 +31,7 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize("/register/**", permitAll)
                 authorize("/login", permitAll)
-                authorize("/verify-email", permitAll)
+                authorize("/verification/**", permitAll)
                 authorize("/token/**", permitAll)
                 authorize("/resetPassword", permitAll)
                 authorize("/updatePassword", permitAll)

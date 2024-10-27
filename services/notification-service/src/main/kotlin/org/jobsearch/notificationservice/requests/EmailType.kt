@@ -1,6 +1,9 @@
 package org.jobsearch.notificationservice.requests
 
 enum class EmailType {
-    VERIFICATION_EMAIL,
-    RESET_PASSWORD_EMAIL
+    EMAIL_VERIFICATION,
+    RESET_PASSWORD,
+    EMPLOYEE_VERIFICATION,
+    EMPLOYEE_VERIFICATION_APPROVED,
+    EMPLOYEE_VERIFICATION_REJECTED
 }

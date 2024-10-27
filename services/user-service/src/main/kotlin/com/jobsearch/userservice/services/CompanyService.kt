@@ -8,4 +8,5 @@ interface CompanyService {
     fun existsByName(name: String): Boolean
     fun save(company: Company): Company
     fun getCompanyIdByName(name: String): UUID
+    fun findCompanyById(companyId: UUID): Company
 }

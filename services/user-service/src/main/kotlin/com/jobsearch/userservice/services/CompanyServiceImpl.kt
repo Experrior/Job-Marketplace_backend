@@ -26,4 +26,9 @@ class CompanyServiceImpl(
         return companyRepository.findCompanyByName(name).companyId
             ?: throw CompanyNotFoundException("Company not found with name: $name")
     }
+
+    override fun findCompanyById(companyId: UUID): Company {
+        return companyRepository.findCompanyByCompanyId(companyId)
+            ?: throw CompanyNotFoundException("Company not found with id: $companyId")
+    }
 }

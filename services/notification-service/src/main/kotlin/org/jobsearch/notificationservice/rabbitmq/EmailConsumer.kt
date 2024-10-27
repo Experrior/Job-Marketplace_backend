@@ -19,8 +19,11 @@ class EmailConsumer (
         try {
             logger.info(("Sending message of " + emailRequest.emailType) + " type")
             when (emailRequest.emailType) {
-                EmailType.VERIFICATION_EMAIL -> emailSendingService.sendVerificationEmail(emailRequest)
-                EmailType.RESET_PASSWORD_EMAIL -> emailSendingService.sendResetPasswordEmail(emailRequest)
+                EmailType.EMAIL_VERIFICATION -> emailSendingService.sendVerificationEmail(emailRequest)
+                EmailType.RESET_PASSWORD -> emailSendingService.sendResetPasswordEmail(emailRequest)
+                EmailType.EMPLOYEE_VERIFICATION -> emailSendingService.sendEmployeeVerificationEmail(emailRequest)
+                EmailType.EMPLOYEE_VERIFICATION_APPROVED -> emailSendingService.sendEmployeeVerificationConfirmationEmail(emailRequest)
+                EmailType.EMPLOYEE_VERIFICATION_REJECTED -> emailSendingService.sendEmployeeVerificationConfirmationEmail(emailRequest)
             }
         } catch (e: Exception) {
             logger.error("Error processing message", e)

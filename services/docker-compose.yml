@@ -44,6 +44,19 @@ services:
     networks:
       - microservices_network
 
+  db:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      - POSTGRES_DB=users_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5433:5432"
+    networks:
+      - microservices_network
+
+
 volumes:
   postgres_data:
     driver: local
