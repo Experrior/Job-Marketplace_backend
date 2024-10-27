@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.Company
 import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.CompanyAlreadyExistsException
+import com.jobsearch.userservice.exceptions.CompanyNotVerifiedException
 import com.jobsearch.userservice.exceptions.UserAlreadyExistsException
 import com.jobsearch.userservice.exceptions.UserRegistrationException
 import com.jobsearch.userservice.requests.CompanyRegistrationRequest
@@ -27,17 +28,23 @@ class RegistrationServiceImpl(
     override fun registerUser(registrationRequest: RegistrationRequest, userRole: UserRole): UUID? {
         try {
             checkUserAlreadyExists(registrationRequest.email)
+            registrationRequest.company?.let { checkCompanyVerified(it) }
+
             val hashedPassword = passwordEncoder.encode(registrationRequest.password)
             val user = createUserEntity(registrationRequest, hashedPassword, userRole)
             val savedUser = userService.save(user)
 
             verificationService.sendVerificationEmail(savedUser)
-            if(userRole == UserRole.RECRUITER)
-                verificationService.sendEmployeeVerificationEmail(savedUser, getCompanyEmail(savedUser.companyId!!))
+            if (userRole == UserRole.RECRUITER) {
+                val companyEmail = getCompanyEmail(savedUser.companyId!!)
+                verificationService.sendEmployeeVerificationEmail(savedUser, companyEmail)
+            }
 
             return savedUser.userId
         }catch (e: UserAlreadyExistsException){
             throw UserAlreadyExistsException()
+        }catch (e: CompanyNotVerifiedException){
+            throw e
         }catch (e: Exception) {
             logger.error("User registration failed: ${e.message}", e)
             throw UserRegistrationException("User registration failed: ${e.message}", 500)
@@ -105,5 +112,12 @@ class RegistrationServiceImpl(
 
     private fun getCompanyEmail(companyId: UUID): String {
         return companyService.findCompanyById(companyId).email
+    }
+
+    private fun checkCompanyVerified(companyName: String) {
+        val companyId = companyService.getCompanyIdByName(companyName)
+        if (!companyService.findCompanyById(companyId).isEmailVerified) {
+            throw CompanyNotVerifiedException("Company is not verified")
+        }
     }
 }

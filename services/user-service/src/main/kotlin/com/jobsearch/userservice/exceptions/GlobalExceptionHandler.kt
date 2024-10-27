@@ -80,6 +80,15 @@ class GlobalExceptionHandler {
             HttpStatus.CONFLICT
         )
     }
+    @ExceptionHandler(CompanyNotVerifiedException::class)
+    fun handleCompanyNotVerifiedException(
+        ex: CompanyNotVerifiedException
+    ): ResponseEntity<String> {
+        return ResponseEntity(
+            ex.message,
+            HttpStatus.FORBIDDEN
+        )
+    }
     @ExceptionHandler(InvalidTokenException::class)
     fun handleInvalidTokenException(
         ex: InvalidTokenException
