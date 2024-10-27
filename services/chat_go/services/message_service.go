@@ -21,9 +21,10 @@ type MessageService interface {
 	// Delete(id string) error
 	// DeleteAll() error
 	// Update(user *User) error
-	GetByChat(chatId string) ([]Message)
+	GetMessages(chatId string) ([]Message)
 	Create(message *Message) (Message, error)
 	GetAllChats(userId string) ([]user_chats)
+	GetUsersByChat(chatId string) ([]string)
 }
 
 type Message struct {
@@ -71,7 +72,23 @@ func (p *DbMessageService) Create(message *Message) (Message, error) {
 	return *message, result.Error
 }
 
-func (p *DbMessageService) GetByChat(chatId string) (rows []Message) {
+
+func (p *DbMessageService) GetUsersByChat(chatId string) ([]string) {
+	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	var user_chats []user_chats
+	p.db.Table("user_chats").Create(&user_chats)
+
+	// process userchats
+    userIDs := make([]string, len(user_chats))
+    for i, chat := range user_chats {
+        userIDs[i] = chat.ChatID
+    }
+	return userIDs
+
+}
+
+func (p *DbMessageService) GetMessages(chatId string) (rows []Message) {
 	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
@@ -93,10 +110,7 @@ func (p *DbMessageService) GetAllChats(userId string) (chats []user_chats) {
 	println("[DEBUG]48")
 
     // Extract only the ChatID values into a new slice
-    // chatIDs := make([]string, len(results))
-    // for i, chat := range results {
-    //     chatIDs[i] = chat.ChatID
-    // }
+
 	// println("[DEBUG]65 "+chatIDs[0])
 	return results
 }
