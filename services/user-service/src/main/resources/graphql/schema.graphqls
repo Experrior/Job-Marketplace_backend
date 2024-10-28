@@ -62,6 +62,7 @@ type Query{
     ### User ###
     userById(userId: ID!): User
     allUsers(limit: Int, offset: Int): [User]
+    recruiterCompany: ID
 
     ### UserProfile ###
     currentUserProfile: UserProfile

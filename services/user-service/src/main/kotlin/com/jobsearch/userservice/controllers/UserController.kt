@@ -5,6 +5,7 @@ import com.jobsearch.userservice.services.UserService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import java.util.*
 
@@ -20,5 +21,11 @@ class UserController(private val userService: UserService) {
     @QueryMapping
     fun allUsers(@Argument limit: Int?, @Argument offset: Int?): List<User> {
         return userService.getAllUsers(limit ?: 10, offset ?: 0)
+    }
+
+    @QueryMapping
+    fun recruiterCompany(@AuthenticationPrincipal recruiterId: String): UUID? {
+        val user = userService.getUserById(UUID.fromString(recruiterId))
+        return user.companyId
     }
 }
