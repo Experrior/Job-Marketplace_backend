@@ -15,10 +15,14 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
     private val logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        if (isPublicPath(exchange)) {
+            return chain.filter(exchange)
+        }
+
         val token = extractToken(exchange)
         if (token == null) {
             logger.error("TOKEN NOT FOUND")
-            return chain.filter(exchange)
+            return onError(exchange, "JWT Token is required", HttpStatus.UNAUTHORIZED)
         }
 
         return if (jwtTokenProvider.validateToken(token)) {
@@ -58,4 +62,10 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
         response.headers.add("error-message", err)
         return response.setComplete()
     }
+
+    private fun isPublicPath(exchange: ServerWebExchange): Boolean {
+        val path = exchange.request.path.toString()
+        return PublicEndpoint.isPublicPath(path)
+    }
+
 }
