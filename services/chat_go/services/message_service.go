@@ -25,6 +25,7 @@ type MessageService interface {
 	Create(message *Message) (Message, error)
 	GetAllChats(userId string) ([]user_chats)
 	GetUsersByChat(chatId string) ([]string)
+	StartChat(creatorId string, targetId string) (chatId string)
 }
 
 type Message struct {
@@ -62,6 +63,24 @@ type user_chats struct {
 	ChatID           string    `json:"chat_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid();"`
 }
 
+type Chat struct {
+
+	ChatId			string 		`json:"chatId" gorm:"PrimaryKey;type:uuid;default:gen_random_uuid()"`
+	CreatedBy		string 	`json:"createdBy" gorm:"PrimaryKey;type:uuid;references:app_users"`
+
+
+	// "chats": {
+	// 	"chat_id": "PK UUID",
+	// 	"name": "first_name",
+	// 	"created_by": "first_name",
+	// 	"deleted_by": "first_name",
+	// 	"last_message": "first_name",
+	// 	"tags": "first_name",
+	// 	"created_at": "timestamp",
+	// 	"updated_at": "timestamp"
+	//   },
+}
+
 
 func (p *DbMessageService) Create(message *Message) (Message, error) {
 	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -85,6 +104,34 @@ func (p *DbMessageService) GetUsersByChat(chatId string) ([]string) {
         userIDs[i] = chat.ChatID
     }
 	return userIDs
+
+}
+
+
+func (p *DbMessageService) StartChat(creatorId string, targetId string) (chatId string) {
+	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	//todo add error handling later on, sHoUlD never happend
+	newChat := Chat{
+		ChatId: "",
+		CreatedBy: creatorId,
+	}
+	p.db.Table("chats").Create(&newChat)
+
+    creatorChat := user_chats{
+        UserID: creatorId,
+        ChatID: newChat.ChatId,
+    }
+	p.db.Table("user_chats").Create(&creatorChat)
+
+    targetChat := user_chats{
+        UserID: creatorId,
+        ChatID: newChat.ChatId,
+    }
+	p.db.Table("user_chats").Create(&targetChat)
+
+	return newChat.ChatId
 
 }
 

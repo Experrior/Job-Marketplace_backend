@@ -93,26 +93,22 @@ func (a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//TODO BELOW, FIX INDEFINITE WEBSOCKET WAIT
-// package main
+func (a *app) StartChat(w http.ResponseWriter, r *http.Request) {
 
-// import (
-//     "fmt"
-//     "time"
-//     "log"
-//     "github.com/gorilla/websocket"
-// )
+	var userId string = r.URL.Query().Get("userId")
+	var targetUserId string = r.URL.Query().Get("userId")
 
-// func (a *app) test1(w http.ResponseWriter, r *http.Request) {
-// 	conn, err := upgrader.Upgrade(w, r, nil)
-// 	if err !=nil {
-// 		print(err)
-// 		return
-// 	}
-// 	listenWithTimeout(conn)
-// }
+	newChat := a.MessageService.StartChat(userId, targetUserId)
 
+	w.Header().Set("Content-Type", "application/json")
 
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(newChat); err != nil {
+		http.Error(w, "Unable to encode JSON", http.StatusInternalServerError)
+		return
+	}
+}
 
 
 func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
@@ -262,7 +258,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 }
 
 func parse_args() string {
-	// Get each DSN component from environment variables with fallback defaults
+
 	host := os.Getenv("DB_HOST")
 	if host == "" {
 		host = "172.22.0.2"
@@ -288,7 +284,6 @@ func parse_args() string {
 		port = "5432"
 	}
 
-	// Combine the components into the DSN string
 	dsn := flag.String("dsn", fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, dbname, port), "PostgreSQL DSN")
 	flag.Parse()
 	return *dsn
@@ -318,7 +313,7 @@ func main() {
 	// userRouter.HandleFunc("/ws_old", handleWebSocket)
 	userRouter.HandleFunc("/ws", application.HandleWebSocketConn)
 	userRouter.HandleFunc("/getUserChats", application.GetAllChats)
-	// userRouter.HandleFunc("/startChat", application.StartChat)
+	userRouter.HandleFunc("/startChat", application.StartChat)
 	// userRouter.HandleFunc("/post", application.CreateMessage).Methods(http.MethodPost)
 	// http.Handle("/messages/post", r)
 	//userRouter.HandleFunc("", application.AddUser).Methods(http.MethodPost)

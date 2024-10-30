@@ -2,7 +2,7 @@ FROM golang:1.23.2
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY chat_go/ .
 RUN go mod download
 
 COPY *.go ./
