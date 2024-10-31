@@ -1,4 +1,4 @@
-type User{
+type User @key(fields: "userId") {
     userId: ID!
     email: String!
     firstName: String!
@@ -57,7 +57,7 @@ type Experience {
     updatedAt: String!
 }
 
-type Query{
+extend type Query {
     ### User ###
     userById(userId: ID!): User
     allUsers(limit: Int, offset: Int): [User]
@@ -89,7 +89,7 @@ type Query{
     allExperiences(profileId: Int!, limit: Int, offset: Int): [Experience]
 }
 
-type Mutation {
+extend type Mutation {
     createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
     updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
     deleteCurrentProfile: Boolean
