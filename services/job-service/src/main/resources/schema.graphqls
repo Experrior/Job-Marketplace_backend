@@ -1,0 +1,29 @@
+type Job{
+    jobId: ID!
+    companyId: ID!
+    title: String!
+    description: String!
+    requiredSkills: String!
+    requiredExperience: String!
+    location: String!
+    salary: Float
+    createdAt: String!
+}
+
+type Query{
+    jobById(jobId: ID!): Job
+    allJobs(limit: Int, offset: Int): [Job]
+}
+
+type Mutation{
+    createJob(jobRequest: JobInput!): Job
+}
+
+input JobInput {
+    title: String!
+    description: String!
+    location: String!
+    salary: Float!
+    requiredSkills: String!
+    requiredExperience: String!
+}

@@ -27,7 +27,7 @@ class SecurityConfig(
         http {
             csrf { disable() }
             authorizeHttpRequests {
-                authorize(anyRequest, authenticated)
+                authorize(anyRequest, permitAll)
             }
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS

@@ -1,6 +1,5 @@
 type User{
     userId: ID!
-    keycloakUserId: String!
     email: String!
     firstName: String!
     lastName: String!

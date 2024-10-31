@@ -1,8 +1,10 @@
 package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobRequest
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -22,6 +24,14 @@ class JobServiceImpl(
         return jobRepository.save(job)
     }
 
+    override fun getJobById(jobId: UUID): Job {
+        return jobRepository.findJobByJobId(jobId)
+            ?: throw JobNotFoundException()
+    }
+
+    override fun getAllJobs(limit: Int, offset: Int): List<Job> {
+        return jobRepository.findAll(PageRequest.of(offset, limit)).content
+    }
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID): Job {
         return Job(
             companyId = companyId,

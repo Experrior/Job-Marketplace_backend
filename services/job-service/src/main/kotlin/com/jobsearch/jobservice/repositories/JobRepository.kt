@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface JobRepository: JpaRepository<Job, UUID> {
+    fun findJobByJobId(jobId: UUID): Job?
 }
