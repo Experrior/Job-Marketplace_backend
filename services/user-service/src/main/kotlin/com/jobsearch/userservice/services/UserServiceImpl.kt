@@ -1,10 +1,8 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.User
-import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.UserRepository
-import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -28,18 +26,6 @@ class UserServiceImpl(
         return userRepository.findAll();
     }
 
-    override fun getUserFromRepresentation(userRepresentation: UserRepresentation, keycloakUserId: String, companyId: UUID?): User {
-        return User(
-            userId = UUID.fromString(keycloakUserId),
-            email = userRepresentation.email,
-            firstName = userRepresentation.firstName,
-            lastName = userRepresentation.lastName,
-            role = getUserRole(userRepresentation),
-            companyId = companyId,
-            isEnabled = userRepresentation.isEnabled,
-            isEmailVerified = userRepresentation.isEmailVerified
-        )
-    }
 
     override fun save(user: User): User {
         return userRepository.save(user)
@@ -59,13 +45,6 @@ class UserServiceImpl(
 
     override fun existsByEmail(email: String): Boolean {
         return userRepository.existsByEmail(email)
-    }
-
-    private fun getUserRole(userRepresentation: UserRepresentation): UserRole{
-        val clientRoles: Map<String, List<String>>? = userRepresentation.clientRoles
-        val jobsearchRoles: List<String>? = clientRoles?.get("jobsearch")
-        val userRole: String = jobsearchRoles?.firstOrNull() ?: "APPLICANT"
-        return UserRole.valueOf(userRole)
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
