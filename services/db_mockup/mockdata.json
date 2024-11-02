@@ -36,9 +36,11 @@
       "job_id": "PK UUID",
       "company_id": "FK_UUID company.company_id",
       "job_title": "first_name",
+      "category": "first_name",
       "job_description": "long_text",
       "required_skills": "long_text",
       "required_experience": "long_text",
+      "seniority": "first_name",
       "location": "first_name",
       "salary": "integer CONST None",
       "created_at": "timestamp"
@@ -85,6 +87,14 @@
     },
     "IntermediaryTable: user_chats":{
       "chat_id": "FK_UUID chats.chat_id",
+      "user_id": "FK_UUID app_users.user_id"
+    },
+    "IntermediaryTable: user_applications":{
+      "job_id": "FK_UUID job.job_id",
+      "user_id": "FK_UUID app_users.user_id"
+    },
+    "IntermediaryTable: user_followed":{
+      "job_id": "FK_UUID job.job_id",
       "user_id": "FK_UUID app_users.user_id"
     },
     "user_profiles": {
