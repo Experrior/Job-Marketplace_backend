@@ -10,20 +10,56 @@ services:
 
   db:
     image: postgres:latest
-    container_name: postgres-container
+    container_name: jobsearch-db
     environment:
-      - POSTGRES_DB=users_db
+      - POSTGRES_DB=jobsearch_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
     ports:
       - "5433:5432"
     networks:
       - microservices_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - microservices_network
+
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices_network
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile : Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - microservices_network
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - microservices_network
 
 volumes:
   postgres_data:
-    driver: local
 
 networks:
   microservices_network:

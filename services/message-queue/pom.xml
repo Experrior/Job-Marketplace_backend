@@ -3,12 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.jobsearch</groupId>
+        <artifactId>jobsearch</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.jobsearch</groupId>
     <artifactId>message-queue</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>message-queue</name>
@@ -29,7 +27,7 @@
     </scm>
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.9.25</kotlin.version>
+        <kotlin.version>2.0.10</kotlin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -78,6 +76,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.jobsearch.messagequeue.MessageQueueApplication</mainClass>
+                    <classifier>exe</classifier>
                 </configuration>
             </plugin>
             <plugin>
