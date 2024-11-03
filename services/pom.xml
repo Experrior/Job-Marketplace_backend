@@ -15,6 +15,7 @@
         <module>notification-service</module>
         <module>eureka-server</module>
         <module>api-gateway</module>
+        <module>job-service</module>
     </modules>
 
     <properties>

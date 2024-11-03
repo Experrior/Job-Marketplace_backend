@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.config
 
+import jakarta.ws.rs.HttpMethod
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -27,6 +28,14 @@ class SecurityConfig(
         http {
             csrf { disable() }
             authorizeHttpRequests {
+                authorize("/jobs/create", hasRole("RECRUITER"))
+                authorize(HttpMethod.POST,"/jobs/{jobId}", hasRole("RECRUITER"))
+                authorize(HttpMethod.DELETE,"/jobs/{jobId}", hasRole("RECRUITER"))
+                authorize(HttpMethod.PUT,"/jobs/{jobId}", hasRole("RECRUITER"))
+                authorize("/applications/{jobId}", hasRole("RECRUITER"))
+                authorize("/applications/{applicationId}/apply", hasRole("APPLICANT"))
+                authorize("/applications", hasRole("APPLICANT"))
+                authorize("/applications/{applicationId}/status", hasRole("RECRUITER"))
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {

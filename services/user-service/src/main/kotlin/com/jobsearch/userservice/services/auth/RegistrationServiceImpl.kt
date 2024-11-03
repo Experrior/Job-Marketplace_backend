@@ -60,7 +60,7 @@ class RegistrationServiceImpl(
             verificationService.sendVerificationEmail(savedCompany)
             return savedCompany.companyId
         }catch (e: CompanyAlreadyExistsException) {
-            throw CompanyAlreadyExistsException("Company already exists")
+            throw e.message?.let { CompanyAlreadyExistsException(it) }!!
         }catch (e: Exception) {
             logger.error("Company registration failed: ${e.message}", e)
             throw UserRegistrationException("Company registration failed: ${e.message}", 500)

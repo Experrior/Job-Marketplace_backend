@@ -12,6 +12,9 @@ data class Job(
     @Column(name = "job_id", updatable = false, nullable = false)
     var jobId: UUID? = null,
 
+    @Column(name = "recruiter_id", nullable = false)
+    var recruiterId: UUID,
+
     @Column(name = "company_id", nullable = false)
     var companyId: UUID,
 
@@ -38,6 +41,7 @@ data class Job(
 ) {
     constructor() : this(
         companyId = UUID.randomUUID(),
+        recruiterId = UUID.randomUUID(),
         title = "",
         description = "",
         requiredSkills = "",
