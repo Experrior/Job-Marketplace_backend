@@ -5,7 +5,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
-@ComponentScan(basePackages = ["com.jobsearch.messagequeue", "com.jobsearch.userservice"])
+@ComponentScan(basePackages = ["com.jobsearch.userservice", "com.jobsearch.messagequeue"])
 class UserServiceApplication
 
 fun main(args: Array<String>) {

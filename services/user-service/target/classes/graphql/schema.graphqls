@@ -1,0 +1,137 @@
+type User{
+    userId: ID!
+    keycloakUserId: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+    role: String!
+    isBlocked: Boolean!
+    emailVerified: Boolean!
+    employeeVerified: Boolean!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type UserProfile{
+    profileId: ID!
+    user: User
+    resumePath: String
+    profilePicturePath: String
+    updatedAt: String
+}
+
+type Settings {
+    settingsId: ID!
+    user: User
+    offersNotification: Boolean
+    newsletterNotification: Boolean
+    recruiterMessages: Boolean
+    pushNotification: Boolean
+    updatedAt: String
+}
+
+type Skill {
+    skillId: ID!
+    userProfile: UserProfile
+    skillName: String
+    proficiencyLevel: String
+    updatedAt: String
+}
+
+type Education {
+    educationId: ID!
+    userProfile: UserProfile
+    institutionName: String!
+    degree: String!
+    startDate: String!
+    endDate: String!
+    updatedAt: String!
+}
+
+type Experience {
+    experienceId: ID!
+    userProfileId: UserProfile!
+    companyName: String!
+    role: String!
+    startDate: String!
+    endDate: String!
+    updatedAt: String!
+}
+
+type Query{
+    ### User ###
+    userById(userId: ID!): User
+    allUsers(limit: Int, offset: Int): [User]
+
+    ### UserProfile ###
+    currentUserProfile: UserProfile
+    userProfileById(profileId: ID!): UserProfile
+    allUserProfiles(limit: Int, offset: Int): [UserProfile]
+
+    ### UserSettings ###
+    userSettingsById(settingsId: ID!): Settings
+    allUserSettings(limit: Int, offset: Int): [Settings]
+    currentUserSettings: Settings
+
+    ### Skill ###
+    skillById(skillId: ID!): Skill
+    userSkills: [Skill]
+    allSkills: [String]
+    allProficiencyLevels: [String]
+
+    ### Education ###
+    educationById(educationId: ID!): Education
+    allEducations(profileId: Int!, limit: Int, offset: Int): [Education]
+    currentUserEducation: [Education]
+
+    ### Experience ###
+    experienceById(experienceId: ID!): Experience
+    allExperiences(profileId: Int!, limit: Int, offset: Int): [Experience]
+}
+
+type Mutation {
+    createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
+    updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
+    deleteCurrentProfile: Boolean
+
+    createUserSettings(
+        settingsRequest: SettingsRequestInput!
+    ): Settings
+    updateCurrentUserSettings(
+        settingsRequest: SettingsRequestInput!
+    ): Settings
+    deleteCurrentUserSettings: Boolean
+
+    createEducation(
+        educationRequest: EducationRequestInput!
+    ): Education
+    updateEducation(
+        educationId: ID!
+        educationRequest: EducationRequestInput!
+    ): Education
+    deleteEducationById(educationId: ID!): Boolean
+    deleteAllUserEducations: Boolean
+
+    addSkill(skillRequest: SkillRequestInput!): Skill
+    deleteSkillById(skillId: ID!): Boolean
+    deleteAllSkills: Boolean
+}
+
+input SettingsRequestInput {
+    offersNotification: Boolean
+    newsletterNotification: Boolean
+    recruiterMessages: Boolean
+    pushNotification: Boolean
+}
+
+input EducationRequestInput {
+    institutionName: String!
+    degree: String!
+    startDate: String!
+    endDate: String!
+}
+
+input SkillRequestInput {
+    skillName: String!
+    proficiencyLevel: String!
+}
