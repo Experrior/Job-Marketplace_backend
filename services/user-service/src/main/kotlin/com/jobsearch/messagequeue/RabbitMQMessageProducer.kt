@@ -1,6 +1,5 @@
 package com.jobsearch.messagequeue
 
-
 import org.springframework.amqp.core.AmqpTemplate
 import org.springframework.stereotype.Component
 

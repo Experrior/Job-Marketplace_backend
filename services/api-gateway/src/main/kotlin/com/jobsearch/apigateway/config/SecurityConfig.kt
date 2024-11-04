@@ -37,11 +37,7 @@ class SecurityConfig(
                 r.path("/user-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("http://172.22.0.1:8081")  //user service ip
-            }
-            .route { r: PredicateSpec ->
-                r.path("/job-service/*")
-                    .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
-                    .uri("http://172.22.0.1:8084")  //job service ip
+                    //todo change ip:port to env vars
             }
             .build()
     }

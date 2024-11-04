@@ -1,22 +1,18 @@
-# Stage 1: Maven Build Environment
-FROM maven:3.8.5-openjdk-17 AS builder
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
 
-# Set up workspace
+WORKDIR /app
+ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
+COPY notification-service/pom.xml .
+RUN mvn dependency:go-offline
+
+COPY notification-service/src ./src
+RUN mvn clean install -Dmaven.test.skip=true -X
+
+FROM openjdk:21-slim
+
 WORKDIR /app
 
-# Build the main notification-service application
-COPY ../notification-service /app/notification-service
-WORKDIR /app/notification-service
-RUN mvn clean package -DskipTests
+COPY --from=builder /app/target/*.jar /app/app.jar
 
-# Stage 2: Runtime Environment
-FROM openjdk:17-jdk-slim
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the compiled JAR from the builder stage
-COPY --from=builder /app/notification-service/target/*.jar /app/notification-service.jar
-
-# Run the notification-service application
-ENTRYPOINT ["java", "-jar", "/app/notification-service.jar"]
+CMD java -Djdk.tls.rejectClientInitiatedRenegotiation=true -jar /app/app.jar

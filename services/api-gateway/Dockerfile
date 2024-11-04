@@ -9,16 +9,11 @@ RUN mvn dependency:go-offline
 COPY api-gateway/src ./src
 RUN mvn clean install -Dmaven.test.skip=true -X
 
-
 FROM openjdk:21-slim
 
 WORKDIR /app
 
 COPY --from=builder /app/target/*.jar /app/app.jar
 
-CMD java -Djdk.tls.rejectClientInitiatedRenegotiation=true \
--XX:+UseG1GC \
--Dspring.profiles.active=prod \
--Djdk.tls.ephemeralDHKeySize=2048 \
- -jar /app/app.jar
+CMD java -Djdk.tls.rejectClientInitiatedRenegotiation=true -jar /app/app.jar
 
