@@ -82,12 +82,26 @@ func (a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
 	var userId string = r.URL.Query().Get("userId")
 	println("[DEBUG]234 " + userId)
 	data := a.MessageService.GetAllChats(userId)
-	println("[DEBUG]2341 " + data[0].ChatID)
+	if len(data) > 0 {
+        println("[DEBUG]2341 " + data[0].ChatID)
+    } else {
+        println("[DEBUG]2342 The user has no chats")
+    }
+
+	// todo fix on frontend
+	chatIds := make([]string, len(data))
+
+    // Iterate over the structs and append the A field to aValues
+    for iter, chat_struct := range data {
+        chatIds[iter] = chat_struct.ChatID
+    }
+
+
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusOK)
 
-	if err := json.NewEncoder(w).Encode(data); err != nil {
+	if err := json.NewEncoder(w).Encode(chatIds); err != nil {
 		http.Error(w, "Unable to encode JSON", http.StatusInternalServerError)
 		return
 	}
@@ -145,6 +159,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(msg, &newReceivedMessage)
 		if err != nil {
 			log.Println("Error while establishig websocket connection")
+			log.Println("Erroneus message: "+string(msg))
 			log.Println(err)
 			return
 		}
@@ -157,7 +172,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 			// channels for websocket signals
 			messageChan := make(chan []byte)
 			errorChan := make(chan error)
-	
+
 			// start a goroutine for websocket read
 			go func() {
 				_, msg, err := conn.ReadMessage()
@@ -167,13 +182,13 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 				}
 				messageChan <- msg
 			}()
-	
+
 			select {
 				case <-ticker.C:
 					log.Println("Websocket timeout reached. Closing the WebSocket connection.")
 					conn.Close()
 					return
-		
+
 				case msg := <-messageChan:
 					ticker.Reset(maxConnection)
 
@@ -324,3 +339,5 @@ func main() {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
+
+/// TODO change all println to log.something, for better logging (adds datetime, by default)
