@@ -21,11 +21,9 @@ import (
 )
 
 const (
-	writeWait     = 10 * time.Second    // Time allowed to write a message to the client
-	maxConnection = 2 * time.Hour       // Maximum allowed time for a connection (8 hours)
-	pongWait      = 2 * time.Hour // Time allowed to read the next pong message (8 hours)
-	pingPeriod    = (pongWait * 9) / 10 // Ping period to check connection liveness
-	randomStrLen  = 10                  // Length of the random string
+	websocketLifetime = 2 * time.Hour // Time after which we check if the user is still connected, if not then drop connection
+	maxIdleDbConnections = 10
+	maxOpenDbConnections = 100
 )
 
 type MetaMessage struct {
@@ -43,23 +41,23 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func openDB(dsn string, setLimits bool) (*gorm.DB, error) {
+func openDB(dsn string) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 	sqlDB, err := db.DB()
-	if setLimits {
-		// Get generic database object sql.DB to use its functions
-		if err != nil {
-			print(err)
-			return nil, err
-		}
-		fmt.Println("Setting db limits: ")
-		sqlDB.SetMaxIdleConns(10)
-		sqlDB.SetMaxOpenConns(100)
+
+	if err != nil {
+		print(err)
+		return nil, err
 	}
+	fmt.Println("Setting db limits: ")
+	sqlDB.SetMaxIdleConns(maxIdleDbConnections)
+	sqlDB.SetMaxOpenConns(maxOpenDbConnections)
+	log.Println("maxIdleDbConnections"+ string(maxIdleDbConnections))
+	log.Println("maxOpenDbConnections"+ string(maxIdleDbConnections))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -88,14 +86,12 @@ func (a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
         println("[DEBUG]2342 The user has no chats")
     }
 
-	// todo fix on frontend
 	chatIds := make([]string, len(data))
 
-    // Iterate over the structs and append the A field to aValues
+
     for iter, chat_struct := range data {
         chatIds[iter] = chat_struct.ChatID
     }
-
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -134,19 +130,19 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-    ticker := time.NewTicker(maxConnection)
+    ticker := time.NewTicker(websocketLifetime)
     defer ticker.Stop()
 
 	go func(conn *websocket.Conn) {
 		defer conn.Close()
 
-		conn.SetReadDeadline(time.Now().Add(pongWait))
-		conn.SetPongHandler(func(string) error {
-			conn.SetReadDeadline(time.Now().Add(pongWait))
-			return nil
-		})
+		// conn.SetReadDeadline(time.Now().Add(pongWait))
+		// conn.SetPongHandler(func(string) error {
+		// 	conn.SetReadDeadline(time.Now().Add(pongWait))
+		// 	return nil
+		// })
 
-		ticker := time.NewTicker(pingPeriod)
+		ticker := time.NewTicker(websocketLifetime)
 		defer ticker.Stop()
 
 		//establish first message
@@ -190,7 +186,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 					return
 
 				case msg := <-messageChan:
-					ticker.Reset(maxConnection)
+					ticker.Reset(websocketLifetime)
 
 					var newReceivedMessage MetaMessage
 					err = json.Unmarshal(msg, &newReceivedMessage)
@@ -314,7 +310,7 @@ func main() {
 	flag.Parse()
 	var dsn = parse_args()
 	println("[DEBUG] Starting using dsn: " + dsn)
-	db, err := openDB(dsn, setLimits)
+	db, err := openDB(dsn)
 	if err != nil {
 		log.Fatalln(err)
 	}
