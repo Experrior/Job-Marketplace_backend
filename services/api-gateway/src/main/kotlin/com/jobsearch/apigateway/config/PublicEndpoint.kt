@@ -13,6 +13,7 @@ enum class PublicEndpoint(val pattern: String) {
     ERROR("/user-service/error");
 
 
+
     companion object {
         private val pathMatcher = AntPathMatcher()
 
