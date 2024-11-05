@@ -1,5 +1,8 @@
 package com.jobsearch.jobservice.exceptions
 
+import graphql.GraphQLError
+import graphql.GraphqlErrorBuilder
+import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -46,5 +49,12 @@ class GlobalExceptionHandler {
     ): ResponseEntity<String> {
         ex.printStackTrace()
         return ResponseEntity("Required request body is missing or unreadable", HttpStatus.BAD_REQUEST)
+    }
+
+    @GraphQlExceptionHandler(IllegalStateException::class)
+    fun handleIllegalStateException(ex: IllegalStateException): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
     }
 }

@@ -52,11 +52,6 @@ class JobController(
         }
     }
 
-    @GetMapping
-    fun getJobs(): ResponseEntity<List<Job>> {
-        return ResponseEntity.ok(jobService.getJobs())
-    }
-
     @GetMapping("/recruiter")
     fun getJobsByRecruiter(
         @AuthenticationPrincipal recruiterId: String

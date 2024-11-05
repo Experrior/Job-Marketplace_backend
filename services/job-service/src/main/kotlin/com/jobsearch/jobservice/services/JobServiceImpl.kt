@@ -4,6 +4,7 @@ import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobRequest
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -24,8 +25,13 @@ class JobServiceImpl(
         return jobRepository.save(job)
     }
 
-    override fun deleteJobById(jobId: UUID) {
-        jobRepository.deleteById(jobId)
+    override fun deleteJobById(jobId: UUID): Boolean {
+        return try {
+            jobRepository.deleteById(jobId)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override fun updateJobById(jobId: UUID, jobRequest: JobRequest): Job {
@@ -40,8 +46,8 @@ class JobServiceImpl(
         return jobRepository.findJobsByRecruiterId(recruiterId)
     }
 
-    override fun getJobs(): List<Job> {
-        return jobRepository.findAll()
+    override fun getJobs(limit: Int, offset: Int): List<Job> {
+        return jobRepository.findAll(PageRequest.of(offset, limit)).content
     }
 
     override fun getJobById(jobId: UUID): Job {
