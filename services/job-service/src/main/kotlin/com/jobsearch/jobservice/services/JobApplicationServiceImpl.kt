@@ -7,6 +7,7 @@ import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
 import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
 import com.jobsearch.jobservice.repositories.ApplicationRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
@@ -14,10 +15,10 @@ class JobApplicationServiceImpl(
     private val applicationRepository: ApplicationRepository,
     private val jobService: JobService
 ): JobApplicationService {
-    override fun applyForJob(jobId: UUID, userId: UUID): Application {
+    override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): Application {
         val job = getJob(jobId)
         checkUserAlreadyApplied(job, userId)
-        val application = createApplication(job, userId)
+        val application = createApplication(job, userId, resume)
         return applicationRepository.save(application)
     }
 
@@ -36,11 +37,12 @@ class JobApplicationServiceImpl(
         applicationRepository.save(application)
     }
 
-    private fun createApplication(job: Job, userId: UUID): Application {
+    private fun createApplication(job: Job, userId: UUID, resume: MultipartFile): Application {
         return Application(
             userId = userId,
             job = job,
-            status = ApplicationStatus.PENDING
+            status = ApplicationStatus.PENDING,
+            resume = resume.bytes
         )
     }
 

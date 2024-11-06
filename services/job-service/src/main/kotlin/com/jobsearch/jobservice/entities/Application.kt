@@ -19,6 +19,10 @@ data class Application(
     @JoinColumn(name = "job_id", referencedColumnName = "job_id", nullable = false)
     var job: Job,
 
+    @Lob
+    @Column(name = "resume", nullable = true)
+    var resume: ByteArray? = null,
+
     @Column(name = "application_date", nullable = false)
     var applicationDate: Timestamp = Timestamp(System.currentTimeMillis()),
 
@@ -29,7 +33,26 @@ data class Application(
         applicationId = null,
         userId = UUID.randomUUID(),
         job = Job(),
+        resume = null,
         applicationDate = Timestamp(System.currentTimeMillis()),
         status = ApplicationStatus.PENDING
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Application
+
+        if (resume != null) {
+            if (other.resume == null) return false
+            if (!resume.contentEquals(other.resume)) return false
+        } else if (other.resume != null) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return resume?.contentHashCode() ?: 0
+    }
 }

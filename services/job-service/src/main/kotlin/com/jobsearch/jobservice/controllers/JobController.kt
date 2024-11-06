@@ -2,86 +2,93 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.requests.JobRequest
+import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.services.JobService
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @Controller
-@RequestMapping("/jobs")
 class JobController(
     private val jobService: JobService
 ) {
-    @PostMapping("/create")
+    @PreAuthorize("hasRole('RECRUITER')")
+    @MutationMapping
     fun createJob(
-        @RequestBody jobRequest: JobRequest
-    ): ResponseEntity<Job> {
-        return ResponseEntity(
-            jobService.createJob(jobRequest),
-            HttpStatus.CREATED
-        )
+        @Argument jobRequest: JobRequest
+    ): Job {
+        return jobService.createJob(jobRequest)
     }
 
-    @DeleteMapping("/{jobId}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    @MutationMapping
     fun deleteJob(
-        @PathVariable jobId: String
-    ): ResponseEntity<String> {
+        @Argument jobId: String
+    ): DeleteJobResponse {
         return try {
             jobService.deleteJobById(UUID.fromString(jobId))
-            ResponseEntity("Job deleted", HttpStatus.OK)
+            DeleteJobResponse(success = true, message = "Job deleted")
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body("Invalid job ID")
+            DeleteJobResponse(success = false, message = "Invalid job ID")
         }
     }
 
-    @PutMapping("/{jobId}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    @MutationMapping
     fun updateJob(
-        @PathVariable jobId: String,
-        @RequestBody jobRequest: JobRequest
-    ): ResponseEntity<Job> {
+        @Argument jobId: String,
+        @Argument jobRequest: JobRequest
+    ): Job {
         return try {
-            ResponseEntity(
-                jobService.updateJobById(UUID.fromString(jobId), jobRequest),
-                HttpStatus.OK
-            )
+            jobService.updateJobById(UUID.fromString(jobId), jobRequest)
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(Job())
+            Job()
         }
     }
 
-    @GetMapping("/recruiter")
-    fun getJobsByRecruiter(
+    @QueryMapping
+    fun allJobs(
+        @Argument limit: Int,
+        @Argument offset: Int
+    ): List<Job> {
+        return jobService.getJobs(limit, offset)
+    }
+
+    @PreAuthorize("hasRole('RECRUITER')")
+    @QueryMapping
+    fun jobsByRecruiter(
         @AuthenticationPrincipal recruiterId: String
-    ): ResponseEntity<List<Job>> {
+    ): List<Job> {
         return try {
-            ResponseEntity.ok(jobService.getJobsByRecruiter(UUID.fromString(recruiterId)))
+            jobService.getJobsByRecruiter(UUID.fromString(recruiterId))
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(emptyList())
+            emptyList()
         }
     }
 
-    @GetMapping("/company/{companyId}")
-    fun getJobsByCompany(
-        @PathVariable companyId: String
-    ): ResponseEntity<List<Job>> {
+    @QueryMapping
+    fun jobsByCompany(
+        @Argument companyId: String
+    ): List<Job> {
         return try {
-            ResponseEntity.ok(jobService.getJobsByCompany(UUID.fromString(companyId)))
+            jobService.getJobsByCompany(UUID.fromString(companyId))
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(emptyList())
+            emptyList()
         }
     }
 
-    @GetMapping("/{jobId}")
-    fun getJobById(
-        @PathVariable jobId: String
-    ): ResponseEntity<Job> {
+    @QueryMapping
+    fun jobById(
+        @Argument jobId: String
+    ): Job {
         return try {
-            ResponseEntity.ok(jobService.getJobById(UUID.fromString(jobId)))
+            jobService.getJobById(UUID.fromString(jobId))
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(Job())
+            Job()
         }
     }
 

@@ -1,0 +1,45 @@
+type Job {
+    jobId: ID!
+    companyId: ID!
+    title: String!
+    description: String!
+    requiredSkills: String!
+    requiredExperience: String!
+    location: String!
+    salary: Float
+    createdAt: String!
+}
+
+type Application {
+    applicationId: ID!
+    userId: ID!
+    job: Job!
+    applicationDate: String!
+    status: String!
+    resume: String!
+}
+
+type Query {
+    jobById(jobId: ID!): Job
+    allJobs(limit: Int, offset: Int): [Job]
+    userApplications: [Application]
+    jobApplications(jobId: ID!): [Application]
+    jobsByRecruiter: [Job]
+    jobsByCompany(companyId: ID!): [Job]
+}
+
+type Mutation {
+    createJob(jobRequest: JobInput!): Job
+    setApplicationStatus(applicationId: ID!, status: String!): String
+    deleteJob(jobId: ID!): String
+    updateJob(jobId: ID!, jobRequest: JobInput!): Job
+}
+
+input JobInput {
+    title: String!
+    description: String!
+    location: String!
+    salary: Float!
+    requiredSkills: String!
+    requiredExperience: String!
+}

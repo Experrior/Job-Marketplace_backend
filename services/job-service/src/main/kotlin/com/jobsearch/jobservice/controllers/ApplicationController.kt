@@ -2,13 +2,19 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
-import com.jobsearch.jobservice.requests.StatusRequest
 import com.jobsearch.jobservice.services.JobApplicationService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Controller
@@ -16,56 +22,61 @@ import java.util.*
 class ApplicationController(
     private val jobApplicationService: JobApplicationService
 ) {
-    @PostMapping("/{jobId}/apply")
+    @PostMapping("/{jobId}/apply", consumes = ["multipart/form-data"])
     fun applyForJob(
         @AuthenticationPrincipal userId: String,
-        @PathVariable jobId: String
+        @PathVariable jobId: String,
+        @RequestParam("resume", required = true) resume: MultipartFile?
     ): ResponseEntity<Application> {
-        return try {
-            ResponseEntity(
-                jobApplicationService.applyForJob(UUID.fromString(jobId), UUID.fromString(userId)),
-                HttpStatus.CREATED
-            )
-        } catch (e: IllegalArgumentException) {
+        return if (resume == null) {
             ResponseEntity.badRequest().body(Application())
+        } else {
+            try {
+                ResponseEntity(
+                    jobApplicationService.applyForJob(UUID.fromString(jobId), UUID.fromString(userId), resume),
+                    HttpStatus.CREATED
+                )
+            } catch (e: IllegalArgumentException) {
+                ResponseEntity.badRequest().body(Application())
+            }
         }
     }
 
-    @GetMapping
-    fun getUserApplications(
+    @QueryMapping
+    fun userApplications(
         @AuthenticationPrincipal userId: String
-    ): ResponseEntity<List<Application>> {
-        return try{
-            ResponseEntity.ok(jobApplicationService.getUserApplications(UUID.fromString(userId)))
-        } catch (e: IllegalArgumentException){
-            ResponseEntity.badRequest().body(emptyList())
-        }
-    }
-
-    @GetMapping("/{jobId}")
-    fun getJobApplications(
-        @PathVariable jobId: String
-    ): ResponseEntity<List<Application>> {
+    ): List<Application> {
         return try {
-            ResponseEntity.ok(jobApplicationService.getJobApplications(UUID.fromString(jobId)))
+            jobApplicationService.getUserApplications(UUID.fromString(userId))
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(emptyList())
+            emptyList()
         }
     }
 
-    @PostMapping("/{applicationId}/status")
+    @QueryMapping
+    fun jobApplications(
+        @Argument jobId: String
+    ): List<Application> {
+        return try {
+            jobApplicationService.getJobApplications(UUID.fromString(jobId))
+        } catch (e: IllegalArgumentException) {
+            emptyList()
+        }
+    }
+
+    @MutationMapping
     fun setApplicationStatus(
-        @PathVariable applicationId: String,
-        @RequestBody statusRequest: StatusRequest
-    ): ResponseEntity<String> {
+        @Argument applicationId: String,
+        @Argument status: String
+    ): String {
         return try {
             jobApplicationService.setApplicationStatus(
                 UUID.fromString(applicationId),
-                ApplicationStatus.valueOf(statusRequest.status))
-            ResponseEntity.ok("Application status updated")
+                ApplicationStatus.valueOf(status))
+            "Application status updated"
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
-            ResponseEntity.badRequest().body("Invalid application ID or status")
+            "Invalid application ID or status"
         }
     }
 
