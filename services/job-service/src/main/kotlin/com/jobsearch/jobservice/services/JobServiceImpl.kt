@@ -46,8 +46,10 @@ class JobServiceImpl(
         return jobRepository.findJobsByRecruiterId(recruiterId)
     }
 
-    override fun getJobs(limit: Int, offset: Int): List<Job> {
-        return jobRepository.findAll(PageRequest.of(offset, limit)).content
+    override fun getJobs(limit: Int?, offset: Int?): List<Job> {
+        val pageLimit = limit ?: 20
+        val pageOffset = offset ?: 0
+        return jobRepository.findAll(PageRequest.of(pageOffset, pageLimit)).content
     }
 
     override fun getJobById(jobId: UUID): Job {

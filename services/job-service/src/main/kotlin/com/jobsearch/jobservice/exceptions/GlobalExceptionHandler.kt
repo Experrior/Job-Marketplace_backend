@@ -57,4 +57,11 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
+    @GraphQlExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
 }

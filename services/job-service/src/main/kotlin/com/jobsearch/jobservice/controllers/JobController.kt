@@ -52,8 +52,8 @@ class JobController(
 
     @QueryMapping
     fun allJobs(
-        @Argument limit: Int,
-        @Argument offset: Int
+        @Argument limit: Int?,
+        @Argument offset: Int?
     ): List<Job> {
         return jobService.getJobs(limit, offset)
     }
