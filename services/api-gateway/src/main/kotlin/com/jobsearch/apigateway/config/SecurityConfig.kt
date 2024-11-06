@@ -6,12 +6,15 @@ import org.springframework.cloud.gateway.route.builder.PredicateSpec
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsConfigurationSource
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
+
 
 @Configuration
 @EnableWebFluxSecurity
@@ -21,6 +24,7 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
+            .cors(Customizer.withDefaults()) // withDefaults means that it will use CorsConfigurationSource
             .csrf { it.disable() }
             .authorizeExchange { exchanges ->
                 exchanges
@@ -40,6 +44,17 @@ class SecurityConfig(
                     //todo change ip:port to env vars
             }
             .build()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("*")
+        configuration.allowedMethods = listOf("GET", "POST", "OPTIONS", "PUT", "DELETE")
+        configuration.allowedHeaders = listOf("*")
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 
 

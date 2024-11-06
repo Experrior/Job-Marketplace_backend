@@ -19,9 +19,7 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
         if (exchange.request.method == HttpMethod.OPTIONS) {
             val response = exchange.response
             response.statusCode = HttpStatus.OK
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            response.headers.add("Access-Control-Allow-Headers", "*")
-            return response.setComplete()
+         return response.setComplete()
         }
         if (isPublicPath(exchange)) {
             return chain.filter(exchange)
