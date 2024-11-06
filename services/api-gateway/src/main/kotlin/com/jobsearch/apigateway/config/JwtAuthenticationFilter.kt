@@ -2,6 +2,7 @@ package com.jobsearch.apigateway.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
@@ -15,6 +16,11 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
     private val logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        if (exchange.request.method == HttpMethod.OPTIONS) {
+            val response = exchange.response
+            response.statusCode = HttpStatus.OK
+            return response.setComplete()
+        }
         if (isPublicPath(exchange)) {
             return chain.filter(exchange)
         }
