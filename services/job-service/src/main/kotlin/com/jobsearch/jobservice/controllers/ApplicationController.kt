@@ -8,6 +8,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
@@ -42,6 +43,7 @@ class ApplicationController(
         }
     }
 
+    @PreAuthorize("hasRole('APPLICANT')")
     @QueryMapping
     fun userApplications(
         @AuthenticationPrincipal userId: String
@@ -53,6 +55,7 @@ class ApplicationController(
         }
     }
 
+    @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun jobApplications(
         @Argument jobId: String
@@ -64,6 +67,7 @@ class ApplicationController(
         }
     }
 
+    @PreAuthorize("hasRole('RECRUITER')")
     @MutationMapping
     fun setApplicationStatus(
         @Argument applicationId: String,
