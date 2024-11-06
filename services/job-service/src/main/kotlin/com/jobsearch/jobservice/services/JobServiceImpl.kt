@@ -4,7 +4,10 @@ import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobRequest
+import com.jobsearch.jobservice.responses.DeleteJobResponse
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -25,12 +28,21 @@ class JobServiceImpl(
         return jobRepository.save(job)
     }
 
-    override fun deleteJobById(jobId: UUID): Boolean {
+    override fun deleteJobById(jobId: UUID): DeleteJobResponse {
         return try {
-            jobRepository.deleteById(jobId)
-            true
+            val job = getJobById(jobId)
+
+            if (job.isDeleted) {
+                return DeleteJobResponse(success = false, message = "Job is already deleted")
+            }
+
+            job.isDeleted = true
+            jobRepository.save(job)
+            DeleteJobResponse(success = true, message = "Job deleted")
+        } catch (e: JobNotFoundException) {
+            DeleteJobResponse(success = false, message = "Job not found")
         } catch (e: Exception) {
-            false
+            DeleteJobResponse(success = false, message = e.message ?: "An unexpected error occurred")
         }
     }
 
@@ -46,10 +58,12 @@ class JobServiceImpl(
         return jobRepository.findJobsByRecruiterId(recruiterId)
     }
 
-    override fun getJobs(limit: Int?, offset: Int?): List<Job> {
+    override fun getJobs(limit: Int?, offset: Int?): Page<Job> {
         val pageLimit = limit ?: 20
         val pageOffset = offset ?: 0
-        return jobRepository.findAll(PageRequest.of(pageOffset, pageLimit)).content
+
+        val pageable: Pageable = PageRequest.of(pageOffset / pageLimit, pageLimit)
+        return jobRepository.findAllByIsDeletedFalse(pageable)
     }
 
     override fun getJobById(jobId: UUID): Job {
@@ -57,8 +71,19 @@ class JobServiceImpl(
             ?: throw JobNotFoundException(jobId)
     }
 
+    override fun getJobByIdAndDeleteFalse(jobId: UUID): Job {
+        return jobRepository.findJobByJobIdAndIsDeletedFalse(jobId)
+            ?: throw JobNotFoundException(jobId)
+    }
+
+    override fun restoreJobById(jobId: UUID): Job {
+        val job = getJobById(jobId)
+        job.isDeleted = false
+        return jobRepository.save(job)
+    }
+
     override fun getJobsByCompany(companyId: UUID): List<Job> {
-        return jobRepository.findJobsByCompanyId(companyId)
+        return jobRepository.findJobsByCompanyIdAndIsDeletedFalse(companyId)
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {

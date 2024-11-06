@@ -8,6 +8,7 @@ type Job {
     location: String!
     salary: Float
     createdAt: String!
+    isDeleted: Boolean!
 }
 
 type Application {
@@ -30,9 +31,10 @@ type Query {
 
 type Mutation {
     createJob(jobRequest: JobInput!): Job
-    setApplicationStatus(applicationId: ID!, status: String!): String
-    deleteJob(jobId: ID!): String
+    setApplicationStatus(applicationId: ID!, status: String!): SetApplicationStatusResponse
+    deleteJob(jobId: ID!): DeleteJobResponse!
     updateJob(jobId: ID!, jobRequest: JobInput!): Job
+    restoreJob(jobId: ID!): Job
 }
 
 input JobInput {
@@ -42,4 +44,14 @@ input JobInput {
     salary: Float!
     requiredSkills: String!
     requiredExperience: String!
+}
+
+type DeleteJobResponse {
+    success: Boolean!
+    message: String!
+}
+
+type SetApplicationStatusResponse {
+    success: Boolean!
+    message: String!
 }

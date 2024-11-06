@@ -37,7 +37,13 @@ data class Job(
     var salary: Double? = null,
 
     @Column(name = "created_at", nullable = false)
-    var createdAt: Timestamp = Timestamp.from(Instant.now())
+    var createdAt: Timestamp = Timestamp.from(Instant.now()),
+
+    @Column(name = "updated_at", nullable = true)
+    var updatedAt: Timestamp? = null,
+
+    @Column(name = "is_deleted", nullable = false)
+    var isDeleted: Boolean = false
 ) {
     constructor() : this(
         companyId = UUID.randomUUID(),
@@ -54,5 +60,10 @@ data class Job(
     @PrePersist
     fun onCreate() {
         createdAt = Timestamp.from(Instant.now())
+    }
+
+    @PreUpdate
+    fun onUpdate() {
+        updatedAt = Timestamp.from(Instant.now())
     }
 }

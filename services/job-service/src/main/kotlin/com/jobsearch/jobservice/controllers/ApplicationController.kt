@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
+import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import com.jobsearch.jobservice.services.JobApplicationService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
@@ -58,30 +59,22 @@ class ApplicationController(
     @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun jobApplications(
-        @Argument jobId: String
+        @Argument jobId: UUID
     ): List<Application> {
-        return try {
-            jobApplicationService.getJobApplications(UUID.fromString(jobId))
-        } catch (e: IllegalArgumentException) {
-            emptyList()
-        }
+         return jobApplicationService.getJobApplications(jobId)
+
     }
 
     @PreAuthorize("hasRole('RECRUITER')")
     @MutationMapping
     fun setApplicationStatus(
-        @Argument applicationId: String,
+        @Argument applicationId: UUID,
         @Argument status: String
-    ): String {
-        return try {
-            jobApplicationService.setApplicationStatus(
-                UUID.fromString(applicationId),
+    ): SetApplicationStatusResponse {
+        return jobApplicationService.setApplicationStatus(
+                applicationId,
                 ApplicationStatus.valueOf(status))
-            "Application status updated"
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-            "Invalid application ID or status"
-        }
+
     }
 
 

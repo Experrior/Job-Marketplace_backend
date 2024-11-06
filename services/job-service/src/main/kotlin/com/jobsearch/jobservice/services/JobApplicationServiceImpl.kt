@@ -6,6 +6,7 @@ import com.jobsearch.jobservice.entities.enums.ApplicationStatus
 import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
 import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
 import com.jobsearch.jobservice.repositories.ApplicationRepository
+import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -31,10 +32,11 @@ class JobApplicationServiceImpl(
         return applicationRepository.findApplicationsByJob(job)
     }
 
-    override fun setApplicationStatus(applicationId: UUID, status: ApplicationStatus) {
+    override fun setApplicationStatus(applicationId: UUID, status: ApplicationStatus): SetApplicationStatusResponse {
         val application = getApplication(applicationId)
         application.status = status
         applicationRepository.save(application)
+        return SetApplicationStatusResponse(success = true, message = "Application status updated")
     }
 
     private fun createApplication(job: Job, userId: UUID, resume: MultipartFile): Application {

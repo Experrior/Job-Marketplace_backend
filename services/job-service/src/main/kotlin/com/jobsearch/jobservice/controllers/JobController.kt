@@ -4,6 +4,7 @@ import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.services.JobService
+import org.springframework.data.domain.Page
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -27,34 +28,38 @@ class JobController(
     @PreAuthorize("hasRole('RECRUITER')")
     @MutationMapping
     fun deleteJob(
-        @Argument jobId: String
+        @Argument jobId: UUID
     ): DeleteJobResponse {
-        return try {
-            jobService.deleteJobById(UUID.fromString(jobId))
-            DeleteJobResponse(success = true, message = "Job deleted")
-        } catch (e: IllegalArgumentException) {
-            DeleteJobResponse(success = false, message = "Invalid job ID")
-        }
+        return jobService.deleteJobById(jobId)
+
     }
 
     @PreAuthorize("hasRole('RECRUITER')")
     @MutationMapping
     fun updateJob(
-        @Argument jobId: String,
+        @Argument jobId: UUID,
         @Argument jobRequest: JobRequest
     ): Job {
         return try {
-            jobService.updateJobById(UUID.fromString(jobId), jobRequest)
+            jobService.updateJobById(jobId, jobRequest)
         } catch (e: IllegalArgumentException) {
             Job()
         }
+    }
+
+    @PreAuthorize("hasRole('RECRUITER')")
+    @MutationMapping
+    fun restoreJob(
+        @Argument jobId: UUID
+    ): Job {
+        return jobService.restoreJobById(jobId)
     }
 
     @QueryMapping
     fun allJobs(
         @Argument limit: Int?,
         @Argument offset: Int?
-    ): List<Job> {
+    ): Page<Job> {
         return jobService.getJobs(limit, offset)
     }
 
@@ -72,24 +77,16 @@ class JobController(
 
     @QueryMapping
     fun jobsByCompany(
-        @Argument companyId: String
+        @Argument companyId: UUID
     ): List<Job> {
-        return try {
-            jobService.getJobsByCompany(UUID.fromString(companyId))
-        } catch (e: IllegalArgumentException) {
-            emptyList()
-        }
+        return jobService.getJobsByCompany(companyId)
     }
 
     @QueryMapping
     fun jobById(
-        @Argument jobId: String
+        @Argument jobId: UUID
     ): Job {
-        return try {
-            jobService.getJobById(UUID.fromString(jobId))
-        } catch (e: IllegalArgumentException) {
-            Job()
-        }
+        return jobService.getJobByIdAndDeleteFalse(jobId)
     }
 
 }

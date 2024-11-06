@@ -12,34 +12,38 @@ import org.springframework.web.context.request.WebRequest
 
 @ControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(JobNotFoundException::class)
-    fun handleJobNotFoundException(
+    @GraphQlExceptionHandler(JobNotFoundException::class)
+    fun handleJobNotFoundExceptionGraphQL(
         ex: JobNotFoundException
-    ): ResponseEntity<String> {
-        return ResponseEntity(
-            "Job not found ${ex.jobId}",
-            HttpStatus.NOT_FOUND
-        )
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message("Job not found: ${ex.jobId}")
+            .build()
     }
 
-    @ExceptionHandler(ApplicationNotFoundException::class)
+    @GraphQlExceptionHandler(ApplicationNotFoundException::class)
     fun handleApplicationNotFoundException(
         ex: ApplicationNotFoundException
-    ): ResponseEntity<String> {
-        return ResponseEntity(
-            "Application not found ${ex.applicationId}",
-            HttpStatus.NOT_FOUND
-        )
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message("Application not found: ${ex.applicationId}")
+            .build()
     }
 
-    @ExceptionHandler(UserAlreadyAppliedException::class)
+    @GraphQlExceptionHandler(UserAlreadyAppliedException::class)
     fun handleUserAlreadyAppliedException(
         ex: UserAlreadyAppliedException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+
+    @ExceptionHandler(JobNotFoundException::class)
+    fun handleJobNotFoundExceptionRest(
+        ex: JobNotFoundException
     ): ResponseEntity<String> {
-        return ResponseEntity(
-            ex.message,
-            HttpStatus.FORBIDDEN
-        )
+        return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
