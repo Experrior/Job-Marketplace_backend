@@ -1,13 +1,16 @@
 package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.JobRepository
+import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -74,6 +77,11 @@ class JobServiceImpl(
     override fun getJobByIdAndDeleteFalse(jobId: UUID): Job {
         return jobRepository.findJobByJobIdAndIsDeletedFalse(jobId)
             ?: throw JobNotFoundException(jobId)
+    }
+
+    override fun getFilteredJobs(filter: JobFilterRequest, pageable: Pageable): Page<Job> {
+        val specification: Specification<Job> = JobSpecifications.getJobsByFilter(filter)
+        return jobRepository.findAll(specification, pageable)
     }
 
     override fun restoreJobById(jobId: UUID): Job {

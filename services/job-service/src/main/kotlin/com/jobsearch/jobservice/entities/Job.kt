@@ -34,7 +34,7 @@ data class Job(
     var location: String,
 
     @Column(name = "salary")
-    var salary: Double? = null,
+    var salary: Int? = null,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),

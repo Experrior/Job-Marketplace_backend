@@ -1,10 +1,12 @@
 package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.services.JobService
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -31,7 +33,6 @@ class JobController(
         @Argument jobId: UUID
     ): DeleteJobResponse {
         return jobService.deleteJobById(jobId)
-
     }
 
     @PreAuthorize("hasRole('RECRUITER')")
@@ -88,5 +89,16 @@ class JobController(
     ): Job {
         return jobService.getJobByIdAndDeleteFalse(jobId)
     }
+
+    @QueryMapping
+    fun filteredJobs(
+        @Argument filter: JobFilterRequest,
+        @Argument limit: Int?,
+        @Argument offset: Int?
+    ): Page<Job> {
+        val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
+        return jobService.getFilteredJobs(filter, pageable)
+    }
+
 
 }

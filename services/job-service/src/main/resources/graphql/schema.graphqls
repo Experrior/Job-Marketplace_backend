@@ -27,6 +27,7 @@ type Query {
     jobApplications(jobId: ID!): [Application]
     jobsByRecruiter: [Job]
     jobsByCompany(companyId: ID!): [Job]
+    filteredJobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
 }
 
 type Mutation {
@@ -41,9 +42,25 @@ input JobInput {
     title: String!
     description: String!
     location: String!
-    salary: Float!
+    salary: Float
     requiredSkills: String!
     requiredExperience: String!
+}
+
+input JobFilterRequest {
+    title: String
+    location: String
+    requiredExperience: String
+    companyId: ID
+    hasSalary: Boolean
+    minSalary: Int
+    maxSalary: Int
+}
+
+type JobPage {
+    content: [Job]
+    totalPages: Int
+    totalElements: Int
 }
 
 type DeleteJobResponse {
