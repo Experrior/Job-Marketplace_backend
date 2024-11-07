@@ -40,9 +40,9 @@
       "job_description": "long_text",
       "required_skills": "long_text",
       "required_experience": "long_text",
-      "seniority": "first_name",
+      "level": "first_name",
       "location": "first_name",
-      "salary": "integer CONST None",
+      "salary": "integer",
       "created_at": "timestamp"
     },
     "experiences": {
@@ -91,9 +91,14 @@
     },
     "IntermediaryTable: user_applications":{
       "job_id": "FK_UUID job.job_id",
-      "user_id": "FK_UUID app_users.user_id"
+      "user_id": "FK_UUID app_users.user_id",
+      "created_at": "timestamp"
     },
     "IntermediaryTable: user_followed":{
+      "job_id": "FK_UUID job.job_id",
+      "user_id": "FK_UUID app_users.user_id"
+    },
+    "IntermediaryTable: user_viewed":{
       "job_id": "FK_UUID job.job_id",
       "user_id": "FK_UUID app_users.user_id"
     },
