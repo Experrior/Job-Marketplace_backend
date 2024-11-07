@@ -65,10 +65,9 @@
     },
     "company": {
       "company_id": "PK UUID",
-      "company_name": "first_name",
+      "name": "first_name",
       "email": "email UNIQUE",
       "logoPath": "first_name",
-      "location": "first_name",
       "industry": "first_name",
       "description": "first_name",
       "verified": "bool",
