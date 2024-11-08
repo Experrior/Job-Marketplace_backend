@@ -1,6 +1,8 @@
 package com.jobsearch.jobservice.entities
 
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
+import org.hibernate.annotations.Type
 import java.sql.Timestamp
 import java.time.Instant
 import java.util.*
@@ -24,8 +26,9 @@ data class Job(
     @Column(name = "job_description", nullable = false)
     var description: String,
 
-    @Column(name = "required_skills", nullable = false)
-    var requiredSkills: String,
+    @Type(JsonType::class)
+    @Column(name = "required_skills", columnDefinition = "json", nullable = false)
+    var requiredSkills: List<Skill>,
 
     @Column(name = "required_experience", nullable = false)
     var requiredExperience: String,
@@ -50,7 +53,7 @@ data class Job(
         recruiterId = UUID.randomUUID(),
         title = "",
         description = "",
-        requiredSkills = "",
+        requiredSkills = emptyList(),
         requiredExperience = "",
         location = ""
     ){

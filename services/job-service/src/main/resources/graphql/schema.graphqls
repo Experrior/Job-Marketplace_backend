@@ -43,7 +43,7 @@ input JobInput {
     description: String!
     location: String!
     salary: Float
-    requiredSkills: String!
+    requiredSkills: [SkillInput!]!
     requiredExperience: String!
 }
 
@@ -71,4 +71,9 @@ type DeleteJobResponse {
 type SetApplicationStatusResponse {
     success: Boolean!
     message: String!
+}
+
+input SkillInput {
+    name: String!
+    level: Int!
 }
