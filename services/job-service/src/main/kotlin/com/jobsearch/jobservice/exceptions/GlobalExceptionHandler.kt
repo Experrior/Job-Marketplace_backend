@@ -61,6 +61,20 @@ class GlobalExceptionHandler {
         return ResponseEntity("Required request body is missing or unreadable", HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(FileSizeExceededException::class)
+    fun handleFileSizeExceededException(
+        ex: FileSizeExceededException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.PAYLOAD_TOO_LARGE)
+    }
+
+    @ExceptionHandler(InvalidFileTypeException::class)
+    fun handleInvalidFileTypeException(
+        ex: InvalidFileTypeException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
+    }
+
     @GraphQlExceptionHandler(IllegalStateException::class)
     fun handleIllegalStateException(ex: IllegalStateException): GraphQLError {
         return GraphqlErrorBuilder.newError()

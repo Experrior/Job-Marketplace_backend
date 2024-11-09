@@ -3,9 +3,7 @@ package com.jobsearch.jobservice.services
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
-import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
-import com.jobsearch.jobservice.exceptions.EmptyResumeException
-import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
+import com.jobsearch.jobservice.exceptions.*
 import com.jobsearch.jobservice.repositories.ApplicationRepository
 import com.jobsearch.jobservice.responses.ApplyForJobResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
@@ -21,6 +19,9 @@ class JobApplicationServiceImpl(
 ): JobApplicationService {
     override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): ApplyForJobResponse {
         checkResumeIsEmpty(resume)
+        checkResumeSize(resume)
+        checkResumeType(resume)
+
         val job = getJob(jobId)
         checkUserAlreadyApplied(job, userId)
         val s3ResumePath = resumeStorageService.storeResume(userId, jobId, resume)
@@ -93,6 +94,18 @@ class JobApplicationServiceImpl(
     private fun checkResumeIsEmpty(resume: MultipartFile) {
         if(resume.isEmpty)
             throw EmptyResumeException()
+    }
+
+    private fun checkResumeType(resume: MultipartFile) {
+        if (resume.contentType != "application/pdf") {
+            throw InvalidFileTypeException()
+        }
+    }
+
+    private fun checkResumeSize(resume: MultipartFile) {
+        if (resume.size > 2 * 1024 * 1024) {
+            throw FileSizeExceededException()
+        }
     }
 
 }
