@@ -38,6 +38,13 @@ class GlobalExceptionHandler {
         return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler(EmptyResumeException::class)
+    fun handleEmptyResumeException(
+        ex: EmptyResumeException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
+    }
+
     @ExceptionHandler(UserAlreadyAppliedException::class)
     fun handleUserAlreadyAppliedException(
         ex: UserAlreadyAppliedException

@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
+import com.jobsearch.jobservice.responses.ApplyForJobResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import com.jobsearch.jobservice.services.JobApplicationService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -27,20 +28,16 @@ class ApplicationController(
     @PostMapping("/{jobId}/apply", consumes = ["multipart/form-data"])
     fun applyForJob(
         @AuthenticationPrincipal userId: String,
-        @PathVariable jobId: String,
-        @RequestParam("resume", required = true) resume: MultipartFile?
-    ): ResponseEntity<Application> {
-        return if (resume == null) {
-            ResponseEntity.badRequest().body(Application())
-        } else {
-            try {
-                ResponseEntity(
-                    jobApplicationService.applyForJob(UUID.fromString(jobId), UUID.fromString(userId), resume),
-                    HttpStatus.CREATED
-                )
-            } catch (e: IllegalArgumentException) {
-                ResponseEntity.badRequest().body(Application())
-            }
+        @PathVariable jobId: UUID,
+        @RequestParam("resume", required = true) resume: MultipartFile
+    ): ResponseEntity<ApplyForJobResponse> {
+        return try {
+            ResponseEntity(
+                jobApplicationService.applyForJob(jobId, UUID.fromString(userId), resume),
+                HttpStatus.CREATED
+            )
+        } catch (e: IllegalArgumentException) {
+                ResponseEntity.badRequest().body(null)
         }
     }
 

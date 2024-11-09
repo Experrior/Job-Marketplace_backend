@@ -4,8 +4,10 @@ import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
 import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
+import com.jobsearch.jobservice.exceptions.EmptyResumeException
 import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
 import com.jobsearch.jobservice.repositories.ApplicationRepository
+import com.jobsearch.jobservice.responses.ApplyForJobResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -17,12 +19,13 @@ class JobApplicationServiceImpl(
     private val jobService: JobService,
     private val resumeStorageService: ResumeStorageService
 ): JobApplicationService {
-    override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): Application {
+    override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): ApplyForJobResponse {
+        checkResumeIsEmpty(resume)
         val job = getJob(jobId)
         checkUserAlreadyApplied(job, userId)
         val s3ResumePath = resumeStorageService.storeResume(userId, jobId, resume)
         val application = createApplication(job, userId, s3ResumePath)
-        return applicationRepository.save(application)
+        return convertToResponse(applicationRepository.save(application))
     }
 
     override fun getUserApplications(userId: UUID): List<Application> {
@@ -75,6 +78,21 @@ class JobApplicationServiceImpl(
         applications.forEach { application ->
             application.resumeUrl = application.s3ResumePath?.let { resumeStorageService.getResumeUrl(it) }
         }
+    }
+
+    private fun convertToResponse(application: Application): ApplyForJobResponse {
+        return ApplyForJobResponse(
+            applicationId = application.applicationId!!,
+            userId = application.userId,
+            job = application.job,
+            applicationDate = application.applicationDate,
+            status = application.status
+        )
+    }
+
+    private fun checkResumeIsEmpty(resume: MultipartFile) {
+        if(resume.isEmpty)
+            throw EmptyResumeException()
     }
 
 }
