@@ -51,6 +51,7 @@ input JobFilterRequest {
     title: String
     location: String
     requiredExperience: String
+    requiredSkills: [String]
     companyId: ID
     hasSalary: Boolean
     minSalary: Int

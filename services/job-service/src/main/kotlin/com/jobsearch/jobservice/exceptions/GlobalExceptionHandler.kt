@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.exceptions
 
 import graphql.GraphQLError
 import graphql.GraphqlErrorBuilder
+import jakarta.validation.ConstraintViolationException
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -66,6 +67,22 @@ class GlobalExceptionHandler {
     fun handleIllegalArgumentException(ex: IllegalArgumentException): GraphQLError {
         return GraphqlErrorBuilder.newError()
             .message(ex.message)
+            .build()
+    }
+
+    @GraphQlExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationExceptionForGraphql(ex: ConstraintViolationException): GraphQLError {
+        val errors: MutableMap<String, String?> = HashMap()
+
+        ex.constraintViolations.forEach { violation ->
+            val fieldName = violation.propertyPath.toString().substringAfterLast('.')
+            val errorMessage = violation.message
+            errors[fieldName] = errorMessage
+        }
+
+        return GraphqlErrorBuilder.newError()
+            .message("Validation error")
+            .extensions(mapOf("errors" to errors))
             .build()
     }
 }

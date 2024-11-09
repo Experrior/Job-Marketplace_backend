@@ -36,8 +36,19 @@ object JobSpecifications {
             filter.maxSalary?.let {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("salary"), it))
             }
-
-            // TODO("Add filter for required skills")
+            filter.requiredSkills?.let { requiredSkillNames ->
+                val skillPredicates = requiredSkillNames.map { skillName ->
+                    criteriaBuilder.isTrue(
+                        criteriaBuilder.function(
+                            "jsonb_path_exists",
+                            Boolean::class.java,
+                            root.get<Any>("requiredSkills"),
+                            criteriaBuilder.literal("""$[*] ? (@.name == "$skillName")""")
+                        )
+                    )
+                }
+                predicates.add(criteriaBuilder.and(*skillPredicates.toTypedArray()))
+            }
 
             criteriaBuilder.and(*predicates.toTypedArray())
         }

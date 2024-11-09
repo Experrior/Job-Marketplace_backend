@@ -27,7 +27,7 @@ data class Job(
     var description: String,
 
     @Type(JsonType::class)
-    @Column(name = "required_skills", columnDefinition = "json", nullable = false)
+    @Column(name = "required_skills", columnDefinition = "jsonb", nullable = false)
     var requiredSkills: List<Skill>,
 
     @Column(name = "required_experience", nullable = false)
