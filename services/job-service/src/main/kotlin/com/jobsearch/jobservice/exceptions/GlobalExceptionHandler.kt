@@ -31,20 +31,18 @@ class GlobalExceptionHandler {
             .build()
     }
 
-    @GraphQlExceptionHandler(UserAlreadyAppliedException::class)
-    fun handleUserAlreadyAppliedException(
-        ex: UserAlreadyAppliedException
-    ): GraphQLError {
-        return GraphqlErrorBuilder.newError()
-            .message(ex.message)
-            .build()
-    }
-
     @ExceptionHandler(JobNotFoundException::class)
     fun handleJobNotFoundExceptionRest(
         ex: JobNotFoundException
     ): ResponseEntity<String> {
         return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(UserAlreadyAppliedException::class)
+    fun handleUserAlreadyAppliedException(
+        ex: UserAlreadyAppliedException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)

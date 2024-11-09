@@ -17,7 +17,7 @@ type Application {
     job: Job!
     applicationDate: String!
     status: String!
-    resume: String!
+    resumeUrl: String!
 }
 
 type Query {
