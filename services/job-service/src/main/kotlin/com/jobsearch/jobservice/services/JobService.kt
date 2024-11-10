@@ -13,10 +13,9 @@ interface JobService {
     fun deleteJobById(jobId: UUID): DeleteJobResponse
     fun updateJobById(jobId: UUID, jobRequest: JobRequest): Job
     fun getJobsByRecruiter(recruiterId: UUID): List<Job>
-    fun getJobs(limit: Int?, offset: Int?): Page<Job>
     fun getJobById(jobId: UUID): Job
     fun getJobsByCompany(companyId: UUID): List<Job>
     fun getJobByIdAndDeleteFalse(jobId: UUID): Job
-    fun getFilteredJobs(filter: JobFilterRequest, pageable: Pageable): Page<Job>
+    fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<Job>
     fun restoreJobById(jobId: UUID): Job
 }

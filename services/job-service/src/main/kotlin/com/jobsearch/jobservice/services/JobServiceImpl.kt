@@ -8,7 +8,6 @@ import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.core.context.SecurityContextHolder
@@ -61,14 +60,6 @@ class JobServiceImpl(
         return jobRepository.findJobsByRecruiterId(recruiterId)
     }
 
-    override fun getJobs(limit: Int?, offset: Int?): Page<Job> {
-        val pageLimit = limit ?: 20
-        val pageOffset = offset ?: 0
-
-        val pageable: Pageable = PageRequest.of(pageOffset / pageLimit, pageLimit)
-        return jobRepository.findAllByIsDeletedFalse(pageable)
-    }
-
     override fun getJobById(jobId: UUID): Job {
         return jobRepository.findJobByJobId(jobId)
             ?: throw JobNotFoundException(jobId)
@@ -79,8 +70,8 @@ class JobServiceImpl(
             ?: throw JobNotFoundException(jobId)
     }
 
-    override fun getFilteredJobs(filter: JobFilterRequest, pageable: Pageable): Page<Job> {
-        val specification: Specification<Job> = JobSpecifications.getJobsByFilter(filter)
+    override fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<Job> {
+        val specification: Specification<Job>? = filter?.let { JobSpecifications.getJobsByFilter(it) }
         return jobRepository.findAll(specification, pageable)
     }
 

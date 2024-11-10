@@ -56,14 +56,6 @@ class JobController(
         return jobService.restoreJobById(jobId)
     }
 
-    @QueryMapping
-    fun allJobs(
-        @Argument limit: Int?,
-        @Argument offset: Int?
-    ): Page<Job> {
-        return jobService.getJobs(limit, offset)
-    }
-
     @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun jobsByRecruiter(
@@ -91,14 +83,12 @@ class JobController(
     }
 
     @QueryMapping
-    fun filteredJobs(
-        @Argument filter: JobFilterRequest,
+    fun jobs(
+        @Argument filter: JobFilterRequest?,
         @Argument limit: Int?,
         @Argument offset: Int?
     ): Page<Job> {
         val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
         return jobService.getFilteredJobs(filter, pageable)
     }
-
-
 }
