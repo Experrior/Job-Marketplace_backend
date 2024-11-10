@@ -31,6 +31,7 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize("/applications/{jobId}", hasRole("RECRUITER"))
                 authorize("/applications/{applicationId}/apply", hasRole("APPLICANT"))
+                authorize("/quizzes/{jobId}/createQuiz", hasRole("RECRUITER"))
                 authorize(anyRequest, permitAll)
             }
             sessionManagement {

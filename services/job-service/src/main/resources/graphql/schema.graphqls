@@ -22,11 +22,15 @@ type Application {
 
 type Query {
     jobById(jobId: ID!): Job
-    userApplications: [Application]
-    jobApplications(jobId: ID!): [Application]
     jobsByRecruiter: [Job]
     jobsByCompany(companyId: ID!): [Job]
     jobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
+
+    userApplications: [Application]
+    jobApplications(jobId: ID!): [Application]
+
+    getQuizByJobId(jobId: ID!): QuizResponse
+    quizzesByRecruiter: [QuizResponse]
 }
 
 type Mutation {
@@ -71,6 +75,11 @@ type DeleteJobResponse {
 type SetApplicationStatusResponse {
     success: Boolean!
     message: String!
+}
+
+type QuizResponse {
+    quizId: ID!
+    s3QuizUrl: String!
 }
 
 input SkillInput {

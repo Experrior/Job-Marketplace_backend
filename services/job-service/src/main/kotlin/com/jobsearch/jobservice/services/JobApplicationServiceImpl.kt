@@ -15,7 +15,7 @@ import java.util.*
 class JobApplicationServiceImpl(
     private val applicationRepository: ApplicationRepository,
     private val jobService: JobService,
-    private val resumeStorageService: ResumeStorageService
+    private val fileStorageService: FileStorageService
 ): JobApplicationService {
     override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): ApplyForJobResponse {
         checkResumeIsEmpty(resume)
@@ -24,7 +24,7 @@ class JobApplicationServiceImpl(
 
         val job = getJob(jobId)
         checkUserAlreadyApplied(job, userId)
-        val s3ResumePath = resumeStorageService.storeResume(userId, jobId, resume)
+        val s3ResumePath = fileStorageService.storeResume(userId, jobId, resume)
         val application = createApplication(job, userId, s3ResumePath)
         return convertToResponse(applicationRepository.save(application))
     }
@@ -77,7 +77,7 @@ class JobApplicationServiceImpl(
 
     private fun setResumeUrls(applications: List<Application>) {
         applications.forEach { application ->
-            application.resumeUrl = application.s3ResumePath?.let { resumeStorageService.getResumeUrl(it) }
+            application.resumeUrl = application.s3ResumePath?.let { fileStorageService.getFileUrl(it) }
         }
     }
 
@@ -93,7 +93,7 @@ class JobApplicationServiceImpl(
 
     private fun checkResumeIsEmpty(resume: MultipartFile) {
         if(resume.isEmpty)
-            throw EmptyResumeException()
+            throw EmptyFileException()
     }
 
     private fun checkResumeType(resume: MultipartFile) {

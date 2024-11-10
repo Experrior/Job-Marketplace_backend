@@ -59,7 +59,6 @@ class ApplicationController(
         @Argument jobId: UUID
     ): List<Application> {
          return jobApplicationService.getJobApplications(jobId)
-
     }
 
     @PreAuthorize("hasRole('RECRUITER')")
@@ -71,8 +70,5 @@ class ApplicationController(
         return jobApplicationService.setApplicationStatus(
                 applicationId,
                 ApplicationStatus.valueOf(status))
-
     }
-
-
 }

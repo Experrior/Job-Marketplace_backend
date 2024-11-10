@@ -31,6 +31,15 @@ class GlobalExceptionHandler {
             .build()
     }
 
+    @GraphQlExceptionHandler(QuizNotFoundException::class)
+    fun handleQuizNotFoundException(
+        ex: QuizNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message("Quiz not found by jobId: ${ex.jobId}")
+            .build()
+    }
+
     @ExceptionHandler(JobNotFoundException::class)
     fun handleJobNotFoundExceptionRest(
         ex: JobNotFoundException
@@ -38,9 +47,16 @@ class GlobalExceptionHandler {
         return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(EmptyResumeException::class)
-    fun handleEmptyResumeException(
-        ex: EmptyResumeException
+    @ExceptionHandler(FileAlreadyExistsException::class)
+    fun handleFileAlreadyExistsException(
+        ex: FileAlreadyExistsException
+    ): ResponseEntity<String> {
+        return ResponseEntity("File already exists with name: ${ex.fileName}", HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(EmptyFileException::class)
+    fun handleEmptyFileException(
+        ex: EmptyFileException
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
