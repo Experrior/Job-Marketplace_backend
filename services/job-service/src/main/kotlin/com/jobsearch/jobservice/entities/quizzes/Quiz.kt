@@ -15,7 +15,7 @@ data class Quiz(
     @Column(name = "recruiter_id", nullable = false)
     var recruiterId: UUID? = null,
 
-    @Column(name = "s3_resume_path", nullable = false)
+    @Column(name = "s3_quiz_path", nullable = false)
     var s3QuizPath: String? = null,
 
     @Transient

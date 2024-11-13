@@ -79,6 +79,7 @@ type SetApplicationStatusResponse {
 
 type QuizResponse {
     quizId: ID!
+    quizName: String!
     s3QuizUrl: String!
 }
 

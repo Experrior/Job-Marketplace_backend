@@ -47,6 +47,13 @@ class GlobalExceptionHandler {
         return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler(FailedToStoreFileException::class)
+    fun handleFailedToStoreFileException(
+        ex: FailedToStoreFileException
+    ): ResponseEntity<String> {
+        return ResponseEntity("Failed to store file", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     @ExceptionHandler(FileAlreadyExistsException::class)
     fun handleFileAlreadyExistsException(
         ex: FileAlreadyExistsException

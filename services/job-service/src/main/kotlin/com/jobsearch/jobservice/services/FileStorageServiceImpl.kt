@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.services
 
+import com.jobsearch.jobservice.exceptions.FailedToStoreFileException
 import com.jobsearch.jobservice.exceptions.FileAlreadyExistsException
 import com.jobsearch.jobservice.repositories.QuizRepository
 import com.jobsearch.jobservice.responses.QuizResponse
@@ -50,23 +51,22 @@ class FileStorageServiceImpl(
         return listObjectsResponse.contents().map {
             val fileUrl = getFileUrl(it.key())
             logger.info("S3QuizPath: ${it.key()}")
-            val quizId = quizRepository.findByS3QuizPath(it.key()).quizId
-            QuizResponse(quizId = quizId!!, quizName = it.key(), s3QuizUrl = fileUrl)
+            val quiz = quizRepository.findByS3QuizPath(it.key())
+            val quizName = quiz.s3QuizPath!!.substringAfterLast('/')
+            QuizResponse(quizId = quiz.quizId!!, quizName = quizName, s3QuizUrl = fileUrl)
         }
     }
 
     private fun saveFile(filePath: String, file: MultipartFile): String {
         try {
             val putObjectRequest = createPutObjectRequest(bucketName!!, filePath, file)
-            logger.info("bucketName: <$bucketName>")
             val requestBody = RequestBody.fromInputStream(file.inputStream, file.size)
             s3Client.putObject(putObjectRequest, requestBody)
 
             return filePath
         } catch (e: S3Exception) {
             logger.error("Failed to store file", e)
-            throw RuntimeException("Failed to store file")
-            // todo(handle exception)
+            throw FailedToStoreFileException()
         }
     }
 

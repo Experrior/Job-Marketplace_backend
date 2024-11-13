@@ -32,10 +32,11 @@ class QuizServiceImpl(
 
     private fun createQuizResponse(savedQuiz: Quiz): QuizResponse {
         val s3QuizUrl = fileStorageService.getFileUrl(savedQuiz.s3QuizPath!!)
+        val quizName = savedQuiz.s3QuizPath!!.substringAfterLast('/')
 
         return QuizResponse(
             quizId = savedQuiz.quizId!!,
-            quizName = savedQuiz.s3QuizPath!!,
+            quizName = quizName,
             s3QuizUrl = s3QuizUrl
         )
     }
