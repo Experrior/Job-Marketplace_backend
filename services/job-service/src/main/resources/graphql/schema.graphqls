@@ -9,6 +9,7 @@ type Job {
     salary: Float
     createdAt: String!
     isDeleted: Boolean!
+    quizId: ID
 }
 
 type Application {
@@ -29,8 +30,8 @@ type Query {
     userApplications: [Application]
     jobApplications(jobId: ID!): [Application]
 
-    getQuizByJobId(jobId: ID!): QuizResponse
     quizzesByRecruiter: [QuizResponse]
+    quizById(quizId: ID!): QuizResponse
 }
 
 type Mutation {
@@ -47,7 +48,8 @@ input JobInput {
     location: String!
     salary: Float
     requiredSkills: [SkillInput!]!
-    requiredExperience: String!
+    requiredExperience: String!,
+    quizId: ID
 }
 
 input JobFilterRequest {

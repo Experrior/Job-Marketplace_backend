@@ -1,9 +1,9 @@
 package com.jobsearch.jobservice.controllers
 
-import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
+import com.jobsearch.jobservice.responses.JobResponse
 import com.jobsearch.jobservice.services.JobService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -23,7 +23,7 @@ class JobController(
     @MutationMapping
     fun createJob(
         @Argument jobRequest: JobRequest
-    ): Job {
+    ): JobResponse {
         return jobService.createJob(jobRequest)
     }
 
@@ -40,19 +40,15 @@ class JobController(
     fun updateJob(
         @Argument jobId: UUID,
         @Argument jobRequest: JobRequest
-    ): Job {
-        return try {
-            jobService.updateJobById(jobId, jobRequest)
-        } catch (e: IllegalArgumentException) {
-            Job()
-        }
+    ): JobResponse {
+        return jobService.updateJobById(jobId, jobRequest)
     }
 
     @PreAuthorize("hasRole('RECRUITER')")
     @MutationMapping
     fun restoreJob(
         @Argument jobId: UUID
-    ): Job {
+    ): JobResponse {
         return jobService.restoreJobById(jobId)
     }
 
@@ -60,7 +56,7 @@ class JobController(
     @QueryMapping
     fun jobsByRecruiter(
         @AuthenticationPrincipal recruiterId: String
-    ): List<Job> {
+    ): List<JobResponse> {
         return try {
             jobService.getJobsByRecruiter(UUID.fromString(recruiterId))
         } catch (e: IllegalArgumentException) {
@@ -71,14 +67,14 @@ class JobController(
     @QueryMapping
     fun jobsByCompany(
         @Argument companyId: UUID
-    ): List<Job> {
+    ): List<JobResponse> {
         return jobService.getJobsByCompany(companyId)
     }
 
     @QueryMapping
     fun jobById(
         @Argument jobId: UUID
-    ): Job {
+    ): JobResponse {
         return jobService.getJobByIdAndDeleteFalse(jobId)
     }
 
@@ -87,7 +83,7 @@ class JobController(
         @Argument filter: JobFilterRequest?,
         @Argument limit: Int?,
         @Argument offset: Int?
-    ): Page<Job> {
+    ): Page<JobResponse> {
         val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
         return jobService.getFilteredJobs(filter, pageable)
     }

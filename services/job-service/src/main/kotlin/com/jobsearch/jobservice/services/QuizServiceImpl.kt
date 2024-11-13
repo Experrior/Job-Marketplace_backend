@@ -4,6 +4,7 @@ import com.jobsearch.jobservice.entities.quizzes.Quiz
 import com.jobsearch.jobservice.exceptions.EmptyFileException
 import com.jobsearch.jobservice.exceptions.FileSizeExceededException
 import com.jobsearch.jobservice.exceptions.InvalidFileTypeException
+import com.jobsearch.jobservice.exceptions.QuizNotFoundException
 import com.jobsearch.jobservice.repositories.QuizRepository
 import com.jobsearch.jobservice.responses.QuizResponse
 import org.springframework.stereotype.Service
@@ -28,6 +29,17 @@ class QuizServiceImpl(
 
     override fun recruiterQuizzes(recruiterId: UUID): List<QuizResponse> {
         return fileStorageService.listQuizConfigs(recruiterId)
+    }
+
+    override fun findQuizEntityById(quizId: UUID): Quiz {
+        return quizRepository.findById(quizId).orElseThrow(
+            { throw QuizNotFoundException(quizId) }
+        )
+    }
+
+    override fun findQuizById(quizId: UUID): QuizResponse {
+        val quiz = findQuizEntityById(quizId)
+        return createQuizResponse(quiz)
     }
 
     private fun createQuizResponse(savedQuiz: Quiz): QuizResponse {

@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.responses.QuizResponse
 import com.jobsearch.jobservice.services.QuizService
+import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -42,6 +43,13 @@ class QuizController(
         } catch (e: IllegalArgumentException) {
             emptyList()
         }
+    }
+
+    @QueryMapping
+    fun quizById(
+        @Argument quizId: UUID
+    ): QuizResponse {
+        return quizService.findQuizById(quizId)
     }
 
 }

@@ -7,6 +7,8 @@ import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
+import com.jobsearch.jobservice.responses.JobResponse
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -18,21 +20,26 @@ import java.util.*
 @Service
 class JobServiceImpl(
     private val jobRepository: JobRepository,
-    webClientBuilder: WebClient.Builder
+    webClientBuilder: WebClient.Builder,
+    private val quizService: QuizService
 ): JobService {
     private val webClient: WebClient = webClientBuilder.build()
-
-    override fun createJob(jobRequest: JobRequest): Job {
+    private val logger = LoggerFactory.getLogger(JobServiceImpl::class.java)
+    override fun createJob(jobRequest: JobRequest): JobResponse {
         val companyId = getRecruiterCompany()
 
         println("Company ID: $companyId")
         val job = mapRequestToJob(jobRequest, companyId, getRecruiterId())
-        return jobRepository.save(job)
+        val savedJob = jobRepository.save(job)
+        logger.info("Job created: $savedJob")
+        logger.info("Job quiz: ${savedJob.quiz}")
+        logger.info("Job quizId: ${savedJob.quiz?.quizId}")
+        return mapJobToResponse(savedJob)
     }
 
     override fun deleteJobById(jobId: UUID): DeleteJobResponse {
         return try {
-            val job = getJobById(jobId)
+            val job = getJobEntityById(jobId)
 
             if (job.isDeleted) {
                 return DeleteJobResponse(success = false, message = "Job is already deleted")
@@ -48,41 +55,44 @@ class JobServiceImpl(
         }
     }
 
-    override fun updateJobById(jobId: UUID, jobRequest: JobRequest): Job {
+    override fun updateJobById(jobId: UUID, jobRequest: JobRequest): JobResponse {
         val existingJob = jobRepository.findById(jobId)
         if (existingJob.isEmpty) {
             throw JobNotFoundException(jobId)
         }
-        return jobRepository.save(mapRequestToJob(jobRequest, getRecruiterCompany(), getRecruiterId(), jobId = jobId))
+        val updatedJob = jobRepository.save(mapRequestToJob(jobRequest, getRecruiterCompany(), getRecruiterId(), jobId = jobId))
+        return mapJobToResponse(updatedJob)    }
+
+    override fun getJobsByRecruiter(recruiterId: UUID): List<JobResponse> {
+        return jobRepository.findJobsByRecruiterId(recruiterId).map { mapJobToResponse(it) }
     }
 
-    override fun getJobsByRecruiter(recruiterId: UUID): List<Job> {
-        return jobRepository.findJobsByRecruiterId(recruiterId)
+    override fun getJobEntityById(jobId: UUID): Job {
+        return jobRepository.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId);
     }
 
-    override fun getJobById(jobId: UUID): Job {
-        return jobRepository.findJobByJobId(jobId)
-            ?: throw JobNotFoundException(jobId)
+    override fun getJobById(jobId: UUID): JobResponse {
+        return mapJobToResponse(getJobEntityById(jobId))
     }
 
-    override fun getJobByIdAndDeleteFalse(jobId: UUID): Job {
-        return jobRepository.findJobByJobIdAndIsDeletedFalse(jobId)
-            ?: throw JobNotFoundException(jobId)
+    override fun getJobByIdAndDeleteFalse(jobId: UUID): JobResponse {
+        val job = jobRepository.findJobByJobIdAndIsDeletedFalse(jobId) ?: throw JobNotFoundException(jobId)
+        return mapJobToResponse(job)
     }
 
-    override fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<Job> {
+    override fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<JobResponse> {
         val specification: Specification<Job>? = filter?.let { JobSpecifications.getJobsByFilter(it) }
-        return jobRepository.findAll(specification, pageable)
+        return jobRepository.findAll(specification, pageable).map { mapJobToResponse(it) }
     }
 
-    override fun restoreJobById(jobId: UUID): Job {
-        val job = getJobById(jobId)
-        job.isDeleted = false
-        return jobRepository.save(job)
+    override fun restoreJobById(jobId: UUID): JobResponse {
+        val job = getJobEntityById(jobId)
+        val restoredJob = jobRepository.save(job)
+        return mapJobToResponse(restoredJob)
     }
 
-    override fun getJobsByCompany(companyId: UUID): List<Job> {
-        return jobRepository.findJobsByCompanyIdAndIsDeletedFalse(companyId)
+    override fun getJobsByCompany(companyId: UUID): List<JobResponse> {
+        return jobRepository.findJobsByCompanyIdAndIsDeletedFalse(companyId).map { mapJobToResponse(it) }
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
@@ -95,7 +105,26 @@ class JobServiceImpl(
             location = jobRequest.location,
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
-            requiredExperience = jobRequest.requiredExperience
+            requiredExperience = jobRequest.requiredExperience,
+            quiz = jobRequest.quizId?.let { quizService.findQuizEntityById(it) },
+        )
+    }
+
+    private fun mapJobToResponse(job: Job): JobResponse {
+        return JobResponse(
+            jobId = job.jobId ?: throw IllegalArgumentException("Job ID cannot be null"),
+            recruiterId = job.recruiterId,
+            companyId = job.companyId,
+            title = job.title,
+            description = job.description,
+            location = job.location,
+            salary = job.salary,
+            requiredSkills = job.requiredSkills,
+            requiredExperience = job.requiredExperience,
+            createdAt = job.createdAt,
+            updatedAt = job.updatedAt,
+            isDeleted = job.isDeleted,
+            quizId = job.quiz?.quizId
         )
     }
 

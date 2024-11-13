@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.entities
 
+import com.jobsearch.jobservice.entities.quizzes.Quiz
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
@@ -38,6 +39,10 @@ data class Job(
 
     @Column(name = "salary")
     var salary: Int? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_id")
+    var quiz: Quiz? = null,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),

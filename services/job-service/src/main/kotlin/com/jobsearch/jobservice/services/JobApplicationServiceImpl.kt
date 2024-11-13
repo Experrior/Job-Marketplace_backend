@@ -59,7 +59,7 @@ class JobApplicationServiceImpl(
     }
 
     private fun getJob(jobId: UUID): Job {
-        return jobService.getJobById(jobId)
+        return jobService.getJobEntityById(jobId)
     }
 
     private fun getApplication(applicationId: UUID): Application {
