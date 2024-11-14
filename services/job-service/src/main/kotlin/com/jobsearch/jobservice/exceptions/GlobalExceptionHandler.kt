@@ -40,6 +40,15 @@ class GlobalExceptionHandler {
             .build()
     }
 
+    @GraphQlExceptionHandler(IllegalAccessException::class)
+    fun handleIllegalAccessException(
+        ex: IllegalAccessException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+
     @ExceptionHandler(JobNotFoundException::class)
     fun handleJobNotFoundExceptionRest(
         ex: JobNotFoundException

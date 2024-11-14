@@ -21,6 +21,14 @@ type Application {
     resumeUrl: String!
 }
 
+type QuizResult {
+    quizResultId: ID!
+    quizId: ID!
+    userId: ID!
+    score: Int!
+    createdAt: String!
+}
+
 type Query {
     jobById(jobId: ID!): Job
     jobsByRecruiter: [Job]
@@ -40,6 +48,7 @@ type Mutation {
     deleteJob(jobId: ID!): DeleteJobResponse!
     updateJob(jobId: ID!, jobRequest: JobInput!): Job
     restoreJob(jobId: ID!): Job
+    submitQuizResult(quizResultRequest: QuizResultInput!): [QuizResult]
 }
 
 input JobInput {
@@ -63,6 +72,17 @@ input JobFilterRequest {
     maxSalary: Int
 }
 
+input SkillInput {
+    name: String!
+    level: Int!
+}
+
+input QuizResultInput {
+    quizId: ID!
+    score: Int!
+    timeTaken: Int
+}
+
 type JobPage {
     content: [Job]
     totalPages: Int
@@ -83,9 +103,4 @@ type QuizResponse {
     quizId: ID!
     quizName: String!
     s3QuizUrl: String!
-}
-
-input SkillInput {
-    name: String!
-    level: Int!
 }
