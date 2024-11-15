@@ -8,7 +8,6 @@ import com.jobsearch.userservice.exceptions.InvalidCredentialsException
 import com.jobsearch.userservice.exceptions.UserNotVerifiedException
 import com.jobsearch.userservice.requests.LoginRequest
 import com.jobsearch.userservice.responses.TokenResponse
-import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -22,8 +21,6 @@ class LoginServiceImpl(
     private val authenticationManager: AuthenticationManager,
     private val jwtTokenProvider: JwtTokenProvider
 ): LoginService {
-    private val logger = LoggerFactory.getLogger(LoginServiceImpl::class.java)
-
     override fun login(loginRequest: LoginRequest): TokenResponse {
         return try {
             val authentication = authenticateUser(loginRequest)
@@ -37,7 +34,6 @@ class LoginServiceImpl(
         } catch (e: BadCredentialsException) {
             throw InvalidCredentialsException("Invalid email or password.")
         } catch (e: Exception) {
-            logger.debug("Unexpected exception during login: ${e.message}", e)
             throw InvalidCredentialsException(e.message ?: "Invalid email or password")
         }
     }

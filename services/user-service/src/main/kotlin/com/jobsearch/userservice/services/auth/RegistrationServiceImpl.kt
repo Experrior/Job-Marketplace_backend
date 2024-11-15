@@ -11,7 +11,6 @@ import com.jobsearch.userservice.requests.CompanyRegistrationRequest
 import com.jobsearch.userservice.requests.RegistrationRequest
 import com.jobsearch.userservice.services.CompanyService
 import com.jobsearch.userservice.services.UserService
-import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -23,8 +22,6 @@ class RegistrationServiceImpl(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val companyService: CompanyService
 ): RegistrationService {
-    private val logger = LoggerFactory.getLogger(RegistrationServiceImpl::class.java)
-
     override fun registerUser(registrationRequest: RegistrationRequest, userRole: UserRole): UUID? {
         try {
             checkUserAlreadyExists(registrationRequest.email)
@@ -46,7 +43,6 @@ class RegistrationServiceImpl(
         }catch (e: CompanyNotVerifiedException){
             throw e
         }catch (e: Exception) {
-            logger.error("User registration failed: ${e.message}", e)
             throw UserRegistrationException("User registration failed: ${e.message}", 500)
         }
     }
@@ -62,7 +58,6 @@ class RegistrationServiceImpl(
         }catch (e: CompanyAlreadyExistsException) {
             throw e.message?.let { CompanyAlreadyExistsException(it) }!!
         }catch (e: Exception) {
-            logger.error("Company registration failed: ${e.message}", e)
             throw UserRegistrationException("Company registration failed: ${e.message}", 500)
         }
     }

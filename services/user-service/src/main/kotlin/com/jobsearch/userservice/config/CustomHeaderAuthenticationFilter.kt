@@ -2,7 +2,6 @@ package com.jobsearch.userservice.config
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
@@ -11,7 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class CustomHeaderAuthenticationFilter : OncePerRequestFilter() {
-    private val logger1 = LoggerFactory.getLogger(CustomHeaderAuthenticationFilter::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -20,11 +18,9 @@ class CustomHeaderAuthenticationFilter : OncePerRequestFilter() {
     ) {
         val userId = request.getHeader("X-User-Id")
         val roles = request.getHeader("X-User-Roles")?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
-        logger1.info("Roles: $roles")
         if (userId != null) {
             val authentication = UsernamePasswordAuthenticationToken(userId, null, roles)
             SecurityContextHolder.getContext().authentication = authentication
-            logger1.info("Security context populated with user: ${SecurityContextHolder.getContext().authentication.authorities}")
         }
 
         filterChain.doFilter(request, response)

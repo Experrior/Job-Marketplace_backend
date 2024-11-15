@@ -1,9 +1,9 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.User
+import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.UserRepository
-import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -15,8 +15,6 @@ import java.util.*
 class UserServiceImpl(
     private val userRepository: UserRepository,
 ): UserService, UserDetailsService{
-    private val logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
-
     override fun getUserById(userId: UUID): User {
         return userRepository.findById(userId)
             .orElseThrow {UserNotFoundException("User with ID $userId not found")}
