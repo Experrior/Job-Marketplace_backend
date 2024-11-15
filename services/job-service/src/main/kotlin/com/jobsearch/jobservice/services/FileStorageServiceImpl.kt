@@ -50,7 +50,6 @@ class FileStorageServiceImpl(
         val listObjectsResponse: ListObjectsV2Response = s3Client.listObjectsV2(listObjectsRequest)
         return listObjectsResponse.contents().map {
             val fileUrl = getFileUrl(it.key())
-            logger.info("S3QuizPath: ${it.key()}")
             val quiz = quizRepository.findByS3QuizPath(it.key())
             val quizName = quiz.s3QuizPath!!.substringAfterLast('/')
             QuizResponse(quizId = quiz.quizId!!, quizName = quizName, s3QuizUrl = fileUrl)

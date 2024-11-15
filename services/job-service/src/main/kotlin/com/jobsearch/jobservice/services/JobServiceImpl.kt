@@ -8,7 +8,7 @@ import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
-import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -24,16 +24,15 @@ class JobServiceImpl(
     private val quizService: QuizService
 ): JobService {
     private val webClient: WebClient = webClientBuilder.build()
-    private val logger = LoggerFactory.getLogger(JobServiceImpl::class.java)
+
+    @Value("\${user.service.url}")
+    val userServiceUrl: String? = null
+
     override fun createJob(jobRequest: JobRequest): JobResponse {
         val companyId = getRecruiterCompany()
 
-        println("Company ID: $companyId")
         val job = mapRequestToJob(jobRequest, companyId, getRecruiterId())
         val savedJob = jobRepository.save(job)
-        logger.info("Job created: $savedJob")
-        logger.info("Job quiz: ${savedJob.quiz}")
-        logger.info("Job quizId: ${savedJob.quiz?.quizId}")
         return mapJobToResponse(savedJob)
     }
 
@@ -138,9 +137,8 @@ class JobServiceImpl(
         val authentication = SecurityContextHolder.getContext().authentication
         val userId = authentication.name
         val roles = authentication.authorities.joinToString(",") { it.authority }
-        println("Roles: $roles")
         val response = webClient.post()
-            .uri("http://user-service/graphql")
+            .uri("$userServiceUrl/graphql")
             .header("X-User-Id", userId)
             .header("X-User-Roles", roles)
             .bodyValue(mapOf("query" to query))

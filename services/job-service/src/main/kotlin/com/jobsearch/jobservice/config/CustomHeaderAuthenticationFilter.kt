@@ -21,12 +21,11 @@ class CustomHeaderAuthenticationFilter : OncePerRequestFilter() {
     ) {
         val userId = request.getHeader("X-User-Id")
         val roles = request.getHeader("X-User-Roles")?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
-        logger1.info("Roles: $roles")
-        logger1.info("userId: $userId")
+
         if (userId != null) {
             val authentication = UsernamePasswordAuthenticationToken(userId, null, roles)
             SecurityContextHolder.getContext().authentication = authentication
-            logger1.info("Security context populated with user: ${SecurityContextHolder.getContext().authentication.authorities}")
+            logger1.info("Security context populated with user: ${SecurityContextHolder.getContext().authentication.principal}")
         }
 
         filterChain.doFilter(request, response)
