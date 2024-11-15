@@ -1,2 +1,1 @@
-# Job-Marketplace
-Platform for posting / applying for jobs
+# Job-Marketplace_backend
