@@ -29,11 +29,12 @@ class ApplicationController(
     fun applyForJob(
         @AuthenticationPrincipal userId: String,
         @PathVariable jobId: UUID,
-        @RequestParam("resume", required = true) resume: MultipartFile
+        @RequestParam("resume", required = true) resume: MultipartFile,
+        @RequestParam("quizResultId", required = false) quizResultId: UUID?
     ): ResponseEntity<ApplyForJobResponse> {
         return try {
             ResponseEntity(
-                jobApplicationService.applyForJob(jobId, UUID.fromString(userId), resume),
+                jobApplicationService.applyForJob(jobId, UUID.fromString(userId), resume, quizResultId),
                 HttpStatus.CREATED
             )
         } catch (e: IllegalArgumentException) {

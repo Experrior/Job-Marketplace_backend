@@ -49,6 +49,13 @@ class GlobalExceptionHandler {
             .build()
     }
 
+    @ExceptionHandler(QuizResultNotFoundException::class)
+    fun handleQuizResultNotFoundException(
+        ex: QuizResultNotFoundException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
+    }
+
     @ExceptionHandler(JobNotFoundException::class)
     fun handleJobNotFoundExceptionRest(
         ex: JobNotFoundException

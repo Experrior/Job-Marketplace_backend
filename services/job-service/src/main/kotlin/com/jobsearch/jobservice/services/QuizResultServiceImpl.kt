@@ -1,6 +1,7 @@
 package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.QuizResult
+import com.jobsearch.jobservice.exceptions.QuizResultNotFoundException
 import com.jobsearch.jobservice.repositories.QuizResultRepository
 import com.jobsearch.jobservice.requests.QuizResultRequest
 import com.jobsearch.jobservice.responses.QuizResultResponse
@@ -11,12 +12,16 @@ import java.util.*
 class QuizResultServiceImpl(
     private val quizResultRepository: QuizResultRepository,
     private val quizService: QuizService,
-    private val jobService: JobService
 ): QuizResultService {
     override fun saveQuizResult(quizResultRequest: QuizResultRequest, userId: UUID): QuizResultResponse {
         val quizResult = quizResultRepository.save(mapQuizResultRequestToQuizResult(quizResultRequest, userId))
 
         return mapQuizResultToQuizResultResponse(quizResult, userId)
+    }
+
+    override fun getQuizResultEntityById(quizResultId: UUID): QuizResult {
+        return quizResultRepository.findById(quizResultId)
+            .orElseThrow { QuizResultNotFoundException("Quiz result not found by id: $quizResultId") }
     }
 
     private fun mapQuizResultRequestToQuizResult(quizResultRequest: QuizResultRequest, userId: UUID): QuizResult {

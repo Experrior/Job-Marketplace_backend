@@ -15,9 +15,10 @@ import java.util.*
 class JobApplicationServiceImpl(
     private val applicationRepository: ApplicationRepository,
     private val jobService: JobService,
-    private val fileStorageService: FileStorageService
+    private val fileStorageService: FileStorageService,
+    private val quizResultService: QuizResultService
 ): JobApplicationService {
-    override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile): ApplyForJobResponse {
+    override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile, quizResultId: UUID?): ApplyForJobResponse {
         checkResumeIsEmpty(resume)
         checkResumeSize(resume)
         checkResumeType(resume)
@@ -25,7 +26,7 @@ class JobApplicationServiceImpl(
         val job = getJob(jobId)
         checkUserAlreadyApplied(job, userId)
         val s3ResumePath = fileStorageService.storeResume(userId, jobId, resume)
-        val application = createApplication(job, userId, s3ResumePath)
+        val application = createApplication(job, userId, s3ResumePath, quizResultId)
         return convertToResponse(applicationRepository.save(application))
     }
 
@@ -49,12 +50,17 @@ class JobApplicationServiceImpl(
         return SetApplicationStatusResponse(success = true, message = "Application status updated")
     }
 
-    private fun createApplication(job: Job, userId: UUID, s3ResumePath: String): Application {
+    private fun createApplication(job: Job, userId: UUID, s3ResumePath: String, quizResultId: UUID?): Application {
+        val quizResult = quizResultId?.let { quizResultService.getQuizResultEntityById(it) }
+        if (job.quiz != null && quizResult == null)
+            throw QuizResultNotFoundException("Quiz result not found")
+
         return Application(
             userId = userId,
             job = job,
             status = ApplicationStatus.PENDING,
-            s3ResumePath = s3ResumePath
+            s3ResumePath = s3ResumePath,
+            quizResult = quizResult
         )
     }
 

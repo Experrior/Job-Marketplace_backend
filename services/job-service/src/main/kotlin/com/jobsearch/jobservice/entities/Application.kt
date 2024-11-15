@@ -32,6 +32,10 @@ data class Application(
     @Column(name = "status", nullable = false)
     var status: ApplicationStatus,
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_result_id", referencedColumnName = "quiz_result_id", nullable = true)
+    var quizResult: QuizResult? = null,
+
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),
 

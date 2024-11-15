@@ -67,7 +67,7 @@ class JobServiceImpl(
     }
 
     override fun getJobEntityById(jobId: UUID): Job {
-        return jobRepository.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId);
+        return jobRepository.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId)
     }
 
     override fun getJobById(jobId: UUID): JobResponse {
