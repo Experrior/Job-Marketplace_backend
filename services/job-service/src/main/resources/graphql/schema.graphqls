@@ -51,6 +51,7 @@ type Mutation {
     updateJob(jobId: ID!, jobRequest: JobInput!): Job
     restoreJob(jobId: ID!): Job
     submitQuizResult(quizResultRequest: QuizResultInput!): QuizResult
+    deleteQuiz(quizId: ID!): DeleteQuizResponse!
 }
 
 input JobInput {
@@ -105,6 +106,8 @@ type QuizResponse {
     quizId: ID!
     quizName: String!
     s3QuizUrl: String!
+    createdAt: String!
+    isDeleted: Boolean!
 }
 
 type DeleteQuizResponse {

@@ -6,6 +6,7 @@ import com.jobsearch.jobservice.exceptions.FileSizeExceededException
 import com.jobsearch.jobservice.exceptions.InvalidFileTypeException
 import com.jobsearch.jobservice.exceptions.QuizNotFoundException
 import com.jobsearch.jobservice.repositories.QuizRepository
+import com.jobsearch.jobservice.responses.DeleteQuizResponse
 import com.jobsearch.jobservice.responses.QuizResponse
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -42,6 +43,16 @@ class QuizServiceImpl(
         return createQuizResponse(quiz)
     }
 
+    override fun deleteQuiz(recruiterId: UUID, quizId: UUID): DeleteQuizResponse {
+        val quiz = findQuizEntityById(quizId)
+        if (quiz.recruiterId != recruiterId) {
+            return DeleteQuizResponse(false, "Quiz does not belong to the recruiter")
+        }
+        quiz.isDeleted = true
+        quizRepository.save(quiz)
+        return DeleteQuizResponse(true, "Quiz deleted successfully")
+    }
+
     private fun createQuizResponse(savedQuiz: Quiz): QuizResponse {
         val s3QuizUrl = fileStorageService.getFileUrl(savedQuiz.s3QuizPath!!)
         val quizName = savedQuiz.s3QuizPath!!.substringAfterLast('/')
@@ -49,7 +60,9 @@ class QuizServiceImpl(
         return QuizResponse(
             quizId = savedQuiz.quizId!!,
             quizName = quizName,
-            s3QuizUrl = s3QuizUrl
+            s3QuizUrl = s3QuizUrl,
+            createdAt = savedQuiz.createdAt,
+            isDeleted = savedQuiz.isDeleted
         )
     }
 

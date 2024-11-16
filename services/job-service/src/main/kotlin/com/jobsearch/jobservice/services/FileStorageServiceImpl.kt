@@ -52,7 +52,8 @@ class FileStorageServiceImpl(
             val fileUrl = getFileUrl(it.key())
             val quiz = quizRepository.findByS3QuizPath(it.key())
             val quizName = quiz.s3QuizPath!!.substringAfterLast('/')
-            QuizResponse(quizId = quiz.quizId!!, quizName = quizName, s3QuizUrl = fileUrl)
+            QuizResponse(quizId = quiz.quizId!!, quizName = quizName, s3QuizUrl = fileUrl,
+                createdAt = quiz.createdAt, isDeleted = quiz.isDeleted)
         }
     }
 
