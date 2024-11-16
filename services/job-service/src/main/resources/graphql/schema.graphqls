@@ -37,6 +37,7 @@ type Query {
     jobsByRecruiter: [Job]
     jobsByCompany(companyId: ID!): [Job]
     jobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
+    followedJobs: [Job]
 
     userApplications: [Application]
     jobApplications(jobId: ID!): [Application]
@@ -52,6 +53,7 @@ type Mutation {
     deleteJob(jobId: ID!): DeleteJobResponse!
     updateJob(jobId: ID!, jobRequest: JobInput!): Job
     restoreJob(jobId: ID!): Job
+    toggleFollowJob(jobId: ID!): FollowJobResponse
 
     submitQuizResult(quizResultRequest: QuizResultInput!): QuizResult
     deleteQuiz(quizId: ID!): DeleteQuizResponse!
@@ -117,4 +119,10 @@ type QuizResponse {
 type DeleteQuizResponse {
     success: Boolean!
     message: String!
+}
+
+type FollowJobResponse {
+    success: Boolean!
+    message: String
+    isFollowed: Boolean!
 }

@@ -3,6 +3,7 @@ package com.jobsearch.jobservice.controllers
 import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
+import com.jobsearch.jobservice.responses.FollowJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
 import com.jobsearch.jobservice.services.JobService
 import org.springframework.data.domain.Page
@@ -82,5 +83,20 @@ class JobController(
     ): Page<JobResponse> {
         val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
         return jobService.getFilteredJobs(filter, pageable)
+    }
+
+    @MutationMapping
+    fun toggleFollowJob(
+        @Argument jobId: UUID,
+        @AuthenticationPrincipal userId: UUID
+    ): FollowJobResponse {
+        return jobService.toggleFollowJob(jobId, userId)
+    }
+
+    @QueryMapping
+    fun followedJobs(
+        @AuthenticationPrincipal userId: UUID
+    ): List<JobResponse> {
+        return jobService.getFollowedFilteredJobs(userId)
     }
 }
