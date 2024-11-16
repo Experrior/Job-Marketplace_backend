@@ -26,9 +26,6 @@ data class Application(
     @Transient
     var resumeUrl: String? = null,
 
-    @Column(name = "application_date", nullable = false)
-    var applicationDate: Timestamp = Timestamp(System.currentTimeMillis()),
-
     @Column(name = "status", nullable = false)
     var status: ApplicationStatus,
 
@@ -50,7 +47,6 @@ data class Application(
         userId = UUID.randomUUID(),
         job = Job(),
         s3ResumePath = null,
-        applicationDate = Timestamp(System.currentTimeMillis()),
         status = ApplicationStatus.PENDING
     )
 

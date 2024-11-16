@@ -102,7 +102,7 @@ class JobApplicationServiceImpl(
             applicationId = application.applicationId!!,
             userId = application.userId,
             job = application.job,
-            applicationDate = application.applicationDate,
+            createdAt = application.createdAt,
             status = application.status
         )
     }

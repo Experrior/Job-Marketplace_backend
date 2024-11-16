@@ -8,6 +8,6 @@ data class ApplyForJobResponse(
     val applicationId: UUID,
     val userId: UUID,
     val job: Job,
-    val applicationDate: Date,
+    val createdAt: Date,
     val status: ApplicationStatus,
 )
