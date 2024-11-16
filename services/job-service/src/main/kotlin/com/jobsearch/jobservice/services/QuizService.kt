@@ -8,7 +8,8 @@ import java.util.*
 
 interface QuizService {
     fun createQuiz(recruiterId: UUID, quizConfig: MultipartFile): QuizResponse
-    fun recruiterQuizzes(recruiterId: UUID): List<QuizResponse>
+    fun getRecruiterQuizzes(recruiterId: UUID): List<QuizResponse>
+    fun getActiveQuizzesByRecruiter(recruiterId: UUID): List<QuizResponse>
     fun findQuizEntityById(quizId: UUID): Quiz
     fun findQuizById(quizId: UUID): QuizResponse
     fun deleteQuizById(recruiterId: UUID, quizId: UUID): DeleteQuizResponse

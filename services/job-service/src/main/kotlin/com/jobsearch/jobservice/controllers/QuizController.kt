@@ -38,7 +38,15 @@ class QuizController(
     fun quizzesByRecruiter(
         @AuthenticationPrincipal recruiterId: UUID
     ): List<QuizResponse> {
-        return quizService.recruiterQuizzes(recruiterId)
+        return quizService.getRecruiterQuizzes(recruiterId)
+    }
+
+    @PreAuthorize("hasRole('RECRUITER')")
+    @QueryMapping
+    fun activeQuizzesByRecruiter(
+        @AuthenticationPrincipal recruiterId: UUID
+    ): List<QuizResponse> {
+        return quizService.getActiveQuizzesByRecruiter(recruiterId)
     }
 
     @QueryMapping

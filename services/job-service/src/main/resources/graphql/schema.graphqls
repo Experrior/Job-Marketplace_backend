@@ -41,6 +41,7 @@ type Query {
     jobApplications(jobId: ID!): [Application]
 
     quizzesByRecruiter: [QuizResponse]
+    activeQuizzesByRecruiter: [QuizResponse]
     quizById(quizId: ID!): QuizResponse
 }
 

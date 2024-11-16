@@ -3,7 +3,6 @@ package com.jobsearch.jobservice.services
 import com.jobsearch.jobservice.exceptions.FailedToStoreFileException
 import com.jobsearch.jobservice.exceptions.FileAlreadyExistsException
 import com.jobsearch.jobservice.repositories.QuizRepository
-import com.jobsearch.jobservice.responses.QuizResponse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -40,7 +39,7 @@ class FileStorageServiceImpl(
         return saveFile(filePath, quizConfig)
     }
 
-    override fun listQuizConfigs(recruiterId: UUID): List<QuizResponse> {
+    override fun listQuizConfigs(recruiterId: UUID): List<String> {
         val prefix = "quizzes/${recruiterId}/"
         val listObjectsRequest = ListObjectsV2Request.builder()
             .bucket(bucketName)
@@ -48,13 +47,7 @@ class FileStorageServiceImpl(
             .build()
 
         val listObjectsResponse: ListObjectsV2Response = s3Client.listObjectsV2(listObjectsRequest)
-        return listObjectsResponse.contents().map {
-            val fileUrl = getFileUrl(it.key())
-            val quiz = quizRepository.findByS3QuizPath(it.key())
-            val quizName = quiz.s3QuizPath!!.substringAfterLast('/')
-            QuizResponse(quizId = quiz.quizId!!, quizName = quizName, s3QuizUrl = fileUrl,
-                createdAt = quiz.createdAt, isDeleted = quiz.isDeleted)
-        }
+        return listObjectsResponse.contents().map { it.key() }
     }
 
     private fun saveFile(filePath: String, file: MultipartFile): String {

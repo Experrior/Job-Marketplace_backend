@@ -28,8 +28,24 @@ class QuizServiceImpl(
         return createQuizResponse(savedQuiz)
     }
 
-    override fun recruiterQuizzes(recruiterId: UUID): List<QuizResponse> {
-        return fileStorageService.listQuizConfigs(recruiterId)
+    override fun getRecruiterQuizzes(recruiterId: UUID): List<QuizResponse> {
+        val quizConfigs = fileStorageService.listQuizConfigs(recruiterId)
+        return quizConfigs.mapNotNull { quizConfig ->
+            val quiz = quizRepository.findByS3QuizPath(quizConfig)
+            quiz?.let { createQuizResponse(it) }
+        }
+    }
+
+    override fun getActiveQuizzesByRecruiter(recruiterId: UUID): List<QuizResponse> {
+        val quizConfigs = fileStorageService.listQuizConfigs(recruiterId)
+        return quizConfigs.mapNotNull { quizConfig ->
+            val quiz = quizRepository.findByS3QuizPath(quizConfig)
+            if (quiz != null && !quiz.isDeleted) {
+                createQuizResponse(quiz)
+            } else {
+                null
+            }
+        }
     }
 
     override fun findQuizEntityById(quizId: UUID): Quiz {
@@ -63,16 +79,16 @@ class QuizServiceImpl(
         return createQuizResponse(savedQuiz)
     }
 
-    private fun createQuizResponse(savedQuiz: Quiz): QuizResponse {
-        val s3QuizUrl = fileStorageService.getFileUrl(savedQuiz.s3QuizPath!!)
-        val quizName = savedQuiz.s3QuizPath!!.substringAfterLast('/')
+    private fun createQuizResponse(quiz: Quiz): QuizResponse {
+        val s3QuizUrl = fileStorageService.getFileUrl(quiz.s3QuizPath!!)
+        val quizName = quiz.s3QuizPath!!.substringAfterLast('/')
 
         return QuizResponse(
-            quizId = savedQuiz.quizId!!,
+            quizId = quiz.quizId!!,
             quizName = quizName,
             s3QuizUrl = s3QuizUrl,
-            createdAt = savedQuiz.createdAt,
-            isDeleted = savedQuiz.isDeleted
+            createdAt = quiz.createdAt,
+            isDeleted = quiz.isDeleted
         )
     }
 

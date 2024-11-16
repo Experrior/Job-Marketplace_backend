@@ -7,6 +7,6 @@ import java.util.*
 
 @Repository
 interface QuizRepository: JpaRepository<Quiz, UUID> {
-    fun findByS3QuizPath(s3QuizPath: String): Quiz
+    fun findByS3QuizPath(s3QuizPath: String): Quiz?
     fun findByQuizId(quizId: UUID): Quiz
 }
