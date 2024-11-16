@@ -1,6 +1,5 @@
 type User{
     userId: ID!
-    keycloakUserId: String!
     email: String!
     firstName: String!
     lastName: String!
@@ -63,6 +62,7 @@ type Query{
     userById(userId: ID!): User
     allUsers(limit: Int, offset: Int): [User]
     recruiterCompany: ID
+    userFullName(userId: ID!): String
 
     ### UserProfile ###
     currentUserProfile: UserProfile

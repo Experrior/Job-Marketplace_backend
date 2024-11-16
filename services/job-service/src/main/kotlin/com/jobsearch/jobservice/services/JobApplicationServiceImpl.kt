@@ -16,7 +16,8 @@ class JobApplicationServiceImpl(
     private val applicationRepository: ApplicationRepository,
     private val jobService: JobService,
     private val fileStorageService: FileStorageService,
-    private val quizResultService: QuizResultService
+    private val quizResultService: QuizResultService,
+    private val userServiceUtils: UserServiceUtils
 ): JobApplicationService {
     override fun applyForJob(jobId: UUID, userId: UUID, resume: MultipartFile, quizResultId: UUID?): ApplyForJobResponse {
         checkResumeIsEmpty(resume)
@@ -33,6 +34,7 @@ class JobApplicationServiceImpl(
     override fun getUserApplications(userId: UUID): List<Application> {
         val applications = applicationRepository.findApplicationsByUserId(userId)
         setResumeUrls(applications)
+        setFullName(applications)
         return applications
     }
 
@@ -40,6 +42,7 @@ class JobApplicationServiceImpl(
         val job = getJob(jobId)
         val applications = applicationRepository.findApplicationsByJob(job)
         setResumeUrls(applications)
+        setFullName(applications)
         return applications
     }
 
@@ -73,6 +76,7 @@ class JobApplicationServiceImpl(
             ?: throw ApplicationNotFoundException(applicationId)
 
         setResumeUrls(listOf(application))
+        setFullName(listOf(application))
         return application
     }
 
@@ -84,6 +88,12 @@ class JobApplicationServiceImpl(
     private fun setResumeUrls(applications: List<Application>) {
         applications.forEach { application ->
             application.resumeUrl = application.s3ResumePath?.let { fileStorageService.getFileUrl(it) }
+        }
+    }
+
+    private fun setFullName(applications: List<Application>) {
+        applications.forEach { application ->
+            application.fullName = application.userId.let { userServiceUtils.getApplicantFullName(it) }
         }
     }
 

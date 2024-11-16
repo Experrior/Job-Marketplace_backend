@@ -28,4 +28,10 @@ class UserController(private val userService: UserService) {
         val user = userService.getUserById(UUID.fromString(recruiterId))
         return user.companyId
     }
+
+    @QueryMapping
+    fun userFullName(@Argument userId: UUID): String {
+        val user = userService.getUserById(userId)
+        return "${user.firstName} ${user.lastName}"
+    }
 }

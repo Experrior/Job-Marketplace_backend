@@ -8,28 +8,22 @@ import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
 import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
 import java.util.*
 
 @Service
 class JobServiceImpl(
     private val jobRepository: JobRepository,
-    webClientBuilder: WebClient.Builder,
-    private val quizService: QuizService
+    private val quizService: QuizService,
+    private val userServiceUtils: UserServiceUtils
 ): JobService {
-    private val webClient: WebClient = webClientBuilder.build()
-
-    @Value("\${user.service.url}")
-    val userServiceUrl: String? = null
 
     override fun createJob(jobRequest: JobRequest): JobResponse {
-        val companyId = getRecruiterCompany()
+        val companyId = userServiceUtils.getRecruiterCompany()
 
         val job = mapRequestToJob(jobRequest, companyId, getRecruiterId())
         val savedJob = jobRepository.save(job)
@@ -59,7 +53,7 @@ class JobServiceImpl(
         if (existingJob.isEmpty) {
             throw JobNotFoundException(jobId)
         }
-        val updatedJob = jobRepository.save(mapRequestToJob(jobRequest, getRecruiterCompany(), getRecruiterId(), jobId = jobId))
+        val updatedJob = jobRepository.save(mapRequestToJob(jobRequest, userServiceUtils.getRecruiterCompany(), getRecruiterId(), jobId = jobId))
         return mapJobToResponse(updatedJob)    }
 
     override fun getJobsByRecruiter(recruiterId: UUID): List<JobResponse> {
@@ -125,29 +119,6 @@ class JobServiceImpl(
             isDeleted = job.isDeleted,
             quizId = job.quiz?.quizId
         )
-    }
-
-    private fun getRecruiterCompany(): UUID {
-        val query = """
-            query {
-                recruiterCompany
-            }
-        """.trimIndent()
-
-        val authentication = SecurityContextHolder.getContext().authentication
-        val userId = authentication.name
-        val roles = authentication.authorities.joinToString(",") { it.authority }
-        val response = webClient.post()
-            .uri("$userServiceUrl/graphql")
-            .header("X-User-Id", userId)
-            .header("X-User-Roles", roles)
-            .bodyValue(mapOf("query" to query))
-            .retrieve()
-            .bodyToMono(Map::class.java)
-            .block()
-
-        val companyId = (response?.get("data") as Map<*, *>)["recruiterCompany"] as String
-        return UUID.fromString(companyId)
     }
 
     private fun getRecruiterId(): UUID{
