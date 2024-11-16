@@ -57,6 +57,17 @@ type Experience {
     updatedAt: String!
 }
 
+type Company {
+    companyId: ID!
+    name: String!
+    description: String!
+    industry: String!
+    logoPath: String!
+    email: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
 type Query{
     ### User ###
     userById(userId: ID!): User
@@ -88,6 +99,9 @@ type Query{
     ### Experience ###
     experienceById(experienceId: ID!): Experience
     allExperiences(profileId: Int!, limit: Int, offset: Int): [Experience]
+
+    ### Company ###
+    companies: [Company]
 }
 
 type Mutation {

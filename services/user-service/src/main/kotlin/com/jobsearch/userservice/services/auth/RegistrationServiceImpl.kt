@@ -65,7 +65,7 @@ class RegistrationServiceImpl(
     private fun createUserEntity(registrationRequest: RegistrationRequest, hashedPassword: String, userRole: UserRole): User {
         var companyId: UUID? = null
         if(registrationRequest.company != null)
-            companyId = companyService.getCompanyIdByName(registrationRequest.company)
+            companyId = companyService.findCompanyIdByName(registrationRequest.company)
 
         return User(
             email = registrationRequest.email,
@@ -110,7 +110,7 @@ class RegistrationServiceImpl(
     }
 
     private fun checkCompanyVerified(companyName: String) {
-        val companyId = companyService.getCompanyIdByName(companyName)
+        val companyId = companyService.findCompanyIdByName(companyName)
         if (!companyService.findCompanyById(companyId).isEmailVerified) {
             throw CompanyNotVerifiedException("Company is not verified")
         }
