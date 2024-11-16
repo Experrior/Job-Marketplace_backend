@@ -54,7 +54,16 @@ class QuizController(
         @AuthenticationPrincipal userId: UUID,
         @Argument quizId: UUID
     ): DeleteQuizResponse {
-        return quizService.deleteQuiz(userId, quizId)
+        return quizService.deleteQuizById(userId, quizId)
+    }
+
+    @PreAuthorize("hasRole('RECRUITER')")
+    @MutationMapping
+    fun restoreQuiz(
+        @AuthenticationPrincipal userId: UUID,
+        @Argument quizId: UUID
+    ): QuizResponse {
+        return quizService.restoreQuizById(userId, quizId)
     }
 
 }

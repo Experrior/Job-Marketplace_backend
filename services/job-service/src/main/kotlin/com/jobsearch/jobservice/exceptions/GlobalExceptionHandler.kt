@@ -36,7 +36,7 @@ class GlobalExceptionHandler {
         ex: QuizNotFoundException
     ): GraphQLError {
         return GraphqlErrorBuilder.newError()
-            .message("Quiz not found by jobId: ${ex.jobId}")
+            .message(ex.message)
             .build()
     }
 

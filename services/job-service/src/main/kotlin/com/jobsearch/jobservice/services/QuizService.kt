@@ -11,5 +11,6 @@ interface QuizService {
     fun recruiterQuizzes(recruiterId: UUID): List<QuizResponse>
     fun findQuizEntityById(quizId: UUID): Quiz
     fun findQuizById(quizId: UUID): QuizResponse
-    fun deleteQuiz(recruiterId: UUID, quizId: UUID): DeleteQuizResponse
+    fun deleteQuizById(recruiterId: UUID, quizId: UUID): DeleteQuizResponse
+    fun restoreQuizById(recruiterId: UUID, quizId: UUID): QuizResponse
 }

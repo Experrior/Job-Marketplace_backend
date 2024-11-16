@@ -34,7 +34,7 @@ class QuizServiceImpl(
 
     override fun findQuizEntityById(quizId: UUID): Quiz {
         return quizRepository.findById(quizId).orElseThrow(
-            { throw QuizNotFoundException(quizId) }
+            { throw QuizNotFoundException("Quiz not found by id: $quizId") }
         )
     }
 
@@ -43,7 +43,7 @@ class QuizServiceImpl(
         return createQuizResponse(quiz)
     }
 
-    override fun deleteQuiz(recruiterId: UUID, quizId: UUID): DeleteQuizResponse {
+    override fun deleteQuizById(recruiterId: UUID, quizId: UUID): DeleteQuizResponse {
         val quiz = findQuizEntityById(quizId)
         if (quiz.recruiterId != recruiterId) {
             return DeleteQuizResponse(false, "Quiz does not belong to the recruiter")
@@ -51,6 +51,16 @@ class QuizServiceImpl(
         quiz.isDeleted = true
         quizRepository.save(quiz)
         return DeleteQuizResponse(true, "Quiz deleted successfully")
+    }
+
+    override fun restoreQuizById(recruiterId: UUID, quizId: UUID): QuizResponse {
+        val quiz = findQuizEntityById(quizId)
+        if (quiz.recruiterId != recruiterId) {
+            throw QuizNotFoundException("Quiz does not belong to the recruiter")
+        }
+        quiz.isDeleted = false
+        val savedQuiz = quizRepository.save(quiz)
+        return createQuizResponse(savedQuiz)
     }
 
     private fun createQuizResponse(savedQuiz: Quiz): QuizResponse {

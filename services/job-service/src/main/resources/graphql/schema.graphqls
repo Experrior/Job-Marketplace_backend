@@ -50,8 +50,10 @@ type Mutation {
     deleteJob(jobId: ID!): DeleteJobResponse!
     updateJob(jobId: ID!, jobRequest: JobInput!): Job
     restoreJob(jobId: ID!): Job
+
     submitQuizResult(quizResultRequest: QuizResultInput!): QuizResult
     deleteQuiz(quizId: ID!): DeleteQuizResponse!
+    restoreQuiz(quizId: ID!): QuizResponse
 }
 
 input JobInput {
