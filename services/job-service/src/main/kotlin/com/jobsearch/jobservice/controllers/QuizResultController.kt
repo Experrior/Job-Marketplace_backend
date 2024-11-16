@@ -17,9 +17,9 @@ class QuizResultController(
     @PreAuthorize("hasRole('APPLICANT')")
     @MutationMapping
     fun submitQuizResult(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Argument quizResultRequest: QuizResultRequest
     ): QuizResultResponse {
-        return quizResultService.saveQuizResult(quizResultRequest, UUID.fromString(userId))
+        return quizResultService.saveQuizResult(quizResultRequest, userId)
     }
 }

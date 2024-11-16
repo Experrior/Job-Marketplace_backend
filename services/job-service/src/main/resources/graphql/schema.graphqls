@@ -19,6 +19,7 @@ type Application {
     applicationDate: String!
     status: String!
     resumeUrl: String!
+    quizResult: QuizResult
 }
 
 type QuizResult {
@@ -104,4 +105,9 @@ type QuizResponse {
     quizId: ID!
     quizName: String!
     s3QuizUrl: String!
+}
+
+type DeleteQuizResponse {
+    success: Boolean!
+    message: String!
 }

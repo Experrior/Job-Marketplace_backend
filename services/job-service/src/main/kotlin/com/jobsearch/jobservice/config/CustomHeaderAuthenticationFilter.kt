@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.*
 
 @Component
 class CustomHeaderAuthenticationFilter : OncePerRequestFilter() {
@@ -23,9 +24,13 @@ class CustomHeaderAuthenticationFilter : OncePerRequestFilter() {
         val roles = request.getHeader("X-User-Roles")?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
 
         if (userId != null) {
-            val authentication = UsernamePasswordAuthenticationToken(userId, null, roles)
-            SecurityContextHolder.getContext().authentication = authentication
-            logger1.info("Security context populated with user: ${SecurityContextHolder.getContext().authentication.principal}")
+            try {
+                val authentication = UsernamePasswordAuthenticationToken(UUID.fromString(userId), null, roles)
+                SecurityContextHolder.getContext().authentication = authentication
+                logger1.info("Security context populated with user: ${SecurityContextHolder.getContext().authentication.principal}")
+            }catch (e: IllegalArgumentException){
+                logger1.error("Invalid UUID format")
+            }
         }
 
         filterChain.doFilter(request, response)

@@ -27,31 +27,23 @@ class ApplicationController(
 ) {
     @PostMapping("/{jobId}/apply", consumes = ["multipart/form-data"])
     fun applyForJob(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @PathVariable jobId: UUID,
         @RequestParam("resume", required = true) resume: MultipartFile,
         @RequestParam("quizResultId", required = false) quizResultId: UUID?
     ): ResponseEntity<ApplyForJobResponse> {
-        return try {
-            ResponseEntity(
-                jobApplicationService.applyForJob(jobId, UUID.fromString(userId), resume, quizResultId),
+        return ResponseEntity(
+                jobApplicationService.applyForJob(jobId, userId, resume, quizResultId),
                 HttpStatus.CREATED
             )
-        } catch (e: IllegalArgumentException) {
-                ResponseEntity.badRequest().body(null)
-        }
     }
 
     @PreAuthorize("hasRole('APPLICANT')")
     @QueryMapping
     fun userApplications(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): List<Application> {
-        return try {
-            jobApplicationService.getUserApplications(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            emptyList()
-        }
+        return jobApplicationService.getUserApplications(userId)
     }
 
     @PreAuthorize("hasRole('RECRUITER')")

@@ -55,13 +55,9 @@ class JobController(
     @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun jobsByRecruiter(
-        @AuthenticationPrincipal recruiterId: String
+        @AuthenticationPrincipal recruiterId: UUID
     ): List<JobResponse> {
-        return try {
-            jobService.getJobsByRecruiter(UUID.fromString(recruiterId))
-        } catch (e: IllegalArgumentException) {
-            emptyList()
-        }
+        return jobService.getJobsByRecruiter(recruiterId)
     }
 
     @QueryMapping

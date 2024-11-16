@@ -6,6 +6,7 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,28 +22,21 @@ class QuizController(
 ) {
     @PostMapping("/createQuiz", consumes = ["multipart/form-data"])
     fun createQuiz(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal recruiterId: UUID,
         @RequestParam("quizConfig", required = true) quizConfig: MultipartFile
     ): ResponseEntity<QuizResponse> {
-        return try {
-            ResponseEntity(
-                quizService.createQuiz(UUID.fromString(userId), quizConfig),
+        return ResponseEntity(
+                quizService.createQuiz(recruiterId, quizConfig),
                 HttpStatus.CREATED
             )
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(null)
-        }
     }
 
+    @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun quizzesByRecruiter(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal recruiterId: UUID
     ): List<QuizResponse> {
-        return try {
-            quizService.recruiterQuizzes(UUID.fromString(userId))
-        } catch (e: IllegalArgumentException) {
-            emptyList()
-        }
+        return quizService.recruiterQuizzes(recruiterId)
     }
 
     @QueryMapping
