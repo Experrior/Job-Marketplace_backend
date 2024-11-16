@@ -19,7 +19,6 @@ import java.util.*
 class FileStorageServiceImpl(
     private val s3Client: S3Client,
     private val s3Presigner: S3Presigner,
-    private val quizRepository: QuizRepository
 ): FileStorageService {
     private val logger = LoggerFactory.getLogger(FileStorageServiceImpl::class.java)
 
