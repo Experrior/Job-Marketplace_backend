@@ -6,6 +6,8 @@ type Job {
     requiredSkills: String!
     requiredExperience: String!
     location: String!
+    employmentType: String!
+    workLocation: String!
     salary: Float
     createdAt: String!
     isDeleted: Boolean!
@@ -65,6 +67,8 @@ input JobInput {
     title: String!
     description: String!
     location: String!
+    employmentType: String!
+    workLocation: String!
     salary: Float
     requiredSkills: [SkillInput!]!
     requiredExperience: String!,

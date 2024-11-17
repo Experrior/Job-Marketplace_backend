@@ -37,6 +37,12 @@ data class Job(
     @Column(name = "location", nullable = false)
     var location: String,
 
+    @Column(name = "employment_type")
+    var employmentType: String,
+
+    @Column(name = "work_location")
+    var workLocation: String,
+
     @Column(name = "salary")
     var salary: Int? = null,
 
@@ -60,7 +66,9 @@ data class Job(
         description = "",
         requiredSkills = emptyList(),
         requiredExperience = "",
-        location = ""
+        location = "",
+        employmentType = "",
+        workLocation = ""
     ){
 
     }

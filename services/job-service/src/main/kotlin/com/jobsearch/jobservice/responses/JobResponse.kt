@@ -14,6 +14,8 @@ data class JobResponse(
     val requiredSkills: List<Skill>,
     val requiredExperience: String,
     val location: String,
+    val employmentType: String,
+    val workLocation: String,
     val salary: Int?,
     val createdAt: Timestamp,
     val updatedAt: Timestamp?,

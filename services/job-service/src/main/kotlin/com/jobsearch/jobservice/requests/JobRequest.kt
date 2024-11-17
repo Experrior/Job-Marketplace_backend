@@ -10,5 +10,7 @@ data class JobRequest(
     val salary: Int?,
     val requiredSkills: List<Skill>,
     val requiredExperience: String,
+    val employmentType: String,
+    val workLocation: String,
     val quizId: UUID?
 )
