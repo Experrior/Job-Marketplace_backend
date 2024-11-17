@@ -48,6 +48,8 @@ type Query {
     quizzesByRecruiter: [QuizResponse]
     activeQuizzesByRecruiter: [QuizResponse]
     quizById(quizId: ID!): QuizResponse
+
+    viewedJobs: [ViewedJobResponse]
 }
 
 type Mutation {
@@ -130,4 +132,9 @@ type FollowJobResponse {
     success: Boolean!
     message: String
     isFollowed: Boolean!
+}
+
+type ViewedJobResponse {
+    jobId: ID!
+    viewCount: Int!
 }

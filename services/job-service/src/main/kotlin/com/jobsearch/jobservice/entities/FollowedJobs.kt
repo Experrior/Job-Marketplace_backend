@@ -6,7 +6,7 @@ import java.time.Instant
 import java.util.*
 
 @Entity(name = "followed_jobs")
-@IdClass(FollowedJobId::class)
+@IdClass(UserJobId::class)
 data class FollowedJobs(
     @Id
     @Column(nullable = false)

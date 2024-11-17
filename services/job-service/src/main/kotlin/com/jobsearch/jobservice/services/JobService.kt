@@ -18,7 +18,7 @@ interface JobService {
     fun getJobEntityById(jobId: UUID): Job
     fun getJobById(jobId: UUID): JobResponse
     fun getJobsByCompany(companyId: UUID): List<JobResponse>
-    fun getJobByIdAndDeleteFalse(jobId: UUID): JobResponse
+    fun getJobByIdAndDeleteFalse(userId: UUID?, jobId: UUID): JobResponse
     fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<JobResponse>
     fun restoreJobById(jobId: UUID): JobResponse
     fun toggleFollowJob(jobId: UUID, userId: UUID): FollowJobResponse

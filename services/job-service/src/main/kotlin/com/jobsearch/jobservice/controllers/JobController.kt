@@ -70,9 +70,10 @@ class JobController(
 
     @QueryMapping
     fun jobById(
+        @AuthenticationPrincipal userId: UUID?,
         @Argument jobId: UUID
     ): JobResponse {
-        return jobService.getJobByIdAndDeleteFalse(jobId)
+        return jobService.getJobByIdAndDeleteFalse(userId, jobId)
     }
 
     @QueryMapping

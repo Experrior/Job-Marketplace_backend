@@ -4,7 +4,7 @@ import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
-import com.jobsearch.jobservice.repositories.FollowedJobsRepository
+import com.jobsearch.jobservice.repositories.FollowedJobRepository
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobFilterRequest
 import com.jobsearch.jobservice.requests.JobRequest
@@ -22,9 +22,10 @@ import java.util.*
 @Service
 class JobServiceImpl(
     private val jobRepository: JobRepository,
-    private val followedJobsRepository: FollowedJobsRepository,
+    private val followedJobRepository: FollowedJobRepository,
     private val quizService: QuizService,
-    private val userServiceUtils: UserServiceUtils
+    private val userServiceUtils: UserServiceUtils,
+    private val viewedJobService: ViewedJobService
 ): JobService {
 
     override fun createJob(jobRequest: JobRequest): JobResponse {
@@ -73,8 +74,11 @@ class JobServiceImpl(
         return mapJobToResponse(getJobEntityById(jobId))
     }
 
-    override fun getJobByIdAndDeleteFalse(jobId: UUID): JobResponse {
+    override fun getJobByIdAndDeleteFalse(userId: UUID?, jobId: UUID): JobResponse {
         val job = jobRepository.findJobByJobIdAndIsDeletedFalse(jobId) ?: throw JobNotFoundException(jobId)
+        if(userId != null){
+            viewedJobService.viewJob(userId, jobId)
+        }
         return mapJobToResponse(job)
     }
 
@@ -93,17 +97,17 @@ class JobServiceImpl(
     override fun toggleFollowJob(jobId: UUID, userId: UUID): FollowJobResponse {
         val job = getJobEntityById(jobId)
 
-        val isFollowed = followedJobsRepository.existsByUserIdAndJobId(userId, jobId)
+        val isFollowed = followedJobRepository.existsByUserIdAndJobId(userId, jobId)
 
         if (isFollowed) {
-            followedJobsRepository.deleteByUserIdAndJobId(userId, jobId)
+            followedJobRepository.deleteByUserIdAndJobId(userId, jobId)
             return FollowJobResponse(
                 success = true,
                 message = "Job successfully unfollowed.",
                 isFollowed = false
             )
         } else {
-            followedJobsRepository.save(FollowedJobs(userId = userId, jobId = jobId, job = job))
+            followedJobRepository.save(FollowedJobs(userId = userId, jobId = jobId, job = job))
             return FollowJobResponse(
                 success = true,
                 message = "Job successfully followed.",
@@ -113,7 +117,7 @@ class JobServiceImpl(
     }
 
     override fun getFollowedFilteredJobs(userId: UUID): List<JobResponse> {
-        return followedJobsRepository.findByUserId(userId).map { mapJobToResponse(it.job!!) }
+        return followedJobRepository.findByUserId(userId).map { mapJobToResponse(it.job!!) }
     }
 
     override fun getJobsByCompany(companyId: UUID): List<JobResponse> {
