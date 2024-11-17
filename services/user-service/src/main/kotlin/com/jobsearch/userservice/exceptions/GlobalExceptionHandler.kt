@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 @ControllerAdvice
 class GlobalExceptionHandler {
+    @ExceptionHandler(FailedToStoreFileException::class)
+    fun handleFailedToStoreFileException(
+        ex: FailedToStoreFileException
+    ): ResponseEntity<String> {
+        return ResponseEntity("Failed to store file", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     @ExceptionHandler(UserRegistrationException::class)
     fun handleUserRegistrationException(
         ex: UserRegistrationException
