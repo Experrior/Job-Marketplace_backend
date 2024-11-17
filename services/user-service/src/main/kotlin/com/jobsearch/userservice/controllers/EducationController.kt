@@ -17,39 +17,39 @@ class EducationController(
     private val educationService: EducationService
 ) {
     @QueryMapping
-    fun currentUserEducation(@AuthenticationPrincipal userId: String): List<Education> {
-        return educationService.getEducationByUserProfile(UUID.fromString(userId))
+    fun currentUserEducation(@AuthenticationPrincipal userId: UUID): List<Education> {
+        return educationService.getEducationByUserProfile(userId)
     }
 
     @QueryMapping
-    fun educationById(@AuthenticationPrincipal userId: String,
+    fun educationById(@AuthenticationPrincipal userId: UUID,
                       @Argument educationId: String): Education {
         return educationService.getEducationById(
-            UUID.fromString(userId),
+            userId,
             getUUIDFromString(educationId))
     }
 
     @MutationMapping
-    fun createEducation(@AuthenticationPrincipal userId: String,
+    fun createEducation(@AuthenticationPrincipal userId: UUID,
                         @Argument @Valid educationRequest: EducationRequest): Education {
-        return educationService.createEducation(UUID.fromString(userId), educationRequest)
+        return educationService.createEducation(userId, educationRequest)
     }
 
     @MutationMapping
-    fun updateEducation(@AuthenticationPrincipal userId: String,
+    fun updateEducation(@AuthenticationPrincipal userId: UUID,
                         @Argument educationId: String,
                         @Argument @Valid educationRequest: EducationRequest): Education {
         return educationService.updateEducation(
-            UUID.fromString(userId),
+            userId,
             getUUIDFromString(educationId),
             educationRequest)
     }
 
     @MutationMapping
-    fun deleteEducationById(@AuthenticationPrincipal userId: String,
+    fun deleteEducationById(@AuthenticationPrincipal userId: UUID,
                             @Argument educationId: String): Boolean {
         return educationService.deleteEducationById(
-            UUID.fromString(userId),
+            userId,
             getUUIDFromString(educationId))
     }
 

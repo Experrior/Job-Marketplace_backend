@@ -17,31 +17,31 @@ class SettingsController(
 ) {
     @QueryMapping
     fun currentUserSettings(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): Settings? {
-        return settingsService.getSettingsByUserId(UUID.fromString(userId))
+        return settingsService.getSettingsByUserId(userId)
     }
 
     @MutationMapping
     fun createUserSettings(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Argument @Valid settingsRequest: SettingsRequest
     ): Settings? {
-        return settingsService.createSettings(UUID.fromString(userId), settingsRequest)
+        return settingsService.createSettings(userId, settingsRequest)
     }
 
     @MutationMapping
     fun updateCurrentUserSettings(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Argument @Valid settingsRequest: SettingsRequest
     ): Settings? {
-        return settingsService.updateSettings(UUID.fromString(userId), settingsRequest)
+        return settingsService.updateSettings(userId, settingsRequest)
     }
 
     @MutationMapping
     fun deleteCurrentUserSettings(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): Boolean {
-        return settingsService.deleteSettingsByUserId(UUID.fromString(userId))
+        return settingsService.deleteSettingsByUserId(userId)
     }
 }

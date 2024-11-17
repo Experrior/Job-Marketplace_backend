@@ -20,9 +20,9 @@ class UserProfileController(private val userProfileService: UserProfileService) 
 
     @QueryMapping
     fun currentUserProfile(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
         ): UserProfile? {
-        return userProfileService.getProfileByUserId(UUID.fromString(userId))
+        return userProfileService.getProfileByUserId(userId)
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -51,8 +51,8 @@ class UserProfileController(private val userProfileService: UserProfileService) 
 
     @MutationMapping
     fun deleteCurrentProfile(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): Boolean {
-        return userProfileService.deleteProfileByUserId(UUID.fromString(userId))
+        return userProfileService.deleteProfileByUserId(userId)
     }
 }

@@ -16,25 +16,25 @@ class SkillController(
     private val skillService: SkillService
 ) {
     @QueryMapping
-    fun userSkills(@AuthenticationPrincipal userId: String): List<Skill> {
-        return skillService.getUserSkills(UUID.fromString(userId))
+    fun userSkills(@AuthenticationPrincipal userId: UUID): List<Skill> {
+        return skillService.getUserSkills(userId)
     }
 
     @MutationMapping
-    fun addSkill(@AuthenticationPrincipal userId: String,
+    fun addSkill(@AuthenticationPrincipal userId: UUID,
                  @Argument @Valid skillRequest: SkillRequest): Skill {
-        return skillService.addSkill(UUID.fromString(userId), skillRequest)
+        return skillService.addSkill(userId, skillRequest)
     }
 
     @MutationMapping
-    fun deleteSkillById(@AuthenticationPrincipal userId: String,
+    fun deleteSkillById(@AuthenticationPrincipal userId: UUID,
                  @Argument skillId: UUID): Boolean {
-        return skillService.deleteSkill(UUID.fromString(userId), skillId)
+        return skillService.deleteSkill(userId, skillId)
     }
 
     @MutationMapping
-    fun deleteAllSkills(@AuthenticationPrincipal userId: String): Boolean {
-        return skillService.deleteAllSkills(UUID.fromString(userId))
+    fun deleteAllSkills(@AuthenticationPrincipal userId: UUID): Boolean {
+        return skillService.deleteAllSkills(userId)
     }
 
     @QueryMapping
