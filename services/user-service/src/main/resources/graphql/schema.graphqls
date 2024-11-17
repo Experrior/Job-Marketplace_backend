@@ -102,6 +102,7 @@ type Query{
 
     ### Company ###
     companies: [Company]
+    companyById(companyId: ID!): Company
 }
 
 type Mutation {

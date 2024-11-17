@@ -149,7 +149,8 @@ class JobServiceImpl(
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,
-            quizId = job.quiz?.quizId
+            quizId = job.quiz?.quizId,
+            companyName = userServiceUtils.getCompanyName(job.companyId)
         )
     }
 

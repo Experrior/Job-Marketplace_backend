@@ -9,6 +9,7 @@ type Job {
     salary: Float
     createdAt: String!
     isDeleted: Boolean!
+    companyName: String
     quizId: ID
 }
 

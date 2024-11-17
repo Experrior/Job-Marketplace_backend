@@ -5,4 +5,5 @@ import java.util.*
 interface UserServiceUtils {
     fun getRecruiterCompany(): UUID
     fun getApplicantFullName(userId: UUID): String
+    fun getCompanyName(companyId: UUID): String
 }
