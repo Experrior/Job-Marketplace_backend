@@ -50,6 +50,15 @@ class FileStorageServiceImpl(
         return presignedURL.url().toString()
     }
 
+    override fun deleteFile(s3FilePath: String) {
+        try {
+            s3Client.deleteObject { it.bucket(bucketName).key(s3FilePath) }
+        } catch (e: S3Exception) {
+            logger.error("Failed to delete file", e)
+            throw FailedToStoreFileException("Failed to delete file")
+        }
+    }
+
     private fun saveFile(filePath: String, file: MultipartFile): String {
         try {
             val putObjectRequest = createPutObjectRequest(bucketName!!, filePath, file)
@@ -59,7 +68,7 @@ class FileStorageServiceImpl(
             return filePath
         } catch (e: S3Exception) {
             logger.error("Failed to store file", e)
-            throw FailedToStoreFileException()
+            throw FailedToStoreFileException("Failed to store file")
         }
     }
 

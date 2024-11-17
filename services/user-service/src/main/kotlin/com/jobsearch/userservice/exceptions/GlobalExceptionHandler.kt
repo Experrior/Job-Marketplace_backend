@@ -21,7 +21,7 @@ class GlobalExceptionHandler {
     fun handleFailedToStoreFileException(
         ex: FailedToStoreFileException
     ): ResponseEntity<String> {
-        return ResponseEntity("Failed to store file", HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity(ex.message, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @ExceptionHandler(UserRegistrationException::class)
@@ -120,6 +120,19 @@ class GlobalExceptionHandler {
         val errors = getErrors(ex)
 
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+    }
+    @ExceptionHandler(FileSizeExceededException::class)
+    fun handleFileSizeExceededException(
+        ex: FileSizeExceededException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.PAYLOAD_TOO_LARGE)
+    }
+
+    @ExceptionHandler(InvalidFileTypeException::class)
+    fun handleInvalidFileTypeException(
+        ex: InvalidFileTypeException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
 
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)

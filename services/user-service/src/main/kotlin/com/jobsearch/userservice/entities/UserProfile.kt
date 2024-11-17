@@ -6,25 +6,37 @@ import java.time.Instant
 import java.util.*
 
 @Entity(name = "user_profiles")
-class UserProfile (
+data class UserProfile (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "profile_id", updatable = false, nullable = false)
     var profileId: UUID? = null,
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     var user: User = User(),
-    @Column(nullable = false)
-    var resumePath: String = "",
-    @Column(nullable = false)
-    var profilePicturePath: String = "",
+
+    @Column(name = "s3_resume_path", nullable = false)
+    var s3ResumePath: String? = null,
+
+    @Transient
+    var resumeUrl: String? = null,
+
+    @Column(name = "s3_picture_path", nullable = false)
+    var s3ProfilePicturePath: String? = "",
+
+    @Transient
+    var profilePictureUrl: String? = null,
+
+    @Column(name = "created_at", nullable = false)
+    var createdAt: Timestamp = Timestamp.from(Instant.now()),
+
     @Column(nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
-    ) {
+) {
     @PrePersist
     fun onCreate() {
-        val currentTimestamp = Timestamp.from(Instant.now())
-        updatedAt = currentTimestamp
+        createdAt = Timestamp.from(Instant.now())
     }
 
     @PreUpdate

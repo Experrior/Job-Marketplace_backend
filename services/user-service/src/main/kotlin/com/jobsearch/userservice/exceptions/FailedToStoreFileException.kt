@@ -1,4 +1,4 @@
 package com.jobsearch.userservice.exceptions
 
-class FailedToStoreFileException: RuntimeException() {
+class FailedToStoreFileException(message: String): RuntimeException(message) {
 }

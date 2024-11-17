@@ -58,7 +58,7 @@ class FileStorageServiceImpl(
             return filePath
         } catch (e: S3Exception) {
             logger.error("Failed to store file", e)
-            throw FailedToStoreFileException()
+            throw FailedToStoreFileException("Failed to store file")
         }
     }
 
