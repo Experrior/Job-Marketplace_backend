@@ -21,7 +21,7 @@ data class QuizResult(
     var applicantId: UUID,
 
     @Column(name = "score", nullable = false)
-    var score: Int,
+    var score: Double,
 
     @Column(name = "time_taken", nullable = true)
     var timeTaken: Int? = null,
@@ -32,7 +32,7 @@ data class QuizResult(
     constructor() : this(
         quiz = Quiz(),
         applicantId = UUID.randomUUID(),
-        score = 0,
+        score = 0.0,
     )
 
     @PrePersist

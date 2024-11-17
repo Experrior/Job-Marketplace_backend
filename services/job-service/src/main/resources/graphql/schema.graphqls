@@ -30,7 +30,7 @@ type QuizResult {
     quizResultId: ID!
     quizId: ID!
     applicantId: ID!
-    score: Int!
+    score: Float!
     timeTaken: Int
     createdAt: String!
 }
@@ -95,7 +95,7 @@ input SkillInput {
 
 input QuizResultInput {
     quizId: ID!
-    score: Int!
+    score: Float!
     timeTaken: Int
 }
 

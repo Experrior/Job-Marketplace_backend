@@ -6,6 +6,6 @@ data class QuizResultResponse (
     val quizResultId: UUID,
     val quizId: UUID,
     val applicantId: UUID,
-    val score: Int,
+    val score: Double,
     val timeTaken: Int?
 )

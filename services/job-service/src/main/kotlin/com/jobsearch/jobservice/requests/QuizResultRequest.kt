@@ -4,6 +4,6 @@ import java.util.*
 
 data class QuizResultRequest (
     val quizId: UUID,
-    val score: Int,
+    val score: Double,
     val timeTaken: Int? = null
 )
