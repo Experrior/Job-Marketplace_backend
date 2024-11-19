@@ -16,6 +16,14 @@ class UserProfileServiceImpl(
     private val userService: UserService,
     private val fileStorageService: FileStorageService
 ) : UserProfileService{
+
+    companion object {
+        private val VALID_RESUME_TYPES = listOf("application/pdf")
+        private val VALID_PICTURE_TYPES = listOf("image/jpeg", "image/png")
+        private const val MAX_RESUME_SIZE = 2 * 1024 * 1024
+        private const val MAX_PICTURE_SIZE = 2 * 1024 * 1024
+    }
+
     override fun getProfileByUserId(userId: UUID): UserProfile {
         val user = userService.getUserById(userId)
         return userProfileRepository.findByUser(user)
@@ -23,7 +31,7 @@ class UserProfileServiceImpl(
     }
 
     override fun getAllProfiles(limit: Int, offset: Int): List<UserProfile> {
-        return userProfileRepository.findAll();
+        return userProfileRepository.findAll()
     }
 
     override fun createDefaultProfile(userId: UUID): UserProfile {
@@ -45,11 +53,15 @@ class UserProfileServiceImpl(
         val profile = getProfileByUserId(userId)
 
         resume?.let {
+            checkFileType(it, VALID_RESUME_TYPES)
+            checkFileSize(it, MAX_RESUME_SIZE)
             profile.s3ResumePath?.let { it1 -> fileStorageService.deleteFile(it1) }
             profile.s3ResumePath = fileStorageService.storeResume(userId, it)
         }
 
         profilePicture?.let {
+            checkFileType(it, VALID_PICTURE_TYPES)
+            checkFileSize(it, MAX_PICTURE_SIZE)
             profile.s3ProfilePicturePath?.let { it1 -> fileStorageService.deleteFile(it1) }
             profile.s3ProfilePicturePath = fileStorageService.storeProfilePicture(userId, it)
         }
@@ -80,7 +92,7 @@ class UserProfileServiceImpl(
         }
     }
 
-    private fun checkFileSize(file: MultipartFile, maxSize: Long) {
+    private fun checkFileSize(file: MultipartFile, maxSize: Int) {
         if (file.size > maxSize) {
             throw FileSizeExceededException("File size exceeds the maximum limit of $maxSize bytes")
         }
