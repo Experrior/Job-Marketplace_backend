@@ -33,15 +33,6 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         return userProfileService.getAllProfiles(limit ?: 10, offset ?: 0)
     }
 
-    @PostMapping("/createUserProfile", consumes = ["multipart/form-data"])
-    fun createUserProfile(
-        @AuthenticationPrincipal userId: UUID,
-        @RequestParam("resume", required = false) resume: MultipartFile,
-        @RequestParam("profilePicture", required = false) profilePicture: MultipartFile
-    ): ResponseEntity<UserProfile>{
-        return ResponseEntity(userProfileService.createProfile(userId, resume, profilePicture), HttpStatus.CREATED)
-    }
-
     @PostMapping
     fun updateCurrentUserProfile(
         @AuthenticationPrincipal userId: UUID,

@@ -7,7 +7,7 @@ import java.util.*
 interface UserProfileService {
     fun getProfileByUserId(userId: UUID): UserProfile
     fun getAllProfiles(limit: Int = 10, offset: Int = 0): List<UserProfile>
-    fun createProfile(userId: UUID, resume: MultipartFile, profilePicture: MultipartFile): UserProfile
+    fun createDefaultProfile(userId: UUID): UserProfile
     fun updateUserProfile(userId: UUID, resume: MultipartFile?, profilePicture: MultipartFile?): UserProfile
     fun getProfileById(profileId: UUID): UserProfile
     fun deleteProfileByUserId(userId: UUID): Boolean

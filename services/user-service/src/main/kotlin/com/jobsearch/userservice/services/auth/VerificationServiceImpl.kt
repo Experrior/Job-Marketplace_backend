@@ -7,6 +7,7 @@ import com.jobsearch.userservice.exceptions.CompanyNotFoundException
 import com.jobsearch.userservice.exceptions.InvalidTokenException
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.services.CompanyService
+import com.jobsearch.userservice.services.UserProfileService
 import com.jobsearch.userservice.services.UserService
 import com.jobsearch.userservice.services.auth.tokens.VerificationTokenService
 import org.jobsearch.notificationservice.requests.EmailRequest
@@ -20,7 +21,8 @@ class VerificationServiceImpl(
     private val messageProducer: RabbitMQMessageProducer,
     private val verificationTokenService: VerificationTokenService,
     private val userService: UserService,
-    private val companyService: CompanyService
+    private val companyService: CompanyService,
+    private val userProfileService: UserProfileService
 ): VerificationService {
 
     override fun sendVerificationEmail(user: User) {
@@ -93,6 +95,7 @@ class VerificationServiceImpl(
         user.isEmailVerified = true
         userService.save(user)
         verificationTokenService.deleteVerificationToken(verificationTokenService.getVerificationToken(token))
+        userProfileService.createDefaultProfile(user.userId!!)
     }
 
     override fun verifyCompanyByToken(token: String): Company {

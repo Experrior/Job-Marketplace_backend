@@ -1,7 +1,10 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.UserProfile
-import com.jobsearch.userservice.exceptions.*
+import com.jobsearch.userservice.exceptions.FileSizeExceededException
+import com.jobsearch.userservice.exceptions.InvalidFileTypeException
+import com.jobsearch.userservice.exceptions.ProfileNotFoundException
+import com.jobsearch.userservice.exceptions.UserNotEligibleForProfileException
 import com.jobsearch.userservice.repositories.UserProfileRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -23,29 +26,16 @@ class UserProfileServiceImpl(
         return userProfileRepository.findAll();
     }
 
-    override fun createProfile(userId: UUID, resume: MultipartFile, profilePicture: MultipartFile): UserProfile {
+    override fun createDefaultProfile(userId: UUID): UserProfile {
         val user = userService.getUserById(userId)
 
         if(!userService.isUserEligibleForProfile(user))
             throw UserNotEligibleForProfileException(userId)
 
-        if(userProfileRepository.existsByUser(user))
-            throw ProfileAlreadyExistsException(userId)
-
-
-        checkFileType(resume, listOf("application/pdf"))
-        checkFileType(profilePicture, listOf("image/jpeg", "image/png"))
-        checkFileSize(resume, 2 * 1024 * 1024) // 2 MB
-        checkFileSize(profilePicture, 1 * 1024 * 1024) // 1 MB
-
-
-        val resumePath = fileStorageService.storeResume(userId, resume)
-        val profilePicturePath = fileStorageService.storeProfilePicture(userId, profilePicture)
-
         val userProfile = UserProfile(
             user = user,
-            s3ResumePath = resumePath,
-            s3ProfilePicturePath = profilePicturePath
+            s3ResumePath = null,
+            s3ProfilePicturePath = null
         )
 
         return userProfileRepository.save(userProfile)

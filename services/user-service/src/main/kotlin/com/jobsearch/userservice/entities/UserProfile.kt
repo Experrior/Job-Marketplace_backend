@@ -16,13 +16,13 @@ data class UserProfile (
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     var user: User = User(),
 
-    @Column(name = "s3_resume_path", nullable = false)
+    @Column(name = "s3_resume_path", nullable = true)
     var s3ResumePath: String? = null,
 
     @Transient
     var resumeUrl: String? = null,
 
-    @Column(name = "s3_picture_path", nullable = false)
+    @Column(name = "s3_picture_path", nullable = true)
     var s3ProfilePicturePath: String? = "",
 
     @Transient
