@@ -135,6 +135,13 @@ class GlobalExceptionHandler {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(ProfileAlreadyExistsException::class)
+    fun handleUserProfileAlreadyExistsException(
+        ex: ProfileAlreadyExistsException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.CONFLICT)
+    }
+
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptionsForGraphql(ex: MethodArgumentNotValidException): GraphQLError {
         val errors = getErrors(ex)
@@ -200,14 +207,6 @@ class GlobalExceptionHandler {
     ): GraphQLError {
         return GraphqlErrorBuilder.newError()
             .message(ex.message)
-            .build()
-    }
-    @GraphQlExceptionHandler(ProfileAlreadyExistsException::class)
-    fun handleUserProfileAlreadyExistsException(
-        ex: ProfileAlreadyExistsException
-    ): GraphQLError {
-        return GraphqlErrorBuilder.newError()
-            .message("User profile already exists ${ex.userId}")
             .build()
     }
     @GraphQlExceptionHandler(SettingsNotFoundException::class)

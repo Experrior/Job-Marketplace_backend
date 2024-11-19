@@ -5,6 +5,8 @@ import com.jobsearch.userservice.services.UserProfileService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
@@ -36,8 +38,8 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         @AuthenticationPrincipal userId: UUID,
         @RequestParam("resume", required = false) resume: MultipartFile,
         @RequestParam("profilePicture", required = false) profilePicture: MultipartFile
-    ): UserProfile{
-        return userProfileService.createProfile(userId, resume, profilePicture)
+    ): ResponseEntity<UserProfile>{
+        return ResponseEntity(userProfileService.createProfile(userId, resume, profilePicture), HttpStatus.CREATED)
     }
 
     @PostMapping
@@ -45,8 +47,8 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         @AuthenticationPrincipal userId: UUID,
         @RequestParam("resume", required = false) resume: MultipartFile,
         @RequestParam("profilePicture", required = false) profilePicture: MultipartFile
-    ): UserProfile {
-        return userProfileService.updateUserProfile(userId, resume, profilePicture)
+    ): ResponseEntity<UserProfile> {
+        return ResponseEntity(userProfileService.updateUserProfile(userId, resume, profilePicture), HttpStatus.OK)
     }
 
     @MutationMapping

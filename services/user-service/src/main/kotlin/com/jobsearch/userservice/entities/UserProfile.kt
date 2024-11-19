@@ -31,8 +31,8 @@ data class UserProfile (
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),
 
-    @Column(nullable = false)
-    var updatedAt: Timestamp = Timestamp(0)
+    @Column(nullable = true)
+    var updatedAt: Timestamp? = null
 ) {
     @PrePersist
     fun onCreate() {
