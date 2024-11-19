@@ -106,13 +106,9 @@ type Query{
 }
 
 type Mutation {
-    createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
     updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
     deleteCurrentProfile: Boolean
 
-    createUserSettings(
-        settingsRequest: SettingsRequestInput!
-    ): Settings
     updateCurrentUserSettings(
         settingsRequest: SettingsRequestInput!
     ): Settings

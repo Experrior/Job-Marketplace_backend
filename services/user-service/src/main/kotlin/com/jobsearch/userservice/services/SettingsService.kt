@@ -6,8 +6,7 @@ import java.util.*
 
 interface SettingsService {
     fun getSettingsByUserId(userId: UUID): Settings?
-    fun createSettings(userId: UUID,
-                       settingsRequest: SettingsRequest): Settings
+    fun createDefaultUserSettings(userId: UUID): Settings
     fun updateSettings(userId: UUID, settingsRequest: SettingsRequest): Settings
     fun deleteSettingsByUserId(userId: UUID): Boolean
 }

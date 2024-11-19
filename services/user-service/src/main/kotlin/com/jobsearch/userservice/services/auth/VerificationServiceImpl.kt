@@ -7,6 +7,7 @@ import com.jobsearch.userservice.exceptions.CompanyNotFoundException
 import com.jobsearch.userservice.exceptions.InvalidTokenException
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.services.CompanyService
+import com.jobsearch.userservice.services.SettingsService
 import com.jobsearch.userservice.services.UserProfileService
 import com.jobsearch.userservice.services.UserService
 import com.jobsearch.userservice.services.auth.tokens.VerificationTokenService
@@ -22,7 +23,8 @@ class VerificationServiceImpl(
     private val verificationTokenService: VerificationTokenService,
     private val userService: UserService,
     private val companyService: CompanyService,
-    private val userProfileService: UserProfileService
+    private val userProfileService: UserProfileService,
+    private val settingsService: SettingsService
 ): VerificationService {
 
     override fun sendVerificationEmail(user: User) {
@@ -89,13 +91,13 @@ class VerificationServiceImpl(
         )
     }
 
-
     override fun verifyUserByToken(token: String) {
         val user = getUserFromToken(token)
         user.isEmailVerified = true
         userService.save(user)
         verificationTokenService.deleteVerificationToken(verificationTokenService.getVerificationToken(token))
         userProfileService.createDefaultProfile(user.userId!!)
+        settingsService.createDefaultUserSettings(user.userId!!)
     }
 
     override fun verifyCompanyByToken(token: String): Company {

@@ -1,7 +1,6 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.Settings
-import com.jobsearch.userservice.exceptions.SettingsAlreadyExistException
 import com.jobsearch.userservice.exceptions.SettingsNotFoundException
 import com.jobsearch.userservice.repositories.SettingsRepository
 import com.jobsearch.userservice.requests.SettingsRequest
@@ -18,21 +17,17 @@ class SettingsServiceImpl(
         return settingsRepository.findByUser(user)
     }
 
-    override fun createSettings(
+    override fun createDefaultUserSettings(
         userId: UUID,
-        settingsRequest: SettingsRequest
     ): Settings {
         val user = userService.getUserById(userId)
 
-        if(settingsRepository.existsByUser(user))
-            throw SettingsAlreadyExistException("Settings already exist for user with id: $userId")
-
         val settings = Settings(
             user = user,
-            offersNotification = settingsRequest.offersNotification,
-            newsletterNotification = settingsRequest.newsletterNotification,
-            recruiterMessages = settingsRequest.recruiterMessages,
-            pushNotification = settingsRequest.pushNotification
+            offersNotification = true,
+            newsletterNotification = true,
+            recruiterMessages = true,
+            pushNotification = true
         )
 
         return settingsRepository.save(settings)

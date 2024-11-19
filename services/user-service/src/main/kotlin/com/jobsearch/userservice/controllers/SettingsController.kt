@@ -23,14 +23,6 @@ class SettingsController(
     }
 
     @MutationMapping
-    fun createUserSettings(
-        @AuthenticationPrincipal userId: UUID,
-        @Argument @Valid settingsRequest: SettingsRequest
-    ): Settings? {
-        return settingsService.createSettings(userId, settingsRequest)
-    }
-
-    @MutationMapping
     fun updateCurrentUserSettings(
         @AuthenticationPrincipal userId: UUID,
         @Argument @Valid settingsRequest: SettingsRequest
