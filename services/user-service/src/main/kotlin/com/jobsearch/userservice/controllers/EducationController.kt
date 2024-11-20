@@ -1,8 +1,9 @@
 package com.jobsearch.userservice.controllers
 
-import com.jobsearch.userservice.entities.Education
 import com.jobsearch.userservice.exceptions.InvalidUUIDException
 import com.jobsearch.userservice.requests.EducationRequest
+import com.jobsearch.userservice.responses.DeleteResponse
+import com.jobsearch.userservice.responses.EducationResponse
 import com.jobsearch.userservice.services.EducationService
 import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
@@ -17,13 +18,13 @@ class EducationController(
     private val educationService: EducationService
 ) {
     @QueryMapping
-    fun currentUserEducation(@AuthenticationPrincipal userId: UUID): List<Education> {
+    fun currentUserEducation(@AuthenticationPrincipal userId: UUID): List<EducationResponse> {
         return educationService.getEducationByUserProfile(userId)
     }
 
     @QueryMapping
     fun educationById(@AuthenticationPrincipal userId: UUID,
-                      @Argument educationId: String): Education {
+                      @Argument educationId: String): EducationResponse {
         return educationService.getEducationById(
             userId,
             getUUIDFromString(educationId))
@@ -31,14 +32,14 @@ class EducationController(
 
     @MutationMapping
     fun createEducation(@AuthenticationPrincipal userId: UUID,
-                        @Argument @Valid educationRequest: EducationRequest): Education {
+                        @Argument @Valid educationRequest: EducationRequest): EducationResponse {
         return educationService.createEducation(userId, educationRequest)
     }
 
     @MutationMapping
     fun updateEducation(@AuthenticationPrincipal userId: UUID,
                         @Argument educationId: String,
-                        @Argument @Valid educationRequest: EducationRequest): Education {
+                        @Argument @Valid educationRequest: EducationRequest): EducationResponse {
         return educationService.updateEducation(
             userId,
             getUUIDFromString(educationId),
@@ -47,14 +48,14 @@ class EducationController(
 
     @MutationMapping
     fun deleteEducationById(@AuthenticationPrincipal userId: UUID,
-                            @Argument educationId: String): Boolean {
+                            @Argument educationId: String): DeleteResponse {
         return educationService.deleteEducationById(
             userId,
             getUUIDFromString(educationId))
     }
 
     @MutationMapping
-    fun deleteAllUserEducations(@AuthenticationPrincipal userId: UUID): Boolean {
+    fun deleteAllUserEducations(@AuthenticationPrincipal userId: UUID): DeleteResponse {
         return educationService.deleteAllUserEducations(userId)
     }
 
