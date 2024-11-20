@@ -15,24 +15,19 @@ class SkillServiceImpl(
     private val userProfileService: UserProfileService
 ): SkillService {
     override fun getUserSkills(userId: UUID): List<Skill> {
-        val profile = userProfileService.getProfileByUserId(userId)
+        val profile = userProfileService.getUserProfileEntity(userId)
 
         return skillRepository.findByUserProfile(profile)
     }
 
     override fun addSkill(userId: UUID, skillRequest: SkillRequest): Skill {
-        val profile = userProfileService.getProfileByUserId(userId)
+        val profile = userProfileService.getUserProfileEntity(userId)
 
-        val skillType = SkillType.valueOf(skillRequest.skillName)
         val proficiencyLevel = ProficiencyLevel.valueOf(skillRequest.proficiencyLevel)
-
-        if (skillType !in SkillType.entries) {
-            throw SkillNotFoundException(skillRequest.skillName)
-        }
 
         val skill = Skill(
             userProfile = profile,
-            skillName = skillType,
+            skillName = skillRequest.skillName,
             proficiencyLevel = proficiencyLevel
         )
 
@@ -40,7 +35,7 @@ class SkillServiceImpl(
     }
 
     override fun deleteSkill(userId: UUID, skillId: UUID): Boolean {
-        val profile = userProfileService.getProfileByUserId(userId)
+        val profile = userProfileService.getUserProfileEntity(userId)
         if(skillRepository.findBySkillIdAndUserProfile(skillId, profile) == null) {
             throw SkillNotFoundException(skillId.toString())
         }
@@ -54,7 +49,7 @@ class SkillServiceImpl(
     }
 
     override fun deleteAllSkills(userId: UUID): Boolean {
-        val profile = userProfileService.getProfileByUserId(userId)
+        val profile = userProfileService.getUserProfileEntity(userId)
         val skills = skillRepository.findByUserProfile(profile)
 
         return try {

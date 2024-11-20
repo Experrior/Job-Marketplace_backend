@@ -54,8 +54,8 @@ class EducationController(
     }
 
     @MutationMapping
-    fun deleteAllUserEducations(@AuthenticationPrincipal userId: String): Boolean {
-        return educationService.deleteAllUserEducations(UUID.fromString(userId))
+    fun deleteAllUserEducations(@AuthenticationPrincipal userId: UUID): Boolean {
+        return educationService.deleteAllUserEducations(userId)
     }
 
     private fun getUUIDFromString(educationId: String): UUID {

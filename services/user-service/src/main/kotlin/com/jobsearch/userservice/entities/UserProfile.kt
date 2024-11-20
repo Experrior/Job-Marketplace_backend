@@ -16,11 +16,17 @@ data class UserProfile (
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     var user: User = User(),
 
-    @Column(name = "s3_resume_path", nullable = true)
-    var s3ResumePath: String? = null,
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var resumes: MutableList<Resume> = mutableListOf(),
 
-    @Transient
-    var resumeUrl: String? = null,
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var skills: MutableList<Skill> = mutableListOf(),
+
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var experience: MutableList<Experience> = mutableListOf(),
+
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var education: MutableList<Education> = mutableListOf(),
 
     @Column(name = "s3_picture_path", nullable = true)
     var s3ProfilePicturePath: String? = "",

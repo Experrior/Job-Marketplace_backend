@@ -1,6 +1,9 @@
 package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.entities.UserProfile
+import com.jobsearch.userservice.responses.ProfilePictureResponse
+import com.jobsearch.userservice.responses.ResumeResponse
+import com.jobsearch.userservice.responses.UserProfileResponse
 import com.jobsearch.userservice.services.UserProfileService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
@@ -23,7 +26,7 @@ class UserProfileController(private val userProfileService: UserProfileService) 
     @QueryMapping
     fun currentUserProfile(
         @AuthenticationPrincipal userId: UUID
-        ): UserProfile? {
+        ): UserProfileResponse {
         return userProfileService.getProfileByUserId(userId)
     }
 
@@ -33,13 +36,28 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         return userProfileService.getAllProfiles(limit ?: 10, offset ?: 0)
     }
 
-    @PostMapping
-    fun updateCurrentUserProfile(
+    @PostMapping("/profile-picture")
+    fun updateCurrentUserProfilePicture(
         @AuthenticationPrincipal userId: UUID,
-        @RequestParam("resume", required = false) resume: MultipartFile,
-        @RequestParam("profilePicture", required = false) profilePicture: MultipartFile
-    ): ResponseEntity<UserProfile> {
-        return ResponseEntity(userProfileService.updateUserProfile(userId, resume, profilePicture), HttpStatus.OK)
+        @RequestParam("profilePicture") profilePicture: MultipartFile
+    ): ResponseEntity<ProfilePictureResponse> {
+        return ResponseEntity(userProfileService.updateProfilePicture(userId, profilePicture), HttpStatus.OK)
+    }
+
+    @PostMapping("/resume")
+    fun addResume(
+        @AuthenticationPrincipal userId: UUID,
+        @RequestParam("resume") resume: MultipartFile
+    ): ResponseEntity<List<ResumeResponse>> {
+        return ResponseEntity(userProfileService.addResume(userId, resume), HttpStatus.OK)
+    }
+
+    @PostMapping("/resume/remove")
+    fun removeResume(
+        @AuthenticationPrincipal userId: UUID,
+        @RequestParam("resumeId") resumeId: UUID
+    ): ResponseEntity<List<ResumeResponse>> {
+        return ResponseEntity(userProfileService.deleteResume(userId, resumeId), HttpStatus.OK)
     }
 
     @MutationMapping

@@ -13,7 +13,7 @@ class Experience(
     var experienceId: UUID? = null,
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
-    var userProfileId: UserProfile = UserProfile(),
+    var userProfile: UserProfile = UserProfile(),
     @Column(nullable = false)
     var companyName: String = "",
     @Column(nullable = false)

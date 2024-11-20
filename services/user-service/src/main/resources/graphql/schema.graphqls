@@ -13,9 +13,12 @@ type User{
 
 type UserProfile{
     profileId: ID!
-    user: User
-    resumePath: String
-    profilePicturePath: String
+    user: User!
+    resumes: [Resume]!
+    skills: [Skill]!
+    experiences: [Experience]!
+    educations: [Education]!
+    profilePictureUrl: String
     updatedAt: String
 }
 
@@ -68,6 +71,14 @@ type Company {
     updatedAt: String!
 }
 
+type Resume {
+    resumeId: ID!
+    userProfile: UserProfile!
+    resumeUrl: String
+    resumeName: String!
+    createdAt: String!
+}
+
 type Query{
     ### User ###
     userById(userId: ID!): User
@@ -106,7 +117,6 @@ type Query{
 }
 
 type Mutation {
-    updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
     deleteCurrentProfile: Boolean
 
     updateCurrentUserSettings(

@@ -12,7 +12,6 @@ import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
 
 
 @ControllerAdvice
@@ -115,7 +114,6 @@ class GlobalExceptionHandler {
         )
     }
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String?>> {
         val errors = getErrors(ex)
 
@@ -140,6 +138,13 @@ class GlobalExceptionHandler {
         ex: ProfileAlreadyExistsException
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(ResumeNotFoundException::class)
+    fun handleResumeNotFoundException(
+        ex: ResumeNotFoundException
+    ): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
     }
 
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
