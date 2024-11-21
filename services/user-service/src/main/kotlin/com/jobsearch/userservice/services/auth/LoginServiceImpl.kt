@@ -2,6 +2,8 @@ package com.jobsearch.userservice.services.auth
 
 import com.jobsearch.userservice.config.JwtTokenProvider
 import com.jobsearch.userservice.entities.User
+import com.jobsearch.userservice.entities.UserRole
+import com.jobsearch.userservice.exceptions.EmployeeNotVerifiedException
 import com.jobsearch.userservice.exceptions.InvalidCredentialsException
 import com.jobsearch.userservice.exceptions.UserNotVerifiedException
 import com.jobsearch.userservice.requests.LoginRequest
@@ -44,7 +46,7 @@ class LoginServiceImpl(
 
             val user = authentication.principal as User
             verifyUserEmail(user)
-
+            verifyEmployeeApproved(user)
             return authentication
         } catch (e: BadCredentialsException) {
             throw InvalidCredentialsException("Invalid email or password.")
@@ -70,6 +72,13 @@ class LoginServiceImpl(
     private fun verifyUserEmail(user: User) {
         if (!user.isEmailVerified) {
             throw UserNotVerifiedException()
+        }
+    }
+
+    private fun verifyEmployeeApproved(user: User){
+        if(user.role == UserRole.RECRUITER){
+            if (!user.isEmployeeVerified)
+                throw EmployeeNotVerifiedException("Employee not verified")
         }
     }
 }

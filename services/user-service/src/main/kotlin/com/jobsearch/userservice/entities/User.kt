@@ -8,7 +8,7 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.util.*
 
-@Entity(name = "users")
+@Entity(name = "app_users")
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

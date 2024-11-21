@@ -1,6 +1,5 @@
 type User{
     userId: ID!
-    keycloakUserId: String!
     email: String!
     firstName: String!
     lastName: String!
@@ -58,10 +57,23 @@ type Experience {
     updatedAt: String!
 }
 
+type Company {
+    companyId: ID!
+    name: String!
+    description: String!
+    industry: String!
+    logoPath: String!
+    email: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
 type Query{
     ### User ###
     userById(userId: ID!): User
     allUsers(limit: Int, offset: Int): [User]
+    recruiterCompany: ID
+    userFullName(userId: ID!): String
 
     ### UserProfile ###
     currentUserProfile: UserProfile
@@ -87,6 +99,10 @@ type Query{
     ### Experience ###
     experienceById(experienceId: ID!): Experience
     allExperiences(profileId: Int!, limit: Int, offset: Int): [Experience]
+
+    ### Company ###
+    companies: [Company]
+    companyById(companyId: ID!): Company
 }
 
 type Mutation {

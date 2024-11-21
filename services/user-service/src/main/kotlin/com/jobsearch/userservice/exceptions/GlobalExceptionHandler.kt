@@ -62,6 +62,15 @@ class GlobalExceptionHandler {
             HttpStatus.CONFLICT
         )
     }
+    @ExceptionHandler(EmployeeNotVerifiedException::class)
+    fun handleEmployeeNotVerifiedException(
+        ex: EmployeeNotVerifiedException
+    ): ResponseEntity<String> {
+        return ResponseEntity(
+            ex.message,
+            HttpStatus.UNAUTHORIZED
+        )
+    }
     @ExceptionHandler(CompanyNotFoundException::class)
     fun handleCompanyNotFoundException(
         ex: CompanyNotFoundException

@@ -22,7 +22,7 @@ class CompanyServiceImpl(
         return companyRepository.save(company)
     }
 
-    override fun getCompanyIdByName(name: String): UUID {
+    override fun findCompanyIdByName(name: String): UUID {
         return companyRepository.findCompanyByName(name).companyId
             ?: throw CompanyNotFoundException("Company not found with name: $name")
     }
@@ -30,5 +30,9 @@ class CompanyServiceImpl(
     override fun findCompanyById(companyId: UUID): Company {
         return companyRepository.findCompanyByCompanyId(companyId)
             ?: throw CompanyNotFoundException("Company not found with id: $companyId")
+    }
+
+    override fun getAllCompanies(): List<Company> {
+        return companyRepository.findAll()
     }
 }

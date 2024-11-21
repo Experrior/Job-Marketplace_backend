@@ -1,0 +1,140 @@
+type Job {
+    jobId: ID!
+    companyId: ID!
+    title: String!
+    description: String!
+    requiredSkills: String!
+    requiredExperience: String!
+    location: String!
+    employmentType: String!
+    workLocation: String!
+    salary: Float
+    createdAt: String!
+    isDeleted: Boolean!
+    companyName: String
+    quizId: ID
+}
+
+type Application {
+    applicationId: ID!
+    userId: ID!
+    job: Job!
+    status: String!
+    resumeUrl: String!
+    quizResult: QuizResult
+    fullName: String!
+    createdAt: String!
+}
+
+type QuizResult {
+    quizResultId: ID!
+    quizId: ID!
+    applicantId: ID!
+    score: Float!
+    timeTaken: Int
+    createdAt: String!
+}
+
+type Query {
+    jobById(jobId: ID!): Job
+    jobsByRecruiter: [Job]
+    jobsByCompany(companyId: ID!): [Job]
+    jobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
+    followedJobs: [Job]
+
+    userApplications: [Application]
+    jobApplications(jobId: ID!): [Application]
+
+    quizzesByRecruiter: [QuizResponse]
+    activeQuizzesByRecruiter: [QuizResponse]
+    quizById(quizId: ID!): QuizResponse
+
+    viewedJobs: [ViewedJobResponse]
+}
+
+type Mutation {
+    createJob(jobRequest: JobInput!): Job
+    setApplicationStatus(applicationId: ID!, status: String!): SetApplicationStatusResponse
+    deleteJob(jobId: ID!): DeleteJobResponse!
+    updateJob(jobId: ID!, jobRequest: JobInput!): Job
+    restoreJob(jobId: ID!): Job
+    toggleFollowJob(jobId: ID!): FollowJobResponse
+
+    submitQuizResult(quizResultRequest: QuizResultInput!): QuizResult
+    deleteQuiz(quizId: ID!): DeleteQuizResponse!
+    restoreQuiz(quizId: ID!): QuizResponse
+}
+
+input JobInput {
+    title: String!
+    description: String!
+    location: String!
+    employmentType: String!
+    workLocation: String!
+    salary: Float
+    requiredSkills: [SkillInput!]!
+    requiredExperience: String!,
+    quizId: ID
+}
+
+input JobFilterRequest {
+    title: String
+    location: String
+    requiredExperience: String
+    requiredSkills: [String]
+    companyId: ID
+    hasSalary: Boolean
+    minSalary: Int
+    maxSalary: Int
+}
+
+input SkillInput {
+    name: String!
+    level: Int!
+}
+
+input QuizResultInput {
+    quizId: ID!
+    score: Float!
+    timeTaken: Int
+}
+
+type JobPage {
+    content: [Job]
+    totalPages: Int
+    totalElements: Int
+}
+
+type DeleteJobResponse {
+    success: Boolean!
+    message: String!
+}
+
+type SetApplicationStatusResponse {
+    success: Boolean!
+    message: String!
+}
+
+type QuizResponse {
+    quizId: ID!
+    quizName: String!
+    s3QuizUrl: String!
+    createdAt: String!
+    isDeleted: Boolean!
+}
+
+type DeleteQuizResponse {
+    success: Boolean!
+    message: String!
+}
+
+type FollowJobResponse {
+    success: Boolean!
+    message: String
+    isFollowed: Boolean!
+}
+
+type ViewedJobResponse {
+    jobId: ID!
+    viewCount: Int!
+}

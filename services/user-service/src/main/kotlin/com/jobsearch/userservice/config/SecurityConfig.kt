@@ -36,6 +36,7 @@ class SecurityConfig(
                 authorize("/resetPassword", permitAll)
                 authorize("/updatePassword", permitAll)
                 authorize("/error", permitAll)
+                authorize("/getCompanies", permitAll)
                 authorize("/recruiter", hasRole(UserRole.RECRUITER.name))
                 authorize("/applicant", hasRole(UserRole.APPLICANT.name))
                 authorize(anyRequest, authenticated)
