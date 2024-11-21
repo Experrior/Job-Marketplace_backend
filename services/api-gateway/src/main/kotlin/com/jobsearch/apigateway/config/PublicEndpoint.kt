@@ -10,6 +10,7 @@ enum class PublicEndpoint(val pattern: String) {
     TOKEN("/user-service/token/**"),
     RESET_PASSWORD("/user-service/resetPassword"),
     UPDATE_PASSWORD("/user-service/updatePassword"),
+    GET_COMPANIES("/user-service/getCompanies"),
     ERROR("/user-service/error");
 
 
