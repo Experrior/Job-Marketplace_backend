@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9d6809b7-33ae-4c9b-bee9-487e126add5c" name="Changes" comment="baseline working">
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/BackendApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/BackendApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/controllers/JobController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/controllers/JobController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Chat.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Chat.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Education.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Education.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Experience.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Experience.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Job.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Job.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Message.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Message.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Skill.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/Skill.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/UserProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/UserProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/UserSettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/entities/UserSettings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/repositories/JobRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/repositories/JobRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/services/JobService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/services/JobService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/services/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db/Dockerfile_db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db_mockup/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../db_mockup/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db_mockup/py_init/mockdata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db_mockup/py_init/requirements.txt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Enum" />
+        <option value="GraphQL File" />
+        <option value="com.intellij.jpb.FlywayMigrationScript" />
+        <option value="Class" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/../.." value="feature/k8s" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Experrior&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Experrior/Job-Marketplace_backend.git&quot;,
+    &quot;accountId&quot;: &quot;b33d3ad6-7cbb-469f-af0f-b81c26cec6cf&quot;
+  }
+}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2kh7V3ky4m7IeOAc18T92ZeRQUT" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.DataSourceAspectTest.testDataSourceAspect.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.BackendApplication.executor": "Run",
+    "git-widget-placeholder": "feature/chat__service",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/mateusz/Desktop/ZPI/repos/Job-Marketplace_backend/services/chat",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "swagger",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/old_newer_config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/graphql" />
+      <recent name="$PROJECT_DIR$/src/main/kotlin/edu/pwr/backend/exceptions" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="edu.pwr.backend.replica_repositories" />
+      <recent name="edu.pwr.backend.replica_entities" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="edu.pwr.backend.entities.replicas" />
+      <recent name="edu.pwr.backend.repositories" />
+      <recent name="" />
+      <recent name="edu.pwr.backend.controllers" />
+      <recent name="edu.pwr.backend.services" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.BackendApplication">
+    <configuration name="DataSourceAspectTest.testDataSourceAspect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.pwr.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.pwr.backend" />
+      <option name="MAIN_CLASS_NAME" value="edu.pwr.backend.DataSourceAspectTest" />
+      <option name="METHOD_NAME" value="testDataSourceAspect" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="edu.pwr.backend.BackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.DataSourceAspectTest.testDataSourceAspect" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9d6809b7-33ae-4c9b-bee9-487e126add5c" name="Changes" comment="" />
+      <created>1723723975841</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723723975841</updated>
+      <workItem from="1723723976781" duration="451000" />
+      <workItem from="1723724522967" duration="257000" />
+      <workItem from="1723730611509" duration="310000" />
+      <workItem from="1723730933842" duration="6105000" />
+      <workItem from="1723738669258" duration="1940000" />
+      <workItem from="1723740622746" duration="817000" />
+      <workItem from="1723741447417" duration="1616000" />
+      <workItem from="1723743349584" duration="4226000" />
+      <workItem from="1724248075682" duration="42000" />
+      <workItem from="1724517750505" duration="6814000" />
+      <workItem from="1724576721817" duration="2318000" />
+      <workItem from="1725035861746" duration="18869000" />
+      <workItem from="1725090609033" duration="890000" />
+      <workItem from="1725091777641" duration="19093000" />
+      <workItem from="1725135488828" duration="46000" />
+      <workItem from="1725136268850" duration="29000" />
+      <workItem from="1725136886567" duration="8000" />
+      <workItem from="1725182187034" duration="250000" />
+      <workItem from="1725182456741" duration="14000" />
+      <workItem from="1725183284669" duration="67000" />
+      <workItem from="1725395852425" duration="698000" />
+      <workItem from="1725637726029" duration="152000" />
+      <workItem from="1725637887692" duration="187000" />
+      <workItem from="1725638104053" duration="39000" />
+      <workItem from="1725638152582" duration="12545000" />
+      <workItem from="1725658650623" duration="596000" />
+      <workItem from="1725659265860" duration="413000" />
+      <workItem from="1725659686931" duration="1624000" />
+      <workItem from="1725661793885" duration="1509000" />
+      <workItem from="1725694246597" duration="6527000" />
+      <workItem from="1725703665409" duration="1980000" />
+      <workItem from="1727520080588" duration="15251000" />
+      <workItem from="1727976351313" duration="26719000" />
+      <workItem from="1728292603653" duration="1823000" />
+      <workItem from="1728294847509" duration="3489000" />
+      <workItem from="1728302461493" duration="4820000" />
+      <workItem from="1728330822239" duration="2282000" />
+      <workItem from="1728396825762" duration="3677000" />
+      <workItem from="1728488767726" duration="1286000" />
+      <workItem from="1728739980494" duration="55000" />
+      <workItem from="1728833088099" duration="11439000" />
+      <workItem from="1728851595335" duration="5532000" />
+      <workItem from="1728888442643" duration="14490000" />
+      <workItem from="1729014198461" duration="64000" />
+    </task>
+    <task id="LOCAL-00001" summary="migration shitshow">
+      <option name="closed" value="true" />
+      <created>1725128410113</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1725128410113</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Starting simple graphQl configuration">
+      <option name="closed" value="true" />
+      <created>1725699716644</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1725699716644</updated>
+    </task>
+    <task id="LOCAL-00003" summary="testing quicksave">
+      <option name="closed" value="true" />
+      <created>1728227601180</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728227601180</updated>
+    </task>
+    <task id="LOCAL-00004" summary="baseline working">
+      <option name="closed" value="true" />
+      <created>1728228916800</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728228916800</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="migration shitshow" />
+    <MESSAGE value="Starting simple graphQl configuration" />
+    <MESSAGE value="testing quicksave" />
+    <MESSAGE value="baseline working" />
+    <option name="LAST_COMMIT_MESSAGE" value="baseline working" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

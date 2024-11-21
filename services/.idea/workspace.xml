@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="002b156a-0822-4db4-9507-8268515860e6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/test/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/DemoApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/config/DB2Config.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/config/Db1Config.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/databases/db1/model/Book1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/databases/db1/repository/Book1Repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/databases/db2/model/Book2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/technosudo/demo/databases/db2/repository/Book2Repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/test/java/com/technosudo/demo/DemoApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Chat.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Chat.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Education.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Education.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Experience.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Experience.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Job.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Job.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Message.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Message.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Skill.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/Skill.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/UserProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/UserProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/UserSettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/edu/pwr/backend/entities/UserSettings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/Dockerfile_db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_mockup/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/db_mockup/Dockerfile" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Experrior&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Experrior/Job-Marketplace_backend.git&quot;,
+    &quot;accountId&quot;: &quot;b33d3ad6-7cbb-469f-af0f-b81c26cec6cf&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2nO84fWgkV71PFlA3xMBY08k4xn" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feature/graphql__server",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/mateusz/Desktop/ZPI/repos/Job-Marketplace_backend/services/backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="002b156a-0822-4db4-9507-8268515860e6" name="Changes" comment="" />
+      <created>1728832571832</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1728832571832</updated>
+      <workItem from="1728832573002" duration="156000" />
+      <workItem from="1728832735717" duration="350000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

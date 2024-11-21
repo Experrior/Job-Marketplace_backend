@@ -10,8 +10,8 @@
         "role": "OPTION IN (recruiter,applicant)",
         "phone": "first_name",
         "is_blocked": "bool",
-        "email_verified": "bool CONST True",
-        "employee_verified": "bool",
+        "is_email_verified": "bool CONST True",
+        "is_employee_verified": "bool",
         "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
         "password_hash": "first_name"
       },
