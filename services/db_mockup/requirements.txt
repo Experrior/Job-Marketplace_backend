@@ -2,4 +2,5 @@ requests
 tqdm
 sqlalchemy
 psycopg
-db_mockdata==0.2.01
+numpy
+db_mockdata
