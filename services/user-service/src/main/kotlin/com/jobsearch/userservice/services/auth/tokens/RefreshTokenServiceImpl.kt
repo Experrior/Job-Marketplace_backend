@@ -1,6 +1,7 @@
 package com.jobsearch.userservice.services.auth.tokens
 
 import com.jobsearch.userservice.config.JwtTokenProvider
+import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.exceptions.InvalidTokenException
 import com.jobsearch.userservice.responses.TokenResponse
 import com.jobsearch.userservice.services.UserService
@@ -39,7 +40,9 @@ class RefreshTokenServiceImpl(
             accessToken = newAccessToken,
             expiresIn = jwtTokenProvider.getValidityInMilliseconds(),
             refreshToken = newRefreshToken,
-            refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds()
+            refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds(),
+            userId = (authentication.principal as User).userId,
+            role = (authentication.principal as User).role.toString()
         )
     }
 }
