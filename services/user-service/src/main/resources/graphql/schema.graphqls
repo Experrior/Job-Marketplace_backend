@@ -18,6 +18,7 @@ type UserProfile{
     skills: [Skill]!
     experiences: [Experience]!
     educations: [Education]!
+    links: [Link]!
     profilePictureUrl: String
     updatedAt: String
 }
@@ -79,6 +80,13 @@ type Resume {
     createdAt: String!
 }
 
+type Link {
+    linkId: ID!
+    userProfile: UserProfile!
+    name: String!
+    url: String!
+}
+
 type Query{
     ### User ###
     userById(userId: ID!): User
@@ -137,6 +145,10 @@ type Mutation {
     addSkill(skillRequest: SkillRequestInput!): Skill
     deleteSkillById(skillId: ID!): Boolean
     deleteAllSkills: Boolean
+
+    addLink(linkRequest: LinkRequestInput!): [Link]
+    deleteLinkById(linkId: ID!): [Link]
+    deleteAllLinks: Boolean
 }
 
 input SettingsRequestInput {
@@ -156,4 +168,9 @@ input EducationRequestInput {
 input SkillRequestInput {
     skillName: String!
     proficiencyLevel: String!
+}
+
+input LinkRequestInput {
+    name: String!
+    url: String!
 }

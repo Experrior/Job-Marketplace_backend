@@ -28,6 +28,9 @@ data class UserProfile (
     @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
     var education: MutableList<Education> = mutableListOf(),
 
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var links: MutableList<UserLink> = mutableListOf(),
+
     @Column(name = "s3_picture_path", nullable = true)
     var s3ProfilePicturePath: String? = "",
 

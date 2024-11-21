@@ -254,4 +254,12 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+    @GraphQlExceptionHandler(LinkNotFoundException::class)
+    fun handleLinkNotFoundException(
+        ex: LinkNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
 }

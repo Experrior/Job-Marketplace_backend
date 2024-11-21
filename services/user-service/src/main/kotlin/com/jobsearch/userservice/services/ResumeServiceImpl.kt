@@ -37,7 +37,6 @@ class ResumeServiceImpl(
             resumeName = resume.originalFilename ?: "Unnamed",
             s3ResumePath = resumePath
         )
-        profile.resumes.add(newResume)
 
         resumeRepository.save(newResume)
         return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }

@@ -44,6 +44,14 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
         )
     }
 
+    fun toLinkResponse(link: UserLink): LinkResponse {
+        return LinkResponse(
+            linkId = link.linkId!!,
+            name = link.name,
+            url = link.url
+        )
+    }
+
     fun toUserProfileResponse(userProfile: UserProfile): UserProfileResponse {
         return UserProfileResponse(
             profileId = userProfile.profileId!!,
@@ -53,6 +61,7 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
             skills = userProfile.skills.map { toSkillResponse(it) },
             experiences = userProfile.experience.map { toExperienceResponse(it) },
             educations = userProfile.education.map { toEducationResponse(it) },
+            links = userProfile.links.map { toLinkResponse(it) },
             updatedAt = userProfile.updatedAt
         )
     }
