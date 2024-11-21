@@ -19,7 +19,7 @@ class EducationController(
 ) {
     @QueryMapping
     fun currentUserEducation(@AuthenticationPrincipal userId: UUID): List<EducationResponse> {
-        return educationService.getEducationByUserProfile(userId)
+        return educationService.getEducationsByUserProfile(userId)
     }
 
     @QueryMapping
@@ -31,15 +31,15 @@ class EducationController(
     }
 
     @MutationMapping
-    fun createEducation(@AuthenticationPrincipal userId: UUID,
-                        @Argument @Valid educationRequest: EducationRequest): EducationResponse {
-        return educationService.createEducation(userId, educationRequest)
+    fun addEducation(@AuthenticationPrincipal userId: UUID,
+                        @Argument @Valid educationRequest: EducationRequest): List<EducationResponse> {
+        return educationService.addEducation(userId, educationRequest)
     }
 
     @MutationMapping
     fun updateEducation(@AuthenticationPrincipal userId: UUID,
                         @Argument educationId: String,
-                        @Argument @Valid educationRequest: EducationRequest): EducationResponse {
+                        @Argument @Valid educationRequest: EducationRequest): List<EducationResponse> {
         return educationService.updateEducation(
             userId,
             getUUIDFromString(educationId),
@@ -48,7 +48,7 @@ class EducationController(
 
     @MutationMapping
     fun deleteEducationById(@AuthenticationPrincipal userId: UUID,
-                            @Argument educationId: String): DeleteResponse {
+                            @Argument educationId: String): List<EducationResponse> {
         return educationService.deleteEducationById(
             userId,
             getUUIDFromString(educationId))

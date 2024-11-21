@@ -1,10 +1,8 @@
-package com.jobsearch.userservice.responses
+package com.jobsearch.userservice.requests
 
 import java.time.YearMonth
-import java.util.*
 
-data class ExperienceResponse(
-    val experienceId: UUID,
+data class ExperienceRequest(
     val companyName: String,
     val role: String,
     val startDate: YearMonth,

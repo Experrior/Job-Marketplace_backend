@@ -262,4 +262,12 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+    @GraphQlExceptionHandler(ExperienceNotFoundException::class)
+    fun handleExperienceNotFoundException(
+        ex: ExperienceNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
 }

@@ -6,21 +6,26 @@ import com.jobsearch.userservice.entities.SkillType
 import com.jobsearch.userservice.exceptions.SkillNotFoundException
 import com.jobsearch.userservice.repositories.SkillRepository
 import com.jobsearch.userservice.requests.SkillRequest
+import com.jobsearch.userservice.responses.DeleteResponse
+import com.jobsearch.userservice.responses.SkillResponse
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class SkillServiceImpl(
     private val skillRepository: SkillRepository,
-    private val userProfileService: UserProfileService
+    private val userProfileService: UserProfileService,
+    private val mapper: UserProfileMapper
 ): SkillService {
-    override fun getUserSkills(userId: UUID): List<Skill> {
+    override fun getUserSkills(userId: UUID): List<SkillResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        return skillRepository.findByUserProfile(profile)
+        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
     }
 
-    override fun addSkill(userId: UUID, skillRequest: SkillRequest): Skill {
+    @Transactional
+    override fun addSkill(userId: UUID, skillRequest: SkillRequest): List<SkillResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val proficiencyLevel = ProficiencyLevel.valueOf(skillRequest.proficiencyLevel)
@@ -31,32 +36,37 @@ class SkillServiceImpl(
             proficiencyLevel = proficiencyLevel
         )
 
-        return skillRepository.save(skill)
+        skillRepository.save(skill)
+        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
     }
 
-    override fun deleteSkill(userId: UUID, skillId: UUID): Boolean {
+    @Transactional
+    override fun deleteSkill(userId: UUID, skillId: UUID): List<SkillResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         if(skillRepository.findBySkillIdAndUserProfile(skillId, profile) == null) {
             throw SkillNotFoundException(skillId.toString())
         }
 
-        return try {
-            skillRepository.deleteById(skillId)
-            true
-        } catch (e: Exception) {
-            false
-        }
+        skillRepository.deleteById(skillId)
+        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
     }
 
-    override fun deleteAllSkills(userId: UUID): Boolean {
+    @Transactional
+    override fun deleteAllSkills(userId: UUID): DeleteResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val skills = skillRepository.findByUserProfile(profile)
 
         return try {
             skillRepository.deleteAll(skills)
-            true
+            DeleteResponse(
+                success = true,
+                message = "All skills deleted successfully"
+            )
         } catch (e: Exception) {
-            false
+            DeleteResponse(
+                success = false,
+                message = e.message ?: "An error occurred while deleting skills"
+            )
         }
     }
 

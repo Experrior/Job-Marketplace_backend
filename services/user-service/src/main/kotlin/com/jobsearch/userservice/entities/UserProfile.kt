@@ -23,10 +23,10 @@ data class UserProfile (
     var skills: MutableList<Skill> = mutableListOf(),
 
     @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var experience: MutableList<Experience> = mutableListOf(),
+    var experiences: MutableList<Experience> = mutableListOf(),
 
     @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var education: MutableList<Education> = mutableListOf(),
+    var educations: MutableList<Education> = mutableListOf(),
 
     @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
     var links: MutableList<UserLink> = mutableListOf(),

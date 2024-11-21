@@ -7,6 +7,7 @@ import com.jobsearch.userservice.repositories.LinkRepository
 import com.jobsearch.userservice.requests.LinkRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.LinkResponse
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -16,6 +17,7 @@ class LinkServiceImpl(
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): LinkService {
+    @Transactional
     override fun addLink(userId: UUID, linkRequest: LinkRequest): List<LinkResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
@@ -29,6 +31,7 @@ class LinkServiceImpl(
         return linkRepository.findByUserProfile(profile).map { mapper.toLinkResponse(it) }
     }
 
+    @Transactional
     override fun deleteLink(userId: UUID, linkId: UUID): List<LinkResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val linkToRemove = getLinkById(linkId)
@@ -41,6 +44,7 @@ class LinkServiceImpl(
         return linkRepository.findByUserProfile(profile).map { mapper.toLinkResponse(it) }
     }
 
+    @Transactional
     override fun deleteAllLinks(userId: UUID): DeleteResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val links = linkRepository.findByUserProfile(profile)

@@ -17,14 +17,14 @@ class EducationServiceImpl(
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): EducationService {
-    override fun getEducationByUserProfile(userId: UUID): List<EducationResponse> {
+    override fun getEducationsByUserProfile(userId: UUID): List<EducationResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         return educationRepository.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
     }
 
     @Transactional
-    override fun createEducation(userId: UUID, educationRequest: EducationRequest): EducationResponse {
+    override fun addEducation(userId: UUID, educationRequest: EducationRequest): List<EducationResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val education = Education(
@@ -35,11 +35,12 @@ class EducationServiceImpl(
             endDate = educationRequest.endDate,
         )
 
-        return mapper.toEducationResponse(educationRepository.save(education))
+        educationRepository.save(education)
+        return educationRepository.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
     }
 
     @Transactional
-    override fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): EducationResponse {
+    override fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): List<EducationResponse> {
         val education = getEducationEntity(educationId)
         checkEducationBelongsToUser(userId, education)
 
@@ -48,7 +49,8 @@ class EducationServiceImpl(
         education.startDate = educationRequest.startDate
         education.endDate = educationRequest.endDate
 
-        return mapper.toEducationResponse(educationRepository.save(education))
+        educationRepository.save(education)
+        return educationRepository.findByUserProfile(education.userProfile).map { mapper.toEducationResponse(it) }
     }
 
     override fun getEducationById(userId: UUID, educationId: UUID): EducationResponse {
@@ -60,21 +62,12 @@ class EducationServiceImpl(
     }
 
     @Transactional
-    override fun deleteEducationById(userId: UUID, educationId: UUID): DeleteResponse {
-        try {
-            val education = getEducationEntity(educationId)
-            checkEducationBelongsToUser(userId, education)
-            educationRepository.delete(education)
-            return DeleteResponse(
-                success = true,
-                message = "Education deleted successfully"
-            )
-        }catch (e: EducationNotFoundException){
-            return DeleteResponse(
-                success = false,
-                message = e.message!!
-            )
-        }
+    override fun deleteEducationById(userId: UUID, educationId: UUID): List<EducationResponse> {
+        val education = getEducationEntity(educationId)
+        checkEducationBelongsToUser(userId, education)
+        educationRepository.delete(education)
+
+        return educationRepository.findByUserProfile(education.userProfile).map { mapper.toEducationResponse(it) }
     }
 
     override fun deleteAllUserEducations(userId: UUID): DeleteResponse {

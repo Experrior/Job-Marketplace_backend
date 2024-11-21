@@ -1,7 +1,8 @@
 package com.jobsearch.userservice.controllers
 
-import com.jobsearch.userservice.entities.Skill
 import com.jobsearch.userservice.requests.SkillRequest
+import com.jobsearch.userservice.responses.DeleteResponse
+import com.jobsearch.userservice.responses.SkillResponse
 import com.jobsearch.userservice.services.SkillService
 import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
@@ -16,24 +17,24 @@ class SkillController(
     private val skillService: SkillService
 ) {
     @QueryMapping
-    fun userSkills(@AuthenticationPrincipal userId: UUID): List<Skill> {
+    fun userSkills(@AuthenticationPrincipal userId: UUID): List<SkillResponse> {
         return skillService.getUserSkills(userId)
     }
 
     @MutationMapping
     fun addSkill(@AuthenticationPrincipal userId: UUID,
-                 @Argument @Valid skillRequest: SkillRequest): Skill {
+                 @Argument @Valid skillRequest: SkillRequest): List<SkillResponse> {
         return skillService.addSkill(userId, skillRequest)
     }
 
     @MutationMapping
     fun deleteSkillById(@AuthenticationPrincipal userId: UUID,
-                 @Argument skillId: UUID): Boolean {
+                 @Argument skillId: UUID): List<SkillResponse> {
         return skillService.deleteSkill(userId, skillId)
     }
 
     @MutationMapping
-    fun deleteAllSkills(@AuthenticationPrincipal userId: UUID): Boolean {
+    fun deleteAllSkills(@AuthenticationPrincipal userId: UUID): DeleteResponse {
         return skillService.deleteAllSkills(userId)
     }
 

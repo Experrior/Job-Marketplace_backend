@@ -2,6 +2,7 @@ package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.entities.Settings
 import com.jobsearch.userservice.requests.SettingsRequest
+import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.services.SettingsService
 import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
@@ -33,7 +34,7 @@ class SettingsController(
     @MutationMapping
     fun deleteCurrentUserSettings(
         @AuthenticationPrincipal userId: UUID
-    ): Boolean {
+    ): DeleteResponse {
         return settingsService.deleteSettingsByUserId(userId)
     }
 }

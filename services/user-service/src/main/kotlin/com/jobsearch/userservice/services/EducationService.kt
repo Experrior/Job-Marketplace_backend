@@ -6,10 +6,10 @@ import com.jobsearch.userservice.responses.EducationResponse
 import java.util.*
 
 interface EducationService {
-    fun getEducationByUserProfile(userId: UUID): List<EducationResponse>
-    fun createEducation(userId: UUID, educationRequest: EducationRequest): EducationResponse
-    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): EducationResponse
+    fun getEducationsByUserProfile(userId: UUID): List<EducationResponse>
+    fun addEducation(userId: UUID, educationRequest: EducationRequest): List<EducationResponse>
+    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): List<EducationResponse>
     fun getEducationById(userId: UUID, educationId: UUID): EducationResponse
-    fun deleteEducationById(userId: UUID, educationId: UUID): DeleteResponse
+    fun deleteEducationById(userId: UUID, educationId: UUID): List<EducationResponse>
     fun deleteAllUserEducations(userId: UUID): DeleteResponse
 }
