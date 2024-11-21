@@ -18,14 +18,14 @@ class EducationServiceImpl(
     private val mapper: UserProfileMapper
 ): EducationService {
     override fun getEducationByUserProfile(userId: UUID): List<EducationResponse> {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         return educationRepository.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
     }
 
     @Transactional
     override fun createEducation(userId: UUID, educationRequest: EducationRequest): EducationResponse {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val education = Education(
             userProfile = profile,
@@ -78,7 +78,7 @@ class EducationServiceImpl(
     }
 
     override fun deleteAllUserEducations(userId: UUID): DeleteResponse {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val educations = educationRepository.findByUserProfile(profile)
 
         if (educations.isEmpty()) {

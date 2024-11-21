@@ -27,7 +27,7 @@ class ResumeServiceImpl(
 
     @Transactional
     override fun addResume(userId: UUID, resume: MultipartFile): List<ResumeResponse> {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         checkFileType(resume, VALID_RESUME_TYPES)
         checkFileSize(resume, MAX_RESUME_SIZE)
@@ -45,7 +45,7 @@ class ResumeServiceImpl(
 
     @Transactional
     override fun deleteResume(userId: UUID, resumeId: UUID): List<ResumeResponse> {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val resumeToRemove = resumeRepository.findById(resumeId)
             .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
 
@@ -60,7 +60,7 @@ class ResumeServiceImpl(
     }
 
     override fun userResumes(userId: UUID): List<ResumeResponse> {
-        val profile = userProfileService.getUserProfileEntity(userId)
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
     }

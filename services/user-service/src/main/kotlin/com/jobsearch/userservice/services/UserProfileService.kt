@@ -8,7 +8,7 @@ import java.util.*
 
 interface UserProfileService {
     fun getProfileByUserId(userId: UUID): UserProfileResponse
-    fun getUserProfileEntity(userId: UUID): UserProfile
+    fun getUserProfileEntityByUserId(userId: UUID): UserProfile
     fun getAllProfiles(limit: Int = 10, offset: Int = 0): List<UserProfile>
     fun createDefaultProfile(userId: UUID): UserProfile
 //    fun updateUserProfile(userId: UUID, resume: MultipartFile?, profilePicture: MultipartFile?): UserProfile

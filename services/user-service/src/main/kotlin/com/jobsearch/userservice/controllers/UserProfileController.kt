@@ -2,7 +2,6 @@ package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.entities.UserProfile
 import com.jobsearch.userservice.responses.ProfilePictureResponse
-import com.jobsearch.userservice.responses.ResumeResponse
 import com.jobsearch.userservice.responses.UserProfileResponse
 import com.jobsearch.userservice.services.UserProfileService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -42,22 +41,6 @@ class UserProfileController(private val userProfileService: UserProfileService) 
         @RequestParam("profilePicture") profilePicture: MultipartFile
     ): ResponseEntity<ProfilePictureResponse> {
         return ResponseEntity(userProfileService.updateProfilePicture(userId, profilePicture), HttpStatus.OK)
-    }
-
-    @PostMapping("/resume")
-    fun addResume(
-        @AuthenticationPrincipal userId: UUID,
-        @RequestParam("resume") resume: MultipartFile
-    ): ResponseEntity<List<ResumeResponse>> {
-        return ResponseEntity(userProfileService.addResume(userId, resume), HttpStatus.OK)
-    }
-
-    @PostMapping("/resume/remove")
-    fun removeResume(
-        @AuthenticationPrincipal userId: UUID,
-        @RequestParam("resumeId") resumeId: UUID
-    ): ResponseEntity<List<ResumeResponse>> {
-        return ResponseEntity(userProfileService.deleteResume(userId, resumeId), HttpStatus.OK)
     }
 
     @MutationMapping
