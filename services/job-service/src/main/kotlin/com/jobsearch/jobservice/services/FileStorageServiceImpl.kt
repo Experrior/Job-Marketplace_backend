@@ -2,7 +2,6 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.exceptions.FailedToStoreFileException
 import com.jobsearch.jobservice.exceptions.FileAlreadyExistsException
-import com.jobsearch.jobservice.repositories.QuizRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -35,6 +34,11 @@ class FileStorageServiceImpl(
         val filePath = "quizzes/${recruiterId}/${quizConfig.originalFilename}"
         checkFileExists(filePath)
 
+        return saveFile(filePath, quizConfig)
+    }
+
+    override fun updateQuizConfig(recruiterId: UUID, quizConfig: MultipartFile): String {
+        val filePath = "quizzes/${recruiterId}/${quizConfig.originalFilename}"
         return saveFile(filePath, quizConfig)
     }
 

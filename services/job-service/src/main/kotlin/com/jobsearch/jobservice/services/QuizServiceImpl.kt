@@ -28,6 +28,20 @@ class QuizServiceImpl(
         return createQuizResponse(savedQuiz)
     }
 
+    override fun updateQuiz(recruiterId: UUID, quizId: UUID, quizConfig: MultipartFile): QuizResponse {
+        checkQuizConfigIsEmpty(quizConfig)
+        checkQuizConfigSize(quizConfig)
+        checkQuizConfigType(quizConfig)
+        val newS3QuizPath = fileStorageService.updateQuizConfig(recruiterId, quizConfig)
+        val quiz = quizRepository.findById(quizId).orElseThrow()
+        if (quiz.recruiterId != recruiterId){
+            throw QuizNotFoundException("Quiz does not belong to the recruiter")
+        }
+        quiz.s3QuizPath = newS3QuizPath
+        val savedQuiz = quizRepository.save(quiz)
+        return createQuizResponse(savedQuiz)
+    }
+
     override fun getRecruiterQuizzes(recruiterId: UUID): List<QuizResponse> {
         val quizConfigs = fileStorageService.listQuizConfigs(recruiterId)
         return quizConfigs.mapNotNull { quizConfig ->
