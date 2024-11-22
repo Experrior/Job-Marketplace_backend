@@ -14,8 +14,11 @@ import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.GetMapping
 import java.util.*
 
+@RestController
 @Controller
 class JobController(
     private val jobService: JobService
@@ -84,6 +87,15 @@ class JobController(
     ): Page<JobResponse> {
         val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
         return jobService.getFilteredJobs(filter, pageable)
+    }
+
+    @GetMapping("/getJobs")
+    fun jobsRest(
+        @Argument limit: Int?,
+        @Argument offset: Int?
+    ): Page<JobResponse> {
+        val pageable = PageRequest.of(offset ?: 0, limit ?: 10)
+        return jobService.getFilteredJobs(null, pageable)
     }
 
     @MutationMapping

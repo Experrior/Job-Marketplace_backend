@@ -11,6 +11,8 @@ enum class PublicEndpoint(val pattern: String) {
     RESET_PASSWORD("/user-service/password/reset"),
     UPDATE_PASSWORD("/user-service/password/update"),
     VALIDATE_TOKEN("/user-service/password/validateToken"),
+    GET_COMPANIES("/user-service/getCompanies"),
+    GET_JOBS("/job-service/getJobs"),
     ERROR("/user-service/error");
 
 
