@@ -10,10 +10,13 @@
         "role": "OPTION IN (recruiter,applicant)",
         "phone": "first_name",
         "is_blocked": "bool",
+        "is_enabled": "bool",
         "is_email_verified": "bool CONST True",
         "is_employee_verified": "bool",
         "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
-        "password_hash": "first_name"
+        "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
+        "password_hash": "first_name",
+        "password": "first_name"
       },
       "skills": {
         "skill_id": "PK UUID",
@@ -36,7 +39,7 @@
       "jobs": {
         "job_id": "PK UUID",
         "company_id": "FK_UUID company.company_id",
-        "job_title": "first_name",
+        "job_title": "OPTION IN (Software Engineer,Data Scientist,DevOps Engineer,Cloud Architect,Full Stack Developer,Front-End Developer,Back-End Developer,Mobile Developer,UX Designer,UI Designer,Product Manager,Project Manager,IT Consultant,Cyber Security Analyst,Network Engineer,Database Administrator,Systems Analyst,Technical Writer,QA Tester,IT Support Specialist)",
         "quiz_id": "FK_UUID quizzes.quiz_id",
         "job_description": "long_text",
         "recruiter_id": "FK_UUID app_users.user_id",
@@ -98,13 +101,13 @@
       },
       "company": {
         "company_id": "PK UUID",
-        "name": "first_name",
-        "email": "email UNIQUE",
+        "name": "OPTION IN (Google,Microsoft,Apple,Amazon,Meta,Tesla,Netflix,Nvidia,Intel,IBM,Oracle,Cisco,Adobe,Salesforce,VMware,Qualcomm,AMD,Twitter,Uber,Airbnb,Alphabet,Microsoft Azure,Amazon Web Services,Meta,Facebook,Instagram,WhatsApp,TSMC,Samsung Electronics,Broadcom,Micron Technology,SAP,Oracle Corporation,Adobe Systems,Autodesk,Atlassian,ServiceNow,MongoDB,Cloudflare,Dell Technologies,HP Inc.,Lenovo,Acer,Verizon Communications,AT&T,T-Mobile US,China Mobile,China Telecom,China Unicom,Alibaba Group,JD.com,Shopify,eBay,Toyota Motor Corporation,Volkswagen Group,Hyundai Motor Group,Ford Motor Company,General Motors,Visa,Mastercard,PayPal,Stripe,Sony Interactive Entertainment,Microsoft Gaming,Nintendo,Tencent Games,Riot Games,Palo Alto Networks,Fortinet,Check Point Software Technologies,CrowdStrike)",
+        "email": "email CONST 259905@student.pwr.edu.pl",
         "logo_path": "first_name",
         "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
-        "industry": "first_name",
+        "industry": "OPTION IN (IT, IT)",
         "description": "first_name",
-        "is_email_verified": "boolean",
+        "is_email_verified": "bool CONST True",
         "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
         "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
       },
@@ -190,7 +193,7 @@
       "jobs": 25,
       "experiences": 10,
       "educations": 20,
-      "company": 20,
+      "company": 4,
       "chats": 1,
       "user_profiles": 2,
       "user_settings": 2,
