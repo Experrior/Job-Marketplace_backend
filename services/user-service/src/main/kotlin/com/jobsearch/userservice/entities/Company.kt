@@ -19,8 +19,10 @@ data class Company(
     var industry: String = "",
     @Column(nullable = true)
     var description: String,
-    @Column(nullable = false)
-    var logoPath: String = "",
+    @Column(name = "s3_logo_path", nullable = true)
+    var s3LogoPath: String? = null,
+    @Transient
+    var logoUrl: String? = null,
     @Column(nullable = false)
     var isEmailVerified: Boolean = false,
     @Column(nullable = false)
@@ -34,7 +36,6 @@ data class Company(
         name = "",
         industry = "",
         description = "",
-        logoPath = "",
         isEmailVerified = false,
         createdAt = Timestamp(0),
         updatedAt = Timestamp(0)

@@ -1,16 +1,16 @@
 package com.jobsearch.userservice.controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.requests.CompanyRegistrationRequest
 import com.jobsearch.userservice.requests.RegistrationRequest
 import com.jobsearch.userservice.services.auth.RegistrationService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/register")
@@ -44,11 +44,16 @@ class RegistrationController(
         )
     }
 
-    @PostMapping("/company")
-    fun registerCompany(@RequestBody @Valid registrationRequest: CompanyRegistrationRequest): ResponseEntity<String>{
-        registrationService.registerCompany(registrationRequest)
+    @PostMapping("/company", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun registerCompany(
+        @RequestParam("registrationRequest") registrationRequestString: String,
+        @RequestParam("logo") logo: MultipartFile
+    ): ResponseEntity<String> {
+        val registrationRequest = ObjectMapper().readValue(registrationRequestString, CompanyRegistrationRequest::class.java)
 
-        return ResponseEntity<String>(
+        registrationService.registerCompany(registrationRequest, logo)
+
+        return ResponseEntity(
             "Company has been registered successfully. Verify your email!",
             HttpStatus.CREATED
         )

@@ -10,9 +10,11 @@ import com.jobsearch.userservice.exceptions.UserRegistrationException
 import com.jobsearch.userservice.requests.CompanyRegistrationRequest
 import com.jobsearch.userservice.requests.RegistrationRequest
 import com.jobsearch.userservice.services.CompanyService
+import com.jobsearch.userservice.services.FileStorageService
 import com.jobsearch.userservice.services.UserService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
@@ -20,7 +22,8 @@ class RegistrationServiceImpl(
     private val userService: UserService,
     private val verificationService: VerificationService,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private val companyService: CompanyService
+    private val companyService: CompanyService,
+    private val fileStorageService: FileStorageService
 ): RegistrationService {
     override fun registerUser(registrationRequest: RegistrationRequest, userRole: UserRole): UUID? {
         try {
@@ -47,10 +50,10 @@ class RegistrationServiceImpl(
         }
     }
 
-    override fun registerCompany(registrationRequest: CompanyRegistrationRequest): UUID? {
+    override fun registerCompany(registrationRequest: CompanyRegistrationRequest, logo: MultipartFile): UUID? {
         try {
             checkCompanyAlreadyExists(registrationRequest.email, registrationRequest.companyName)
-            val company = createCompanyEntity(registrationRequest)
+            val company = createCompanyEntity(registrationRequest, logo)
             val savedCompany = companyService.save(company)
 
             verificationService.sendVerificationEmail(savedCompany)
@@ -80,15 +83,22 @@ class RegistrationServiceImpl(
         )
     }
 
-    private fun createCompanyEntity(registrationRequest: CompanyRegistrationRequest): Company {
-        return Company(
+    private fun createCompanyEntity(registrationRequest: CompanyRegistrationRequest, logo: MultipartFile): Company {
+        val company = Company(
             email = registrationRequest.email,
             name = registrationRequest.companyName,
             industry = registrationRequest.industry,
             description = registrationRequest.description ?: "",
-            logoPath = registrationRequest.logo,
             isEmailVerified = false
         )
+
+        val savedCompany = companyService.save(company)
+
+        val logoPath = fileStorageService.storeCompanyLogo(savedCompany.companyId!!, logo)
+
+        savedCompany.s3LogoPath = logoPath
+
+        return companyService.save(savedCompany)
     }
 
     private fun checkUserAlreadyExists(email: String){
