@@ -28,4 +28,8 @@ data class ResetPasswordToken(
             return Date(cal.time.time)
         }
     }
+
+    fun isExpired(): Boolean {
+        return expiryDate.before(Date())
+    }
 }

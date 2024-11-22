@@ -8,6 +8,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,6 +23,16 @@ class ResetPasswordController(
 
         return ResponseEntity(
             ApiResponse(message = "Reset password link has been sent"),
+            HttpStatus.OK
+        )
+    }
+
+    @GetMapping("/validateToken")
+    fun validateResetToken(@RequestParam("token") token: String): ResponseEntity<ApiResponse> {
+        resetPasswordService.validateToken(token)
+
+        return ResponseEntity(
+            ApiResponse(message = "Token is valid"),
             HttpStatus.OK
         )
     }

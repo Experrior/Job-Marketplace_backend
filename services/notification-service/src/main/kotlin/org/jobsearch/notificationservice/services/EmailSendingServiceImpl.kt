@@ -31,7 +31,7 @@ class EmailSendingServiceImpl(
     }
 
     override fun sendResetPasswordEmail(emailRequest: EmailRequest) {
-        val resetPasswordUrl = buildUrl("/user-service/updatePassword", emailRequest.message)
+        val resetPasswordUrl = buildUrl("/reset-password", emailRequest.message)
         val placeholders = mapOf(
             "resetPasswordLink" to resetPasswordUrl
         )
@@ -59,7 +59,6 @@ class EmailSendingServiceImpl(
 
         sendEmail(emailRequest.to, subject, templateName, emptyMap())
     }
-
 
     private fun sendEmail(to: String, subject: String, template: Template, placeholders: Map<String, String> = emptyMap(), employeeDetails: EmployeeDetails? = null) {
         val mail = mailSender.createMimeMessage()
@@ -91,7 +90,6 @@ class EmailSendingServiceImpl(
         }
         return updatedContent
     }
-
 
     @Throws(IOException::class)
     private fun loadTemplate(filename: String): String {
