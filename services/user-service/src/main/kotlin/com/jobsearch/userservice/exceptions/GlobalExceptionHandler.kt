@@ -125,28 +125,24 @@ class GlobalExceptionHandler {
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.PAYLOAD_TOO_LARGE)
     }
-
     @ExceptionHandler(InvalidFileTypeException::class)
     fun handleInvalidFileTypeException(
         ex: InvalidFileTypeException
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
-
     @ExceptionHandler(ProfileAlreadyExistsException::class)
     fun handleUserProfileAlreadyExistsException(
         ex: ProfileAlreadyExistsException
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.CONFLICT)
     }
-
     @ExceptionHandler(ResumeNotFoundException::class)
     fun handleResumeNotFoundException(
         ex: ResumeNotFoundException
     ): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
     }
-
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptionsForGraphql(ex: MethodArgumentNotValidException): GraphQLError {
         val errors = getErrors(ex)
@@ -156,7 +152,6 @@ class GlobalExceptionHandler {
             .extensions(mapOf("errors" to errors))
             .build()
     }
-
     @GraphQlExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolationExceptionForGraphql(ex: ConstraintViolationException): GraphQLError {
         val errors: MutableMap<String, String?> = HashMap()
@@ -188,7 +183,6 @@ class GlobalExceptionHandler {
 
         return errors
     }
-
 
     @GraphQlExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundExceptionForGraphql(

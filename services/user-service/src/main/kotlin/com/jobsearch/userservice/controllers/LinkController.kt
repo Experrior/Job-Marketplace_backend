@@ -4,6 +4,7 @@ import com.jobsearch.userservice.requests.LinkRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.LinkResponse
 import com.jobsearch.userservice.services.LinkService
+import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -17,7 +18,7 @@ class LinkController(
     @MutationMapping
     fun addLink(
         @AuthenticationPrincipal userId: UUID,
-        @Argument linkRequest: LinkRequest
+        @Argument @Valid linkRequest: LinkRequest
         ): List<LinkResponse> {
         return linkService.addLink(userId, linkRequest)
     }

@@ -4,6 +4,7 @@ import com.jobsearch.userservice.requests.ExperienceRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.ExperienceResponse
 import com.jobsearch.userservice.services.ExperienceService
+import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -17,7 +18,7 @@ class ExperienceController(
     @MutationMapping
     fun addExperience(
         @AuthenticationPrincipal userId: UUID,
-        @Argument experienceRequest: ExperienceRequest
+        @Argument @Valid experienceRequest: ExperienceRequest
     ): List<ExperienceResponse> {
         return experienceService.addExperience(userId, experienceRequest)
     }

@@ -1,6 +1,5 @@
 package com.jobsearch.userservice.controllers
 
-import com.jobsearch.userservice.entities.UserProfile
 import com.jobsearch.userservice.responses.ProfilePictureResponse
 import com.jobsearch.userservice.responses.UserProfileResponse
 import com.jobsearch.userservice.services.UserProfileService
@@ -31,7 +30,7 @@ class UserProfileController(private val userProfileService: UserProfileService) 
 
     @PreAuthorize("hasRole('ADMIN')")
     @QueryMapping
-    fun allUserProfiles(@Argument limit: Int? = 10, @Argument offset: Int? = 0): List<UserProfile> {
+    fun allUserProfiles(@Argument limit: Int? = 10, @Argument offset: Int? = 0): List<UserProfileResponse> {
         return userProfileService.getAllProfiles(limit ?: 10, offset ?: 0)
     }
 

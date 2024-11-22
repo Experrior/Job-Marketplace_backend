@@ -24,8 +24,8 @@ class UserProfileServiceImpl(
         return mapper.toUserProfileResponse(userProfile)
     }
 
-    override fun getAllProfiles(limit: Int, offset: Int): List<UserProfile> {
-        return userProfileRepository.findAll()
+    override fun getAllProfiles(limit: Int, offset: Int): List<UserProfileResponse> {
+        return userProfileRepository.findAll().map { mapper.toUserProfileResponse(it) }
     }
 
     override fun createDefaultProfile(userId: UUID): UserProfile {
@@ -54,7 +54,6 @@ class UserProfileServiceImpl(
         return try {
             val profile = getUserProfileEntityByUserId(userId)
             userProfileRepository.delete(profile)
-
             true
         } catch (e: ProfileNotFoundException) {
             false
@@ -63,13 +62,23 @@ class UserProfileServiceImpl(
 
     override fun updateProfilePicture(userId: UUID, profilePicture: MultipartFile): ProfilePictureResponse {
         val profile = getUserProfileEntityByUserId(userId)
+        deleteExistingProfilePicture(profile)
+        val updatedProfile = updateProfilePicturePath(profile, userId, profilePicture)
+        return createProfilePictureResponse(updatedProfile)
+    }
 
+    private fun deleteExistingProfilePicture(profile: UserProfile) {
         profile.s3ProfilePicturePath?.let { fileStorageService.deleteFile(it) }
-        profile.s3ProfilePicturePath = fileStorageService.storeProfilePicture(userId, profilePicture)
+    }
 
-        val savedProfile = userProfileRepository.save(profile)
+    private fun updateProfilePicturePath(profile: UserProfile, userId: UUID, profilePicture: MultipartFile): UserProfile {
+        profile.s3ProfilePicturePath = fileStorageService.storeProfilePicture(userId, profilePicture)
+        return userProfileRepository.save(profile)
+    }
+
+    private fun createProfilePictureResponse(profile: UserProfile): ProfilePictureResponse {
         return ProfilePictureResponse(
-            profilePictureUrl = fileStorageService.getFileUrl(savedProfile.s3ProfilePicturePath!!)
+            profilePictureUrl = fileStorageService.getFileUrl(profile.s3ProfilePicturePath!!)
         )
     }
 
