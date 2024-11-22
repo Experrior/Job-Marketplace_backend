@@ -1,6 +1,8 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.exceptions.FailedToStoreFileException
+import com.jobsearch.userservice.exceptions.FileSizeExceededException
+import com.jobsearch.userservice.exceptions.InvalidFileTypeException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -25,19 +27,35 @@ class FileStorageServiceImpl(
     @Value("\${aws.s3.bucket}")
     val bucketName: String? = null
 
+    companion object {
+        private val VALID_PICTURE_TYPES = listOf("image/jpeg", "image/png")
+        private val VALID_RESUME_TYPES = listOf("application/pdf")
+        private const val MAX_PICTURE_SIZE = 2 * 1024 * 1024
+        private const val MAX_RESUME_SIZE = 2 * 1024 * 1024
+    }
+
     override fun storeProfilePicture(userId: UUID, profilePicture: MultipartFile): String {
+        checkFileType(profilePicture, VALID_PICTURE_TYPES)
+        checkFileSize(profilePicture, MAX_PICTURE_SIZE)
+
         val filePath = "profile_pictures/${userId}_${profilePicture.originalFilename}"
 
         return saveFile(filePath, profilePicture)
     }
 
     override fun storeResume(userId: UUID, resume: MultipartFile): String {
+        checkFileType(resume, VALID_RESUME_TYPES)
+        checkFileSize(resume, MAX_RESUME_SIZE)
+
         val filePath = "resumes/$${userId}_${resume.originalFilename}"
 
         return saveFile(filePath, resume)
     }
 
     override fun storeCompanyLogo(companyId: UUID, logo: MultipartFile): String {
+        checkFileType(logo, VALID_PICTURE_TYPES)
+        checkFileSize(logo, MAX_PICTURE_SIZE)
+
         val filePath = "company_logos/${companyId}_${logo.originalFilename}"
 
         return saveFile(filePath, logo)
@@ -93,5 +111,18 @@ class FileStorageServiceImpl(
             .signatureDuration(Duration.ofMinutes(15))
             .getObjectRequest(createGetObjectRequest(bucketName, s3FilePath))
             .build()
+    }
+
+    private fun checkFileType(file: MultipartFile, validTypes: List<String>) {
+        if (file.contentType !in validTypes) {
+            throw InvalidFileTypeException(
+                "Expected file types: ${validTypes.joinToString(", ")}, but got: ${file.contentType}")
+        }
+    }
+
+    private fun checkFileSize(file: MultipartFile, maxSize: Int) {
+        if (file.size > maxSize) {
+            throw FileSizeExceededException("File size exceeds the maximum limit of $maxSize bytes")
+        }
     }
 }

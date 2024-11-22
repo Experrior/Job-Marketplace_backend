@@ -1,8 +1,6 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.Resume
-import com.jobsearch.userservice.exceptions.FileSizeExceededException
-import com.jobsearch.userservice.exceptions.InvalidFileTypeException
 import com.jobsearch.userservice.exceptions.ResumeNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.ResumeRepository
@@ -20,17 +18,10 @@ class ResumeServiceImpl(
     private val mapper: UserProfileMapper
 ): ResumeService {
 
-    companion object {
-        private val VALID_RESUME_TYPES = listOf("application/pdf")
-        private const val MAX_RESUME_SIZE = 2 * 1024 * 1024
-    }
-
     @Transactional
     override fun addResume(userId: UUID, resume: MultipartFile): List<ResumeResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        checkFileType(resume, VALID_RESUME_TYPES)
-        checkFileSize(resume, MAX_RESUME_SIZE)
         val resumePath = fileStorageService.storeResume(userId, resume)
         val newResume = Resume(
             userProfile = profile,
@@ -62,18 +53,5 @@ class ResumeServiceImpl(
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
-    }
-
-    private fun checkFileType(file: MultipartFile, validTypes: List<String>) {
-        if (file.contentType !in validTypes) {
-            throw InvalidFileTypeException(
-                "Expected file types: ${validTypes.joinToString(", ")}, but got: ${file.contentType}")
-        }
-    }
-
-    private fun checkFileSize(file: MultipartFile, maxSize: Int) {
-        if (file.size > maxSize) {
-            throw FileSizeExceededException("File size exceeds the maximum limit of $maxSize bytes")
-        }
     }
 }
