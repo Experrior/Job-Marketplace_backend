@@ -65,7 +65,7 @@ class GlobalExceptionHandler {
     fun handleUserAlreadyExistsException(ex: UserAlreadyExistsException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             status = HttpStatus.CONFLICT.value(),
-            message = "User already exists"
+            message = ex.message ?: "User already exists"
         )
         return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
     }
@@ -116,13 +116,10 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
+    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String?>> {
         val errors = getErrors(ex)
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.BAD_REQUEST.value(),
-            message = "Validation error: $errors"
-        )
-        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+
+        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(FileSizeExceededException::class)
