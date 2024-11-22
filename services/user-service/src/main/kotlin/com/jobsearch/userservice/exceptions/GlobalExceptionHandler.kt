@@ -1,6 +1,6 @@
 package com.jobsearch.userservice.exceptions
 
-import com.jobsearch.userservice.responses.ErrorResponse
+import com.jobsearch.userservice.responses.ApiResponse
 import graphql.GraphQLError
 import graphql.GraphqlErrorBuilder
 import jakarta.validation.ConstraintViolationException
@@ -17,146 +17,146 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler(FailedToStoreFileException::class)
-    fun handleFailedToStoreFileException(ex: FailedToStoreFileException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+    fun handleFailedToStoreFileException(ex: FailedToStoreFileException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.name,
             message = ex.message ?: "Failed to store file"
         )
-        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @ExceptionHandler(UserRegistrationException::class)
-    fun handleUserRegistrationException(ex: UserRegistrationException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = ex.statusCode,
+    fun handleUserRegistrationException(ex: UserRegistrationException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.valueOf(ex.statusCode).name,
             message = ex.message ?: "User registration error"
         )
-        return ResponseEntity(errorResponse, HttpStatus.valueOf(ex.statusCode))
+        return ResponseEntity(apiResponse, HttpStatus.valueOf(ex.statusCode))
     }
 
     @ExceptionHandler(InvalidCredentialsException::class)
-    fun handleInvalidCredentialsException(ex: InvalidCredentialsException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.UNAUTHORIZED.value(),
+    fun handleInvalidCredentialsException(ex: InvalidCredentialsException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.UNAUTHORIZED.name,
             message = ex.message ?: "Invalid credentials"
         )
-        return ResponseEntity(errorResponse, HttpStatus.UNAUTHORIZED)
+        return ResponseEntity(apiResponse, HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.NOT_FOUND.value(),
+    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.NOT_FOUND.name,
             message = ex.message ?: "User not found"
         )
-        return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
+        return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(UserNotVerifiedException::class)
-    fun handleUserNotVerifiedException(ex: UserNotVerifiedException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.FORBIDDEN.value(),
+    fun handleUserNotVerifiedException(ex: UserNotVerifiedException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.FORBIDDEN.name,
             message = "User not verified"
         )
-        return ResponseEntity(errorResponse, HttpStatus.FORBIDDEN)
+        return ResponseEntity(apiResponse, HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleUserAlreadyExistsException(ex: UserAlreadyExistsException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.CONFLICT.value(),
+    fun handleUserAlreadyExistsException(ex: UserAlreadyExistsException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.CONFLICT.name,
             message = ex.message ?: "User already exists"
         )
-        return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
+        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
     }
 
     @ExceptionHandler(EmployeeNotVerifiedException::class)
-    fun handleEmployeeNotVerifiedException(ex: EmployeeNotVerifiedException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.UNAUTHORIZED.value(),
+    fun handleEmployeeNotVerifiedException(ex: EmployeeNotVerifiedException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.UNAUTHORIZED.name,
             message = ex.message ?: "Employee not verified"
         )
-        return ResponseEntity(errorResponse, HttpStatus.UNAUTHORIZED)
+        return ResponseEntity(apiResponse, HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(CompanyNotFoundException::class)
-    fun handleCompanyNotFoundException(ex: CompanyNotFoundException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.NOT_FOUND.value(),
+    fun handleCompanyNotFoundException(ex: CompanyNotFoundException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.NOT_FOUND.name,
             message = "Company not found: ${ex.companyName}"
         )
-        return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
+        return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(CompanyAlreadyExistsException::class)
-    fun handleCompanyAlreadyExistsException(ex: CompanyAlreadyExistsException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.CONFLICT.value(),
+    fun handleCompanyAlreadyExistsException(ex: CompanyAlreadyExistsException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.CONFLICT.name,
             message = ex.message ?: "Company already exists"
         )
-        return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
+        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
     }
 
     @ExceptionHandler(CompanyNotVerifiedException::class)
-    fun handleCompanyNotVerifiedException(ex: CompanyNotVerifiedException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.FORBIDDEN.value(),
+    fun handleCompanyNotVerifiedException(ex: CompanyNotVerifiedException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.FORBIDDEN.name,
             message = ex.message ?: "Company not verified"
         )
-        return ResponseEntity(errorResponse, HttpStatus.FORBIDDEN)
+        return ResponseEntity(apiResponse, HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(InvalidTokenException::class)
-    fun handleInvalidTokenException(ex: InvalidTokenException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.BAD_REQUEST.value(),
+    fun handleInvalidTokenException(ex: InvalidTokenException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.BAD_REQUEST.name,
             message = ex.message ?: "Invalid token"
         )
-        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+        return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String?>> {
         val errors = getErrors(ex)
-
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(FileSizeExceededException::class)
-    fun handleFileSizeExceededException(ex: FileSizeExceededException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.PAYLOAD_TOO_LARGE.value(),
+    fun handleFileSizeExceededException(ex: FileSizeExceededException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.PAYLOAD_TOO_LARGE.name,
             message = ex.message ?: "File size exceeded"
         )
-        return ResponseEntity(errorResponse, HttpStatus.PAYLOAD_TOO_LARGE)
+        return ResponseEntity(apiResponse, HttpStatus.PAYLOAD_TOO_LARGE)
     }
 
     @ExceptionHandler(InvalidFileTypeException::class)
-    fun handleInvalidFileTypeException(ex: InvalidFileTypeException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.BAD_REQUEST.value(),
+    fun handleInvalidFileTypeException(ex: InvalidFileTypeException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.BAD_REQUEST.name,
             message = ex.message ?: "Invalid file type"
         )
-        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+        return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(ProfileAlreadyExistsException::class)
-    fun handleUserProfileAlreadyExistsException(ex: ProfileAlreadyExistsException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.CONFLICT.value(),
+    fun handleUserProfileAlreadyExistsException(ex: ProfileAlreadyExistsException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.CONFLICT.name,
             message = ex.message ?: "Profile already exists"
         )
-        return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
+        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
     }
 
     @ExceptionHandler(ResumeNotFoundException::class)
-    fun handleResumeNotFoundException(ex: ResumeNotFoundException): ResponseEntity<ErrorResponse> {
-        val errorResponse = ErrorResponse(
-            status = HttpStatus.NOT_FOUND.value(),
+    fun handleResumeNotFoundException(ex: ResumeNotFoundException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.NOT_FOUND.name,
             message = ex.message ?: "Resume not found"
         )
-        return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
+        return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
     }
+
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptionsForGraphql(ex: MethodArgumentNotValidException): GraphQLError {
         val errors = getErrors(ex)
@@ -166,6 +166,7 @@ class GlobalExceptionHandler {
             .extensions(mapOf("errors" to errors))
             .build()
     }
+
     @GraphQlExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolationExceptionForGraphql(ex: ConstraintViolationException): GraphQLError {
         val errors: MutableMap<String, String?> = HashMap()
@@ -190,6 +191,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(UserNotEligibleForProfileException::class)
     fun handleUserNotEligibleForProfileException(
         ex: UserNotEligibleForProfileException
@@ -198,6 +200,7 @@ class GlobalExceptionHandler {
             .message("User not eligible for profile creation: ${ex.userId}")
             .build()
     }
+
     @GraphQlExceptionHandler(ProfileNotFoundException::class)
     fun handleUserProfileNotFoundException(
         ex: ProfileNotFoundException
@@ -206,6 +209,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(SettingsNotFoundException::class)
     fun handleSettingsNotFoundException(
         ex: SettingsNotFoundException
@@ -214,6 +218,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(SettingsAlreadyExistException::class)
     fun handleSettingsAlreadyExistException(
         ex: SettingsAlreadyExistException
@@ -222,6 +227,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(EducationNotFoundException::class)
     fun handleEducationNotFoundException(
         ex: EducationNotFoundException
@@ -230,6 +236,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(InvalidUUIDException::class)
     fun handleInvalidUUIDException(
         ex: InvalidUUIDException
@@ -238,6 +245,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(SkillNotFoundException::class)
     fun handleSkillNotFoundException(
         ex: SkillNotFoundException
@@ -246,6 +254,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(LinkNotFoundException::class)
     fun handleLinkNotFoundException(
         ex: LinkNotFoundException
@@ -254,6 +263,7 @@ class GlobalExceptionHandler {
             .message(ex.message)
             .build()
     }
+
     @GraphQlExceptionHandler(ExperienceNotFoundException::class)
     fun handleExperienceNotFoundException(
         ex: ExperienceNotFoundException

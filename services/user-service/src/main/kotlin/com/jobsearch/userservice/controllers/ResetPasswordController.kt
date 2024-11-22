@@ -8,16 +8,14 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 
 @Controller
+@RequestMapping("/password")
 class ResetPasswordController(
     private val resetPasswordService: ResetPasswordService
 ) {
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset")
     fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<ApiResponse>{
         resetPasswordService.resetPassword(resetPasswordRequest.email)
 
@@ -37,7 +35,7 @@ class ResetPasswordController(
         )
     }
 
-    @PostMapping("/updatePassword")
+    @PostMapping("/update")
     fun updatePassword(
         @RequestParam("token") resetPasswordToken: String,
         @RequestBody @Valid updatePasswordRequest: UpdatePasswordRequest): ResponseEntity<ApiResponse>{

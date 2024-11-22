@@ -8,8 +8,9 @@ enum class PublicEndpoint(val pattern: String) {
     REGISTER("/user-service/register/**"),
     VERIFICATION("/user-service/verification/**"),
     TOKEN("/user-service/token/**"),
-    RESET_PASSWORD("/user-service/resetPassword"),
-    UPDATE_PASSWORD("/user-service/updatePassword"),
+    RESET_PASSWORD("/user-service/password/reset"),
+    UPDATE_PASSWORD("/user-service/password/update"),
+    VALIDATE_TOKEN("/user-service/password/validateToken"),
     ERROR("/user-service/error");
 
 
