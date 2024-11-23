@@ -130,7 +130,8 @@
         "user_id": "FK_UUID app_users.user_id",
         "resume_path": "first_name",
         "profile_picture_path": "first_name",
-        "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
+        "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
+        "created_at":"timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
       },
       "user_settings": {
         "settings_id": "PK UUID",
