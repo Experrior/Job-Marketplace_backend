@@ -13,6 +13,7 @@ enum class PublicEndpoint(val pattern: String) {
     VALIDATE_TOKEN("/user-service/password/validateToken"),
     GET_COMPANIES("/user-service/getCompanies"),
     GET_JOBS("/job-service/getJobs"),
+    GET_COMPANY_BY_ID("/user-service/getCompanyById"),
     ERROR("/user-service/error");
 
 

@@ -1,6 +1,5 @@
 package com.jobsearch.jobservice.services
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -15,7 +14,6 @@ class UserServiceUtilsImpl(
 
     private val webClient: WebClient = webClientBuilder.build()
     private val companyNameCache = ConcurrentHashMap<UUID, String>()
-    private val logger = LoggerFactory.getLogger(UserServiceUtilsImpl::class.java)
 
     @Value("\${user.service.url}")
     lateinit var userServiceUrl: String
@@ -34,6 +32,17 @@ class UserServiceUtilsImpl(
             .uri("$userServiceUrl/graphql")
             .headers { it.setAll(headers) }
             .bodyValue(mapOf("query" to query))
+            .retrieve()
+            .bodyToMono(Any::class.java)
+            .block()?.let {
+                @Suppress("UNCHECKED_CAST")
+                it as? Map<String, Any?>
+            }
+    }
+
+    private fun executeRestRequest(uri: String): Map<String, Any?>? {
+        return webClient.get()
+            .uri("$userServiceUrl/$uri")
             .retrieve()
             .bodyToMono(Any::class.java)
             .block()?.let {
@@ -70,18 +79,11 @@ class UserServiceUtilsImpl(
 
     override fun getCompanyName(companyId: UUID): String {
         return companyNameCache.computeIfAbsent(companyId) {
-            val query = """
-                query {
-                    companyById(companyId: "$companyId") {
-                        name
-                    }
-                }
-            """.trimIndent()
+            val uri = "getCompanyById?companyId=$companyId"
 
-            val response = executeGraphQLQuery(query)
-            (response?.get("data") as? Map<*, *>)?.get("companyById")?.let { company ->
-                (company as? Map<*, *>)?.get("name") as? String
-            } ?: throw IllegalStateException("Company name not found")
+            val response = executeRestRequest(uri)
+            (response as? Map<*, *>)?.get("name") as? String
+                ?: throw IllegalStateException("Company name not found")
         }
     }
 }
