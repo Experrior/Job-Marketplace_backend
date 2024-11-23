@@ -24,8 +24,8 @@ class UserController(private val userService: UserService) {
     }
 
     @QueryMapping
-    fun recruiterCompany(@AuthenticationPrincipal recruiterId: String): UUID? {
-        val user = userService.getUserById(UUID.fromString(recruiterId))
+    fun recruiterCompany(@AuthenticationPrincipal recruiterId: UUID): UUID? {
+        val user = userService.getUserById(recruiterId)
         return user.companyId
     }
 

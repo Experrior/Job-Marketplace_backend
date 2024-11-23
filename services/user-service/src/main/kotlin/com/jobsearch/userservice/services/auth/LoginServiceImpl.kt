@@ -65,7 +65,9 @@ class LoginServiceImpl(
             accessToken = token,
             expiresIn = jwtTokenProvider.getValidityInMilliseconds(),
             refreshToken = refreshToken,
-            refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds()
+            refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds(),
+            userId = (authentication.principal as User).userId,
+            role = (authentication.principal as User).role.toString()
         )
     }
 

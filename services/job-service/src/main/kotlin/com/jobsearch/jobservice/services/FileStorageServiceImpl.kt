@@ -2,7 +2,6 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.exceptions.FailedToStoreFileException
 import com.jobsearch.jobservice.exceptions.FileAlreadyExistsException
-import com.jobsearch.jobservice.repositories.QuizRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

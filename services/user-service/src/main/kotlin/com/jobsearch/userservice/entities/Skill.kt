@@ -15,7 +15,7 @@ class Skill(
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     var userProfile: UserProfile,
     @Column(nullable = false)
-    var skillName: SkillType = SkillType.JAVA,
+    var skillName: String = "",
     @Column(nullable = false)
     var proficiencyLevel: ProficiencyLevel = ProficiencyLevel.BEGINNER,
     @Column(nullable = false)
@@ -23,7 +23,7 @@ class Skill(
 ){
     constructor() : this(
         userProfile = UserProfile(),
-        skillName = SkillType.JAVA,
+        skillName = "",
         proficiencyLevel = ProficiencyLevel.BEGINNER
     )
 

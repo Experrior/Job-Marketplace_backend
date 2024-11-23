@@ -13,9 +13,13 @@ type User{
 
 type UserProfile{
     profileId: ID!
-    user: User
-    resumePath: String
-    profilePicturePath: String
+    user: User!
+    resumes: [Resume]!
+    skills: [Skill]!
+    experiences: [Experience]!
+    educations: [Education]!
+    links: [Link]!
+    profilePictureUrl: String
     updatedAt: String
 }
 
@@ -44,17 +48,15 @@ type Education {
     degree: String!
     startDate: String!
     endDate: String!
-    updatedAt: String!
 }
 
 type Experience {
     experienceId: ID!
-    userProfileId: UserProfile!
+    userProfileId: UserProfile
     companyName: String!
     role: String!
     startDate: String!
     endDate: String!
-    updatedAt: String!
 }
 
 type Company {
@@ -66,6 +68,21 @@ type Company {
     email: String!
     createdAt: String!
     updatedAt: String!
+}
+
+type Resume {
+    resumeId: ID!
+    userProfile: UserProfile!
+    resumeUrl: String
+    resumeName: String!
+    createdAt: String!
+}
+
+type Link {
+    linkId: ID!
+    userProfile: UserProfile!
+    name: String!
+    url: String!
 }
 
 type Query{
@@ -106,31 +123,36 @@ type Query{
 }
 
 type Mutation {
-    createUserProfile(resumePath: String!, profilePicturePath: String!): UserProfile
-    updateCurrentUserProfile(resumePath: String, profilePicturePath: String): UserProfile
     deleteCurrentProfile: Boolean
 
-    createUserSettings(
-        settingsRequest: SettingsRequestInput!
-    ): Settings
     updateCurrentUserSettings(
         settingsRequest: SettingsRequestInput!
     ): Settings
-    deleteCurrentUserSettings: Boolean
+    deleteCurrentUserSettings: DeleteResponse
 
-    createEducation(
+    addEducation(
         educationRequest: EducationRequestInput!
-    ): Education
+    ): [Education]
     updateEducation(
         educationId: ID!
         educationRequest: EducationRequestInput!
-    ): Education
-    deleteEducationById(educationId: ID!): Boolean
-    deleteAllUserEducations: Boolean
+    ): [Education]
+    deleteEducationById(educationId: ID!): [Education]
+    deleteAllUserEducations: DeleteResponse
 
-    addSkill(skillRequest: SkillRequestInput!): Skill
-    deleteSkillById(skillId: ID!): Boolean
-    deleteAllSkills: Boolean
+    addExperience(
+        experienceRequest: ExperienceRequestInput!
+    ): [Experience]
+    deleteExperienceById(experienceId: ID!): [Experience]
+    deleteAllUserExperiences: DeleteResponse
+
+    addSkill(skillRequest: SkillRequestInput!): [Skill]
+    deleteSkillById(skillId: ID!): [Skill]
+    deleteAllSkills: DeleteResponse
+
+    addLink(linkRequest: LinkRequestInput!): [Link]
+    deleteLinkById(linkId: ID!): [Link]
+    deleteAllLinks: DeleteResponse
 }
 
 input SettingsRequestInput {
@@ -147,7 +169,24 @@ input EducationRequestInput {
     endDate: String!
 }
 
+input ExperienceRequestInput {
+    companyName: String!
+    role: String!
+    startDate: String!
+    endDate: String!
+}
+
 input SkillRequestInput {
     skillName: String!
     proficiencyLevel: String!
+}
+
+input LinkRequestInput {
+    name: String!
+    url: String!
+}
+
+type DeleteResponse {
+    success: Boolean!
+    message: String
 }

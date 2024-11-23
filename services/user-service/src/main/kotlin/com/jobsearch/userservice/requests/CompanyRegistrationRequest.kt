@@ -1,21 +1,26 @@
 package com.jobsearch.userservice.requests
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
 data class CompanyRegistrationRequest(
-    @field:Email(message = "Email should be valid")
-    @field:NotBlank(message = "Email must not be blank")
+    @JsonProperty("email")
+    @field:NotBlank(message = "Email is required")
+    @field:Email(message = "Invalid email format")
     val email: String,
 
-    @field:NotBlank(message = "Company name must not be blank")
+    @JsonProperty("companyName")
+    @field:NotBlank(message = "Company name is required")
+    @field:Size(max = 100, message = "Company name must not exceed 100 characters")
     val companyName: String,
 
-    @field:NotBlank(message = "Industry must not be blank")
+    @JsonProperty("industry")
+    @field:NotBlank(message = "Industry is required")
     val industry: String,
 
-    val description: String?,
-
-    @field:NotBlank(message = "Logo must not be blank")
-    val logo: String
+    @JsonProperty("description")
+    @field:Size(max = 500, message = "Description must not exceed 500 characters")
+    val description: String?
 )
