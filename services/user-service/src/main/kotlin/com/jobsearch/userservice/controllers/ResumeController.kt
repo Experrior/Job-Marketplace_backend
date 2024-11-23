@@ -30,4 +30,11 @@ class ResumeController(
     ): ResponseEntity<List<ResumeResponse>> {
         return ResponseEntity(resumeService.deleteResume(userId, resumeId), HttpStatus.OK)
     }
+
+    @PostMapping("/myResumes")
+    fun getResumes(
+        @AuthenticationPrincipal userId: UUID
+    ): ResponseEntity<List<ResumeResponse>> {
+        return ResponseEntity(resumeService.userResumes(userId), HttpStatus.OK)
+    }
 }
