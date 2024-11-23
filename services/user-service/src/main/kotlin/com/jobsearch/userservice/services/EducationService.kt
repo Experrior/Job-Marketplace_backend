@@ -1,14 +1,15 @@
 package com.jobsearch.userservice.services
 
-import com.jobsearch.userservice.entities.Education
 import com.jobsearch.userservice.requests.EducationRequest
+import com.jobsearch.userservice.responses.DeleteResponse
+import com.jobsearch.userservice.responses.EducationResponse
 import java.util.*
 
 interface EducationService {
-    fun getEducationByUserProfile(userId: UUID): List<Education>
-    fun createEducation(userId: UUID, educationRequest: EducationRequest): Education
-    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): Education
-    fun getEducationById(userId: UUID, educationId: UUID): Education
-    fun deleteEducationById(userId: UUID, educationId: UUID): Boolean
-    fun deleteAllUserEducations(userId: UUID): Boolean
+    fun getEducationsByUserProfile(userId: UUID): List<EducationResponse>
+    fun addEducation(userId: UUID, educationRequest: EducationRequest): List<EducationResponse>
+    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): List<EducationResponse>
+    fun getEducationById(userId: UUID, educationId: UUID): EducationResponse
+    fun deleteEducationById(userId: UUID, educationId: UUID): List<EducationResponse>
+    fun deleteAllUserEducations(userId: UUID): DeleteResponse
 }

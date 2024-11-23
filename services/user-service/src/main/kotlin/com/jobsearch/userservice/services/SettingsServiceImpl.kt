@@ -1,10 +1,10 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.Settings
-import com.jobsearch.userservice.exceptions.SettingsAlreadyExistException
 import com.jobsearch.userservice.exceptions.SettingsNotFoundException
 import com.jobsearch.userservice.repositories.SettingsRepository
 import com.jobsearch.userservice.requests.SettingsRequest
+import com.jobsearch.userservice.responses.DeleteResponse
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -13,26 +13,22 @@ class SettingsServiceImpl(
     private val settingsRepository: SettingsRepository,
     private val userService: UserService
 ): SettingsService {
-    override fun getSettingsByUserId(userId: UUID): Settings? {
+    override fun getSettingsByUserId(userId: UUID): Settings {
         val user = userService.getUserById(userId)
-        return settingsRepository.findByUser(user)
+        return settingsRepository.findByUser(user) ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
     }
 
-    override fun createSettings(
+    override fun createDefaultUserSettings(
         userId: UUID,
-        settingsRequest: SettingsRequest
     ): Settings {
         val user = userService.getUserById(userId)
 
-        if(settingsRepository.existsByUser(user))
-            throw SettingsAlreadyExistException("Settings already exist for user with id: $userId")
-
         val settings = Settings(
             user = user,
-            offersNotification = settingsRequest.offersNotification,
-            newsletterNotification = settingsRequest.newsletterNotification,
-            recruiterMessages = settingsRequest.recruiterMessages,
-            pushNotification = settingsRequest.pushNotification
+            offersNotification = true,
+            newsletterNotification = true,
+            recruiterMessages = true,
+            pushNotification = true
         )
 
         return settingsRepository.save(settings)
@@ -43,7 +39,6 @@ class SettingsServiceImpl(
         settingsRequest: SettingsRequest
     ): Settings {
         val settings = getSettingsByUserId(userId)
-            ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
 
         settingsRequest.offersNotification.let { settings.offersNotification = it }
         settingsRequest.newsletterNotification.let { settings.newsletterNotification = it }
@@ -53,13 +48,19 @@ class SettingsServiceImpl(
         return settingsRepository.save(settings)
     }
 
-    override fun deleteSettingsByUserId(userId: UUID): Boolean {
+    override fun deleteSettingsByUserId(userId: UUID): DeleteResponse {
         return try {
-            val settings = getSettingsByUserId(userId) ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
+            val settings = getSettingsByUserId(userId)
             settingsRepository.delete(settings)
-            true
+            DeleteResponse(
+                success = true,
+                message = "Settings deleted successfully"
+            )
         } catch (e: Exception) {
-            false
+            DeleteResponse(
+                success = false,
+                message = e.message ?: "An error occurred while deleting settings"
+            )
         }
     }
 }

@@ -2,6 +2,7 @@ package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.entities.Settings
 import com.jobsearch.userservice.requests.SettingsRequest
+import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.services.SettingsService
 import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
@@ -17,31 +18,23 @@ class SettingsController(
 ) {
     @QueryMapping
     fun currentUserSettings(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): Settings? {
-        return settingsService.getSettingsByUserId(UUID.fromString(userId))
-    }
-
-    @MutationMapping
-    fun createUserSettings(
-        @AuthenticationPrincipal userId: String,
-        @Argument @Valid settingsRequest: SettingsRequest
-    ): Settings? {
-        return settingsService.createSettings(UUID.fromString(userId), settingsRequest)
+        return settingsService.getSettingsByUserId(userId)
     }
 
     @MutationMapping
     fun updateCurrentUserSettings(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Argument @Valid settingsRequest: SettingsRequest
     ): Settings? {
-        return settingsService.updateSettings(UUID.fromString(userId), settingsRequest)
+        return settingsService.updateSettings(userId, settingsRequest)
     }
 
     @MutationMapping
     fun deleteCurrentUserSettings(
-        @AuthenticationPrincipal userId: String
-    ): Boolean {
-        return settingsService.deleteSettingsByUserId(UUID.fromString(userId))
+        @AuthenticationPrincipal userId: UUID
+    ): DeleteResponse {
+        return settingsService.deleteSettingsByUserId(userId)
     }
 }

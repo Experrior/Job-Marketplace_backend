@@ -39,6 +39,21 @@ class ResetPasswordServiceImpl(
         resetPasswordTokenRepository.deleteByToken(token)
     }
 
+    override fun validateToken(token: String) {
+        val resetToken = resetPasswordTokenRepository.findByToken(token)
+            ?: throw InvalidTokenException("The reset password token is invalid.")
+
+        if (resetToken.isExpired()) {
+            throw InvalidTokenException("The reset password token has expired.")
+        }
+
+        val user = resetToken.user ?: throw InvalidTokenException("The user associated with this token does not exist.")
+
+        if (!userService.existsByUserId(user.userId!!)) {
+            throw InvalidTokenException("The user associated with this token does not exist.")
+        }
+    }
+
     fun generateResetToken(user: User): String {
         val token = UUID.randomUUID().toString()
         val expiryDate = Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME)
