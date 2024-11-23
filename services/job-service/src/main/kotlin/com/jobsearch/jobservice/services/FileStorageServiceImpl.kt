@@ -37,6 +37,11 @@ class FileStorageServiceImpl(
         return saveFile(filePath, quizConfig)
     }
 
+    override fun updateQuizConfig(recruiterId: UUID, quizConfig: MultipartFile): String {
+        val filePath = "quizzes/${recruiterId}/${quizConfig.originalFilename}"
+        return saveFile(filePath, quizConfig)
+    }
+
     override fun listQuizConfigs(recruiterId: UUID): List<String> {
         val prefix = "quizzes/${recruiterId}/"
         val listObjectsRequest = ListObjectsV2Request.builder()

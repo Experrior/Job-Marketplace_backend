@@ -14,4 +14,5 @@ interface QuizService {
     fun findQuizById(quizId: UUID): QuizResponse
     fun deleteQuizById(recruiterId: UUID, quizId: UUID): DeleteQuizResponse
     fun restoreQuizById(recruiterId: UUID, quizId: UUID): QuizResponse
+    fun updateQuiz(recruiterId: UUID, quizId: UUID, quizConfig: MultipartFile): QuizResponse
 }
