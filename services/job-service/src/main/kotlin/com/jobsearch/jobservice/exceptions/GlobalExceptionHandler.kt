@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.exceptions
 
+import com.jobsearch.jobservice.responses.ApiResponse
 import graphql.GraphQLError
 import graphql.GraphqlErrorBuilder
 import jakarta.validation.ConstraintViolationException
@@ -13,6 +14,116 @@ import org.springframework.web.context.request.WebRequest
 
 @ControllerAdvice
 class GlobalExceptionHandler {
+    @ExceptionHandler(QuizResultNotFoundException::class)
+    fun handleQuizResultNotFoundException(
+        ex: QuizResultNotFoundException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.NOT_FOUND.name,
+            message = ex.message ?: "Quiz result not found",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(JobNotFoundException::class)
+    fun handleJobNotFoundExceptionRest(
+        ex: JobNotFoundException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.NOT_FOUND.name,
+            message = "Job not found: ${ex.jobId}",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(FailedToStoreFileException::class)
+    fun handleFailedToStoreFileException(
+        ex: FailedToStoreFileException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.name,
+            message = "Failed to store file",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(FileAlreadyExistsException::class)
+    fun handleFileAlreadyExistsException(
+        ex: FileAlreadyExistsException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.CONFLICT.name,
+            message = "File already exists with name: ${ex.fileName}",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(EmptyFileException::class)
+    fun handleEmptyFileException(
+        ex: EmptyFileException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.BAD_REQUEST.name,
+            message = ex.message ?: "Empty file",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(UserAlreadyAppliedException::class)
+    fun handleUserAlreadyAppliedException(
+        ex: UserAlreadyAppliedException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.CONFLICT.name,
+            message = ex.message ?: "User already applied",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(
+        ex: HttpMessageNotReadableException,
+        request: WebRequest
+    ): ResponseEntity<ApiResponse> {
+        ex.printStackTrace()
+        val apiResponse = ApiResponse(
+            status = HttpStatus.BAD_REQUEST.name,
+            message = "Required request body is missing or unreadable",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(FileSizeExceededException::class)
+    fun handleFileSizeExceededException(
+        ex: FileSizeExceededException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.PAYLOAD_TOO_LARGE.name,
+            message = ex.message ?: "File size exceeded",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.PAYLOAD_TOO_LARGE)
+    }
+
+    @ExceptionHandler(InvalidFileTypeException::class)
+    fun handleInvalidFileTypeException(
+        ex: InvalidFileTypeException
+    ): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.BAD_REQUEST.name,
+            message = ex.message ?: "Invalid file type",
+            timestamp = System.currentTimeMillis()
+        )
+        return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+    }
+
     @GraphQlExceptionHandler(JobNotFoundException::class)
     fun handleJobNotFoundExceptionGraphQL(
         ex: JobNotFoundException
@@ -47,71 +158,6 @@ class GlobalExceptionHandler {
         return GraphqlErrorBuilder.newError()
             .message(ex.message)
             .build()
-    }
-
-    @ExceptionHandler(QuizResultNotFoundException::class)
-    fun handleQuizResultNotFoundException(
-        ex: QuizResultNotFoundException
-    ): ResponseEntity<String> {
-        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(JobNotFoundException::class)
-    fun handleJobNotFoundExceptionRest(
-        ex: JobNotFoundException
-    ): ResponseEntity<String> {
-        return ResponseEntity("Job not found: ${ex.jobId}", HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(FailedToStoreFileException::class)
-    fun handleFailedToStoreFileException(
-        ex: FailedToStoreFileException
-    ): ResponseEntity<String> {
-        return ResponseEntity("Failed to store file", HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
-    @ExceptionHandler(FileAlreadyExistsException::class)
-    fun handleFileAlreadyExistsException(
-        ex: FileAlreadyExistsException
-    ): ResponseEntity<String> {
-        return ResponseEntity("File already exists with name: ${ex.fileName}", HttpStatus.CONFLICT)
-    }
-
-    @ExceptionHandler(EmptyFileException::class)
-    fun handleEmptyFileException(
-        ex: EmptyFileException
-    ): ResponseEntity<String> {
-        return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(UserAlreadyAppliedException::class)
-    fun handleUserAlreadyAppliedException(
-        ex: UserAlreadyAppliedException
-    ): ResponseEntity<String> {
-        return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleHttpMessageNotReadableException(
-        ex: HttpMessageNotReadableException,
-        request: WebRequest
-    ): ResponseEntity<String> {
-        ex.printStackTrace()
-        return ResponseEntity("Required request body is missing or unreadable", HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(FileSizeExceededException::class)
-    fun handleFileSizeExceededException(
-        ex: FileSizeExceededException
-    ): ResponseEntity<String> {
-        return ResponseEntity(ex.message, HttpStatus.PAYLOAD_TOO_LARGE)
-    }
-
-    @ExceptionHandler(InvalidFileTypeException::class)
-    fun handleInvalidFileTypeException(
-        ex: InvalidFileTypeException
-    ): ResponseEntity<String> {
-        return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
 
     @GraphQlExceptionHandler(IllegalStateException::class)
