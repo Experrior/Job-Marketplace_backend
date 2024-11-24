@@ -49,9 +49,15 @@ class ApplicationController(
     @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun jobApplications(
-        @Argument jobId: UUID
+        @Argument jobId: UUID,
+        @Argument sortOrder: String?
     ): List<Application> {
-         return jobApplicationService.getJobApplications(jobId)
+        val applications = jobApplicationService.getJobApplications(jobId)
+        return when (sortOrder?.lowercase(Locale.getDefault())) {
+            "asc" -> applications.sortedBy { it.quizResult?.score }
+            "desc" -> applications.sortedByDescending { it.quizResult?.score }
+            else -> applications
+        }
     }
 
     @PreAuthorize("hasRole('RECRUITER')")

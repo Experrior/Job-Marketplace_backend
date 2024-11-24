@@ -43,7 +43,7 @@ type Query {
     followedJobs: [Job]
 
     userApplications: [Application]
-    jobApplications(jobId: ID!): [Application]
+    jobApplications(jobId: ID!, sortOrder: String): [Application]
 
     quizzesByRecruiter: [QuizResponse]
     activeQuizzesByRecruiter: [QuizResponse]
