@@ -60,6 +60,8 @@ type Mutation {
     restoreJob(jobId: ID!): Job
     toggleFollowJob(jobId: ID!): FollowJobResponse
 
+    applyForJob(jobId: ID!, resumeId: ID!, quizResultId: ID): Application
+
     submitQuizResult(quizResultRequest: QuizResultInput!): QuizResult
     deleteQuiz(quizId: ID!): DeleteQuizResponse!
     restoreQuiz(quizId: ID!): QuizResponse

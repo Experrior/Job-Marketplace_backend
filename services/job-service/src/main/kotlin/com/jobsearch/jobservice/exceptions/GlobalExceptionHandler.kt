@@ -74,18 +74,6 @@ class GlobalExceptionHandler {
         return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(UserAlreadyAppliedException::class)
-    fun handleUserAlreadyAppliedException(
-        ex: UserAlreadyAppliedException
-    ): ResponseEntity<ApiResponse> {
-        val apiResponse = ApiResponse(
-            status = HttpStatus.CONFLICT.name,
-            message = ex.message ?: "User already applied",
-            timestamp = System.currentTimeMillis()
-        )
-        return ResponseEntity(apiResponse, HttpStatus.CONFLICT)
-    }
-
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadableException(
         ex: HttpMessageNotReadableException,
@@ -122,6 +110,25 @@ class GlobalExceptionHandler {
             timestamp = System.currentTimeMillis()
         )
         return ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST)
+    }
+
+
+    @GraphQlExceptionHandler(ResumeNotFoundException::class)
+    fun handleResumeNotFoundExceptionGraphQL(
+        ex: ResumeNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message ?: "Resume not found")
+            .build()
+    }
+
+    @GraphQlExceptionHandler(UserAlreadyAppliedException::class)
+    fun handleUserAlreadyAppliedExceptionGraphQL(
+        ex: UserAlreadyAppliedException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message ?: "User already applied for job")
+            .build()
     }
 
     @GraphQlExceptionHandler(JobNotFoundException::class)
