@@ -2,6 +2,8 @@ package com.jobsearch.userservice.controllers
 
 import com.jobsearch.userservice.responses.ResumeResponse
 import com.jobsearch.userservice.services.ResumeService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -29,5 +31,16 @@ class ResumeController(
         @RequestParam("resumeId") resumeId: UUID
     ): ResponseEntity<List<ResumeResponse>> {
         return ResponseEntity(resumeService.deleteResume(userId, resumeId), HttpStatus.OK)
+    }
+
+    @QueryMapping
+    fun userResumes(@AuthenticationPrincipal userId: UUID): List<ResumeResponse> {
+        return resumeService.userResumes(userId)
+    }
+
+    @QueryMapping
+    fun resumeById(@AuthenticationPrincipal userId: UUID,
+                      @Argument resumeId: UUID): ResumeResponse {
+        return resumeService.getResumeById(userId, resumeId)
     }
 }

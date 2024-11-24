@@ -85,6 +85,14 @@ type Link {
     url: String!
 }
 
+type ResumeResponse {
+    resumeId: ID!,
+    resumeName: String!,
+    s3ResumePath: String!,
+    resumeUrl: String,
+    createdAt: String!
+}
+
 type Query{
     ### User ###
     userById(userId: ID!): User
@@ -120,6 +128,10 @@ type Query{
     ### Company ###
     companies: [Company]
     companyById(companyId: ID!): Company
+
+    ### Resume ###
+    resumeById(resumeId: ID!): ResumeResponse
+    userResumes: [ResumeResponse]
 }
 
 type Mutation {
