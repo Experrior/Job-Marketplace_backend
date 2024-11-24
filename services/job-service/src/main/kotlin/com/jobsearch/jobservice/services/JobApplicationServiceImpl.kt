@@ -25,7 +25,11 @@ class JobApplicationServiceImpl(
         checkResumeType(resume)
 
         val job = getJob(jobId)
+
         checkUserAlreadyApplied(job, userId)
+        checkQuizRequirement(job, quizResultId)
+        checkQuizResultBelongsToUser(quizResultId, userId)
+
         val s3ResumePath = fileStorageService.storeResume(userId, jobId, resume)
         val application = createApplication(job, userId, s3ResumePath, quizResultId)
         return convertToResponse(applicationRepository.save(application))
@@ -121,6 +125,17 @@ class JobApplicationServiceImpl(
     private fun checkResumeSize(resume: MultipartFile) {
         if (resume.size > 2 * 1024 * 1024) {
             throw FileSizeExceededException()
+        }
+    }
+
+    private fun checkQuizResultBelongsToUser(quizResultId: UUID?, userId: UUID) {
+        if (quizResultId != null && quizResultService.getQuizResultEntityById(quizResultId).applicantId != userId)
+            throw QuizResultNotFoundException("Quiz result does not belong to the user")
+    }
+
+    private fun checkQuizRequirement(job: Job, quizResultId: UUID?) {
+        if (job.quiz != null && quizResultId == null) {
+            throw QuizResultNotFoundException("Quiz result is required for this job")
         }
     }
 
