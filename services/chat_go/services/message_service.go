@@ -119,7 +119,8 @@ func (p *DbMessageService) StartChat(recruiterId string, applicantId string, rec
 	var existing chats
 
 	result := p.db.Table("chats").Where("recruiter_id = ?", recruiterId).Where("applicant_id = ?", applicantId).Find(&existing)
-	if (result.Error == nil) {
+	if (result.Error == nil && existing.ChatId != "") {
+		log.Println("Found existing chats")
 		//existing chat found
 		return existing
 	}
