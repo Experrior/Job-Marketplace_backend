@@ -29,7 +29,7 @@ data class Application(
     @Column(name = "status", nullable = false)
     var status: ApplicationStatus,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_result_id", referencedColumnName = "quiz_result_id", nullable = true)
     var quizResult: QuizResult? = null,
 

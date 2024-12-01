@@ -19,7 +19,7 @@ class ExperienceServiceImpl(
 ): ExperienceService {
 
     @Transactional
-    override fun addExperience(userId: UUID, experienceRequest: ExperienceRequest): List<ExperienceResponse> {
+    override fun addExperience(userId: UUID, experienceRequest: ExperienceRequest): ExperienceResponse {
         val userProfile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val newExperience = Experience(
@@ -30,21 +30,21 @@ class ExperienceServiceImpl(
             endDate = experienceRequest.endDate
         )
 
-        experienceRepository.save(newExperience)
-
-        return experienceRepository.findByUserProfile(userProfile).map { mapper.toExperienceResponse(it) }
+        return mapper.toExperienceResponse(experienceRepository.save(newExperience))
     }
 
     @Transactional
-    override fun deleteExperienceById(userId: UUID, experienceId: UUID): List<ExperienceResponse> {
-        val userProfile = userProfileService.getUserProfileEntityByUserId(userId)
+    override fun deleteExperienceById(userId: UUID, experienceId: UUID): DeleteResponse{
         val experience = getExperienceEntity(experienceId)
 
         checkExperienceBelongsToUser(userId, experience)
 
         experienceRepository.delete(experience)
 
-        return experienceRepository.findByUserProfile(userProfile).map { mapper.toExperienceResponse(it) }
+        return DeleteResponse(
+            success = true,
+            message = "Experience deleted successfully"
+        )
     }
 
     @Transactional

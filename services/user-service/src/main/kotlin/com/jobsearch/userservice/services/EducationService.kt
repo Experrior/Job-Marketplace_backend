@@ -7,9 +7,9 @@ import java.util.*
 
 interface EducationService {
     fun getEducationsByUserProfile(userId: UUID): List<EducationResponse>
-    fun addEducation(userId: UUID, educationRequest: EducationRequest): List<EducationResponse>
-    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): List<EducationResponse>
+    fun addEducation(userId: UUID, educationRequest: EducationRequest): EducationResponse
+    fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): EducationResponse
     fun getEducationById(userId: UUID, educationId: UUID): EducationResponse
-    fun deleteEducationById(userId: UUID, educationId: UUID): List<EducationResponse>
+    fun deleteEducationById(userId: UUID, educationId: UUID): DeleteResponse
     fun deleteAllUserEducations(userId: UUID): DeleteResponse
 }

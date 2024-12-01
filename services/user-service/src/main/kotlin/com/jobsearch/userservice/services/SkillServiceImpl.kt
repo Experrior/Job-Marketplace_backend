@@ -25,19 +25,19 @@ class SkillServiceImpl(
     }
 
     @Transactional
-    override fun addSkill(userId: UUID, skillRequest: SkillRequest): List<SkillResponse> {
+    override fun addSkill(userId: UUID, skillRequest: SkillRequest): SkillResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        val proficiencyLevel = ProficiencyLevel.valueOf(skillRequest.proficiencyLevel)
+        val skillType = SkillType.valueOf(skillRequest.skillName.uppercase())
 
         val skill = Skill(
             userProfile = profile,
-            skillName = skillRequest.skillName,
-            proficiencyLevel = proficiencyLevel
+            skillName = skillType.displayName,
+            proficiencyLevel = skillRequest.proficiencyLevel
         )
 
-        skillRepository.save(skill)
-        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
+        return mapper.toSkillResponse(skillRepository.save(skill))
+//        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
     }
 
     @Transactional

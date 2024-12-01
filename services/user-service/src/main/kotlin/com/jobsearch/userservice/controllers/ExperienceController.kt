@@ -19,7 +19,7 @@ class ExperienceController(
     fun addExperience(
         @AuthenticationPrincipal userId: UUID,
         @Argument @Valid experienceRequest: ExperienceRequest
-    ): List<ExperienceResponse> {
+    ): ExperienceResponse {
         return experienceService.addExperience(userId, experienceRequest)
     }
 
@@ -27,7 +27,7 @@ class ExperienceController(
     fun deleteExperienceById(
         @AuthenticationPrincipal userId: UUID,
         @Argument experienceId: String
-    ): List<ExperienceResponse> {
+    ): DeleteResponse{
         return experienceService.deleteExperienceById(userId, UUID.fromString(experienceId))
     }
 

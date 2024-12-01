@@ -30,7 +30,6 @@ class SecurityConfig(
             csrf { disable() }
             authorizeHttpRequests {
                 authorize("/applications/{jobId}", hasRole("RECRUITER"))
-                authorize("/applications/{applicationId}/apply", hasRole("APPLICANT"))
                 authorize("/quizzes/{jobId}/createQuiz", hasRole("RECRUITER"))
                 authorize(anyRequest, permitAll)
             }

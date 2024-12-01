@@ -157,6 +157,15 @@ class GlobalExceptionHandler {
         return ResponseEntity(apiResponse, HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler(UnauthorizedAccessException::class)
+    fun handleRestUnauthorizedAccessException(ex: UnauthorizedAccessException): ResponseEntity<ApiResponse> {
+        val apiResponse = ApiResponse(
+            status = HttpStatus.UNAUTHORIZED.name,
+            message = ex.message ?: "Unauthorized access"
+        )
+        return ResponseEntity(apiResponse, HttpStatus.UNAUTHORIZED)
+    }
+
     @GraphQlExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptionsForGraphql(ex: MethodArgumentNotValidException): GraphQLError {
         val errors = getErrors(ex)
@@ -267,6 +276,15 @@ class GlobalExceptionHandler {
     @GraphQlExceptionHandler(ExperienceNotFoundException::class)
     fun handleExperienceNotFoundException(
         ex: ExperienceNotFoundException
+    ): GraphQLError {
+        return GraphqlErrorBuilder.newError()
+            .message(ex.message)
+            .build()
+    }
+
+    @GraphQlExceptionHandler(UnauthorizedAccessException::class)
+    fun handleUnauthorizedAccessException(
+        ex: UnauthorizedAccessException
     ): GraphQLError {
         return GraphqlErrorBuilder.newError()
             .message(ex.message)

@@ -21,14 +21,22 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
-    @Bean
+@Bean
     fun filterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
-            .cors(Customizer.withDefaults()) // withDefaults means that it will use CorsConfigurationSource
+            .cors { cors ->
+                cors.configurationSource { exchange ->
+                    val configuration = CorsConfiguration().apply {
+                        allowedOrigins = listOf("*")
+                        allowedMethods = listOf("GET", "POST", "OPTIONS", "PUT", "DELETE")
+                        allowedHeaders = listOf("*")
+                    }
+                    configuration
+                }
+            }
             .csrf { it.disable() }
             .authorizeExchange { exchanges ->
-                exchanges
-                    .anyExchange().permitAll()
+                exchanges.anyExchange().permitAll()
             }
             .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .build()
@@ -41,27 +49,16 @@ class SecurityConfig(
                 r.path("/user-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("http://172.22.0.1:8081")  //user service ip
-                    //todo change ip:port to env vars
+                //todo change ip:port to env vars
             }
             .route { r: PredicateSpec ->
                 r.path("/job-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("http://172.22.0.1:8083")  //user service ip
-                    //todo change ip:port to env vars
+                //todo change ip:port to env vars
             }
 
             .build()
-    }
-
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("*")
-        configuration.allowedMethods = listOf("GET", "POST", "OPTIONS", "PUT", "DELETE")
-        configuration.allowedHeaders = listOf("*")
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
     }
 
 

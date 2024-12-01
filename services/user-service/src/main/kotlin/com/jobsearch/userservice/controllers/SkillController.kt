@@ -23,7 +23,7 @@ class SkillController(
 
     @MutationMapping
     fun addSkill(@AuthenticationPrincipal userId: UUID,
-                 @Argument @Valid skillRequest: SkillRequest): List<SkillResponse> {
+                 @Argument @Valid skillRequest: SkillRequest): SkillResponse {
         return skillService.addSkill(userId, skillRequest)
     }
 

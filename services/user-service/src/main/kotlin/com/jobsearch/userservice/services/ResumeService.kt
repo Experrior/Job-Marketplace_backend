@@ -8,4 +8,5 @@ interface ResumeService {
     fun addResume(userId: UUID, resume: MultipartFile): List<ResumeResponse>
     fun deleteResume(userId: UUID, resumeId: UUID): List<ResumeResponse>
     fun userResumes(userId: UUID): List<ResumeResponse>
+    fun getResumeById(userId: UUID, resumeId: UUID): ResumeResponse
 }
