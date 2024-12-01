@@ -63,6 +63,7 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
             experiences = userProfile.experiences.map { toExperienceResponse(it) },
             educations = userProfile.educations.map { toEducationResponse(it) },
             links = userProfile.links.map { toLinkResponse(it) },
+            createdAt = userProfile.createdAt,
             updatedAt = userProfile.updatedAt
         )
     }

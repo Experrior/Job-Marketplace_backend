@@ -20,6 +20,7 @@ type UserProfile{
     educations: [Education]!
     links: [Link]!
     profilePictureUrl: String
+    createdAt: String
     updatedAt: String
 }
 
@@ -37,7 +38,7 @@ type Skill {
     skillId: ID!
     userProfile: UserProfile
     skillName: String
-    proficiencyLevel: String
+    proficiencyLevel: Int
     updatedAt: String
 }
 
@@ -144,21 +145,21 @@ type Mutation {
 
     addEducation(
         educationRequest: EducationRequestInput!
-    ): [Education]
+    ): Education
     updateEducation(
         educationId: ID!
         educationRequest: EducationRequestInput!
-    ): [Education]
-    deleteEducationById(educationId: ID!): [Education]
+    ): Education
+    deleteEducationById(educationId: ID!): DeleteResponse
     deleteAllUserEducations: DeleteResponse
 
     addExperience(
         experienceRequest: ExperienceRequestInput!
-    ): [Experience]
-    deleteExperienceById(experienceId: ID!): [Experience]
+    ): Experience
+    deleteExperienceById(experienceId: ID!): DeleteResponse
     deleteAllUserExperiences: DeleteResponse
 
-    addSkill(skillRequest: SkillRequestInput!): [Skill]
+    addSkill(skillRequest: SkillRequestInput!): Skill
     deleteSkillById(skillId: ID!): [Skill]
     deleteAllSkills: DeleteResponse
 

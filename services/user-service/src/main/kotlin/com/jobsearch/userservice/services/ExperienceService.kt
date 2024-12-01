@@ -6,7 +6,7 @@ import com.jobsearch.userservice.responses.ExperienceResponse
 import java.util.*
 
 interface ExperienceService {
-    fun addExperience(userId: UUID, experienceRequest: ExperienceRequest): List<ExperienceResponse>
-    fun deleteExperienceById(userId: UUID, experienceId: UUID): List<ExperienceResponse>
+    fun addExperience(userId: UUID, experienceRequest: ExperienceRequest): ExperienceResponse
+    fun deleteExperienceById(userId: UUID, experienceId: UUID): DeleteResponse
     fun deleteAllUserExperiences(userId: UUID): DeleteResponse
 }

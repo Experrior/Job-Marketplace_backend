@@ -24,7 +24,7 @@ data class Job(
     @Column(name = "job_title", nullable = false)
     var title: String,
 
-    @Column(name = "job_description", nullable = false)
+    @Column(name = "job_description", nullable = false, columnDefinition = "TEXT")
     var description: String,
 
     @Type(JsonType::class)

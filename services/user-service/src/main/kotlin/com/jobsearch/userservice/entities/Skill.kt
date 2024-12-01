@@ -17,14 +17,14 @@ class Skill(
     @Column(nullable = false)
     var skillName: String = "",
     @Column(nullable = false)
-    var proficiencyLevel: ProficiencyLevel = ProficiencyLevel.BEGINNER,
+    var proficiencyLevel: Int = 0,
     @Column(nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
 ){
     constructor() : this(
         userProfile = UserProfile(),
         skillName = "",
-        proficiencyLevel = ProficiencyLevel.BEGINNER
+        proficiencyLevel = 0
     )
 
     @PreUpdate

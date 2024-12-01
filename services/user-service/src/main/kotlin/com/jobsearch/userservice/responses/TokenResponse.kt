@@ -8,5 +8,7 @@ data class TokenResponse(
     val refreshToken: String,
     val refreshExpiresIn: Long,
     val userId: UUID?,
-    val role: String
+    val role: String,
+    val firstName: String,
+    val lastName: String
 )

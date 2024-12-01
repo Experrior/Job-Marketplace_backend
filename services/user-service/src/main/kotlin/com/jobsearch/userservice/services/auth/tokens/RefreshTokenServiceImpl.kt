@@ -42,7 +42,9 @@ class RefreshTokenServiceImpl(
             refreshToken = newRefreshToken,
             refreshExpiresIn = jwtTokenProvider.getRefreshValidityInMilliseconds(),
             userId = (authentication.principal as User).userId,
-            role = (authentication.principal as User).role.toString()
+            role = (authentication.principal as User).role.toString(),
+            firstName = (authentication.principal as User).firstName,
+            lastName = (authentication.principal as User).lastName
         )
     }
 }
