@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.services
 
+import com.jobsearch.jobservice.exceptions.ResumeNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -14,6 +15,7 @@ class UserServiceUtilsImpl(
 
     private val webClient: WebClient = webClientBuilder.build()
     private val companyNameCache = ConcurrentHashMap<UUID, String>()
+    private val s3ResumePathCache = ConcurrentHashMap<UUID, String>()
 
     @Value("\${user.service.url}")
     lateinit var userServiceUrl: String
@@ -84,6 +86,23 @@ class UserServiceUtilsImpl(
             val response = executeRestRequest(uri)
             (response as? Map<*, *>)?.get("name") as? String
                 ?: throw IllegalStateException("Company name not found")
+        }
+    }
+
+    override fun getS3ResumePath(resumeId: UUID): String {
+        return s3ResumePathCache.computeIfAbsent(resumeId) {
+            val query = """
+                query {
+                    resumeById(resumeId: "$resumeId") {
+                        s3ResumePath
+                    }
+                }
+            """.trimIndent()
+
+
+            val response = executeGraphQLQuery(query)
+            (response?.get("data") as? Map<*, *>)?.get("resumeById")?.let { it as? Map<*, *> }?.get("s3ResumePath") as? String
+                ?: throw ResumeNotFoundException("Resume not found by id: $resumeId")
         }
     }
 }

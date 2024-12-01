@@ -47,7 +47,7 @@ class FileStorageServiceImpl(
         checkFileType(resume, VALID_RESUME_TYPES)
         checkFileSize(resume, MAX_RESUME_SIZE)
 
-        val filePath = "resumes/$${userId}_${resume.originalFilename}"
+        val filePath = "resumes/${userId}_${resume.originalFilename}"
 
         return saveFile(filePath, resume)
     }

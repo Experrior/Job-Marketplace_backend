@@ -49,13 +49,13 @@ class SecurityConfig(
                 r.path("/user-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("http://172.22.0.1:8081")  //user service ip
-                    //todo change ip:port to env vars
+                //todo change ip:port to env vars
             }
             .route { r: PredicateSpec ->
                 r.path("/job-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("http://172.22.0.1:8083")  //user service ip
-                    //todo change ip:port to env vars
+                //todo change ip:port to env vars
             }
             .route { r: PredicateSpec ->
                 r.path("/chat-service/**")
@@ -70,17 +70,5 @@ class SecurityConfig(
             }
             .build()
     }
-
-    // @Bean
-    // fun corsConfigurationSource(): CorsConfigurationSource {
-    //     val configuration = CorsConfiguration()
-    //     configuration.allowedOrigins = listOf("*")
-    //     configuration.allowedMethods = listOf("GET", "POST", "OPTIONS", "PUT", "DELETE")
-    //     configuration.allowedHeaders = listOf("*")
-    //     val source = UrlBasedCorsConfigurationSource()
-    //     source.registerCorsConfiguration("/**", configuration)
-    //     return source
-    // }
-
 
 }

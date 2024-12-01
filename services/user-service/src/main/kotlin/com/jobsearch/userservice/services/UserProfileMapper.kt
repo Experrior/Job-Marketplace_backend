@@ -11,6 +11,7 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
         return ResumeResponse(
             resumeId = resume.resumeId!!,
             resumeName = resume.resumeName,
+            s3ResumePath = resume.s3ResumePath!!,
             resumeUrl = fileStorageService.getFileUrl(resume.s3ResumePath!!),
             createdAt = resume.createdAt
         )
@@ -62,6 +63,7 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
             experiences = userProfile.experiences.map { toExperienceResponse(it) },
             educations = userProfile.educations.map { toEducationResponse(it) },
             links = userProfile.links.map { toLinkResponse(it) },
+            createdAt = userProfile.createdAt,
             updatedAt = userProfile.updatedAt
         )
     }

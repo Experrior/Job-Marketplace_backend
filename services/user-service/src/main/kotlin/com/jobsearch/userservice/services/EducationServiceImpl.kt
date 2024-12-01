@@ -24,7 +24,7 @@ class EducationServiceImpl(
     }
 
     @Transactional
-    override fun addEducation(userId: UUID, educationRequest: EducationRequest): List<EducationResponse> {
+    override fun addEducation(userId: UUID, educationRequest: EducationRequest): EducationResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val education = Education(
@@ -35,12 +35,11 @@ class EducationServiceImpl(
             endDate = educationRequest.endDate,
         )
 
-        educationRepository.save(education)
-        return educationRepository.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
+        return mapper.toEducationResponse(educationRepository.save(education))
     }
 
     @Transactional
-    override fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): List<EducationResponse> {
+    override fun updateEducation(userId: UUID, educationId: UUID, educationRequest: EducationRequest): EducationResponse {
         val education = getEducationEntity(educationId)
         checkEducationBelongsToUser(userId, education)
 
@@ -49,8 +48,7 @@ class EducationServiceImpl(
         education.startDate = educationRequest.startDate
         education.endDate = educationRequest.endDate
 
-        educationRepository.save(education)
-        return educationRepository.findByUserProfile(education.userProfile).map { mapper.toEducationResponse(it) }
+        return mapper.toEducationResponse(educationRepository.save(education))
     }
 
     override fun getEducationById(userId: UUID, educationId: UUID): EducationResponse {
@@ -62,12 +60,15 @@ class EducationServiceImpl(
     }
 
     @Transactional
-    override fun deleteEducationById(userId: UUID, educationId: UUID): List<EducationResponse> {
+    override fun deleteEducationById(userId: UUID, educationId: UUID): DeleteResponse {
         val education = getEducationEntity(educationId)
         checkEducationBelongsToUser(userId, education)
         educationRepository.delete(education)
 
-        return educationRepository.findByUserProfile(education.userProfile).map { mapper.toEducationResponse(it) }
+        return DeleteResponse(
+            success = true,
+            message = "Education deleted successfully"
+        )
     }
 
     override fun deleteAllUserEducations(userId: UUID): DeleteResponse {

@@ -20,7 +20,6 @@ type UserProfile{
     educations: [Education]!
     links: [Link]!
     profilePictureUrl: String
-    createdAt: String
     updatedAt: String
 }
 
@@ -38,7 +37,7 @@ type Skill {
     skillId: ID!
     userProfile: UserProfile
     skillName: String
-    proficiencyLevel: Int
+    proficiencyLevel: String
     updatedAt: String
 }
 
@@ -86,14 +85,6 @@ type Link {
     url: String!
 }
 
-type ResumeResponse {
-    resumeId: ID!,
-    resumeName: String!,
-    s3ResumePath: String!,
-    resumeUrl: String,
-    createdAt: String!
-}
-
 type Query{
     ### User ###
     userById(userId: ID!): User
@@ -129,10 +120,6 @@ type Query{
     ### Company ###
     companies: [Company]
     companyById(companyId: ID!): Company
-
-    ### Resume ###
-    resumeById(resumeId: ID!): ResumeResponse
-    userResumes: [ResumeResponse]
 }
 
 type Mutation {
@@ -145,21 +132,21 @@ type Mutation {
 
     addEducation(
         educationRequest: EducationRequestInput!
-    ): Education
+    ): [Education]
     updateEducation(
         educationId: ID!
         educationRequest: EducationRequestInput!
-    ): Education
-    deleteEducationById(educationId: ID!): DeleteResponse
+    ): [Education]
+    deleteEducationById(educationId: ID!): [Education]
     deleteAllUserEducations: DeleteResponse
 
     addExperience(
         experienceRequest: ExperienceRequestInput!
-    ): Experience
-    deleteExperienceById(experienceId: ID!): DeleteResponse
+    ): [Experience]
+    deleteExperienceById(experienceId: ID!): [Experience]
     deleteAllUserExperiences: DeleteResponse
 
-    addSkill(skillRequest: SkillRequestInput!): Skill
+    addSkill(skillRequest: SkillRequestInput!): [Skill]
     deleteSkillById(skillId: ID!): [Skill]
     deleteAllSkills: DeleteResponse
 

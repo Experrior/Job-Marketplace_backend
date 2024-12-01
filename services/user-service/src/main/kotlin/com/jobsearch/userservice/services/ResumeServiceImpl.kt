@@ -1,6 +1,7 @@
 package com.jobsearch.userservice.services
 
 import com.jobsearch.userservice.entities.Resume
+import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.ResumeNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.ResumeRepository
@@ -52,5 +53,17 @@ class ResumeServiceImpl(
     override fun userResumes(userId: UUID): List<ResumeResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
+    }
+
+    override fun getResumeById(userId: UUID, resumeId: UUID): ResumeResponse {
+        val profile = userProfileService.getUserProfileEntityByUserId(userId)
+        val resume = resumeRepository.findById(resumeId)
+            .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
+
+        if (profile.user.role != UserRole.RECRUITER && resume.userProfile != profile) {
+            throw UnauthorizedAccessException("Resume does not belong to the user's profile")
+        }
+
+        return mapper.toResumeResponse(resume)
     }
 }
