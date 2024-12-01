@@ -3,9 +3,7 @@ package services
 import (
 	"context"
 	"log"
-	// "encoding/json"
 	"time"
-
 	"gorm.io/gorm"
 	"github.com/google/uuid"
 )
@@ -19,10 +17,6 @@ func NewMessageService(db *gorm.DB) *DbMessageService {
 }
 
 type MessageService interface {
-	// Get(id string) (*app_users, error)
-	// Delete(id string) error
-	// DeleteAll() error
-	// Update(user *User) error
 	GetMessages(chatId string) ([]Message)
 	Create(message *Message) (Message, error)
 	GetAllChats(userId string) ([]chats)
