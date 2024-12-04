@@ -1,5 +1,5 @@
 {
-  "connection": "postgresql+psycopg2://admin:test@172.22.0.2:5432/JobMarketDB",
+  "connection": "postgresql+psycopg2://admin:test@172.22.0.1:5432/JobMarketDB",
   "tables": {
     "app_users": {
       "user_id": "PK UUID",
@@ -42,7 +42,7 @@
       "category": "OPTION IN (Web Development,Mobile Development,Gamedev,Embedded,Analytics,Machine Learning,Cloud Computing,Networks,Cybersecurity,Administration,ERP,Consulting,Compilers)",
       "job_description": "long_text",
       "recruiter_id": "FK_UUID app_users.user_id",
-      "required_skills": "jsonb:json1 value:required_skills",
+      "required_skills": "first_name",
       "required_experience": "long_text RANGE(4,10)",
       "employment_type": "OPTION IN (full-time,part-time)",
       "work_setting": "OPTION IN (remote,hybrid,stationary)",
@@ -65,21 +65,12 @@
     },
     "applications": {
       "application_id": "PK UUID",
-      "status": "smallint RANGE(1,6)",
+      "status": "integer RANGE(1,6)",
       "job_id": "FK_UUID jobs.job_id",
-      "quiz_result_id": "FK_UUID quiz_results.quiz_result_id",
       "user_id": "FK_UUID app_users.user_id",
       "s3_resume_path": "first_name",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
-    },
-    "quiz_results": {
-      "quiz_result_id": "PK UUID",
-      "score": "float RANGE(0,100)",
-      "time_taken": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=60,std=15)",
-      "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
-      "applicant_id": "FK_UUID app_users.user_id",
-      "quiz_id": "FK_UUID quizzes.quiz_id"
     },
     "quizzes": {
       "quiz_id": "PK UUID",
@@ -186,19 +177,21 @@
     }
   ],
   "objects_count": {
-    "app_users": 5000,
-    "skills": 400,
-    "chat_messages": 6,
-    "job": 2500,
-    "experiences": 800,
-    "educations": 700,
+    "app_users": 1000,
+    "skills": 20,
+    "chat_messages": 60,
+    "jobs": 500,
+    "experiences": 80,
+    "educations": 70,
     "company": 100,
-    "chats": 1,
-    "user_profiles": 500,
-    "user_settings": 2,
-    "user_chats": 2,
-    "quizzes": 2,
-    "quiz_results": 2,
-    "applications": 12000
+    "chats": 10,
+    "user_profiles": 50,
+    "user_settings": 20,
+    "user_chats": 20,
+    "user_followed": 2000,
+    "user_viewed": 15000,
+    "quizzes": 20,
+    "applications": 4000,
+    "employee_verification_tokens": 5
   }
 }
