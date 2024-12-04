@@ -237,6 +237,9 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 							}
 
 						} else if newReceivedMessage.Operation == "post" {
+							log.Println("testing post operation:")
+							log.Println(&newReceivedMessage.MessageValue)
+							log.Println(newReceivedMessage.MessageValue)
 							//db query to insert chat message, send msg to all corresponding websockets TODO
 							data, _ := a.MessageService.Create(&newReceivedMessage.MessageValue)
 
@@ -252,15 +255,17 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 								conn, ok := retrieved_conn.(*websocket.Conn) // type assertion for value any from sync.Map
 								if !ok {
 									log.Println("[CRITICAL ERROR] The connection stored in sync.Map is not of type: *websocket.Conn")
+								}else{
+									jsonData, err := json.Marshal(newReceivedMessage.MessageValue)
+									if err != nil {
+										log.Println("[ERROR] Couldn't parse json for newReceivedMessage.MessageValue")
+									}
+									if err = conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
+										log.Println("[ERROR] Couldn't send message to target, even though connection existed")
+	
+									}
 								}
-								jsonData, err := json.Marshal(newReceivedMessage.MessageValue)
-								if err != nil {
-									log.Println("[ERROR] Couldn't parse json for newReceivedMessage.MessageValue")
-								}
-								if err = conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
-									log.Println("[ERROR] Couldn't send message to target, even though connection existed")
 
-								}
 
 							}
 							var msgs []services.Message
