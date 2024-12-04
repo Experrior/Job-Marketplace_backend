@@ -1,5 +1,5 @@
 {
-  "connection": "postgresql+psycopg2://admin:test@172.22.0.2:5432/JobMarketDB",
+  "connection": "postgresql+psycopg2://admin:test@172.22.0.1:5432/JobMarketDB",
   "tables": {
     "app_users": {
       "user_id": "PK UUID",
