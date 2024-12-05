@@ -57,7 +57,12 @@ class SecurityConfig(
                     .uri("http://172.22.0.1:8083")  //user service ip
                 //todo change ip:port to env vars
             }
-
+            .route { r: PredicateSpec ->
+                r.path("/analytics/**")
+                    .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
+                    .uri("http://172.22.0.1:8089")  //user service ip
+                //todo change ip:port to env vars
+            }
             .build()
     }
 
