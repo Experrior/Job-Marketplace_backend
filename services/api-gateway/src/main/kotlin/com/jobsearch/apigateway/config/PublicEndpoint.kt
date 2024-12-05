@@ -14,7 +14,8 @@ enum class PublicEndpoint(val pattern: String) {
     GET_COMPANIES("/user-service/getCompanies"),
     GET_JOBS("/job-service/getJobs"),
     GET_COMPANY_BY_ID("/user-service/getCompanyById"),
-    ERROR("/user-service/error");
+    ERROR("/user-service/error"),
+    ANALYTICS("/analytics/**");
 
 
 

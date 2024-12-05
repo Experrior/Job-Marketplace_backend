@@ -154,7 +154,7 @@
       "json1": {
         "fields": [
           {
-            "skills": {
+            "required_skills": {
                "type": "array",
                "item_count": "RANGE(1, 5)",
                "content": {
