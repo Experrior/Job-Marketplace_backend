@@ -25,7 +25,7 @@ class CompanyController(
     }
 
     @GetMapping("/getCompanies")
-    fun registerApplicant(): ResponseEntity<List<Company>> {
+    fun getCompanies(): ResponseEntity<List<Company>> {
         return ResponseEntity.ok(companyService.getAllCompanies())
     }
 
