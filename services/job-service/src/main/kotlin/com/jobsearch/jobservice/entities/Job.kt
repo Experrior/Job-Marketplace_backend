@@ -40,15 +40,18 @@ data class Job(
     @Column(name = "location", nullable = false)
     var location: String,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "employment_type")
     var employmentType: EmploymentType? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "work_location")
     var workLocation: WorkLocation? = null,
 
     @Column(name = "salary")
     var salary: Int? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "experience_level")
     var experienceLevel: ExperienceLevel? = null,
 
