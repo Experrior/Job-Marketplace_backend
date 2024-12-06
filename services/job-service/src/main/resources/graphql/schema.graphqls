@@ -125,6 +125,17 @@ type QuizResponse {
     isDeleted: Boolean!
 }
 
+type ApplicationResponse {
+    applicationId: ID!
+    userId: ID!
+    job: Job!
+    status: String!
+    resumeUrl: String
+    quizResult: QuizResult
+    createdAt: String!
+    updatedAt: String
+}
+
 type DeleteQuizResponse {
     success: Boolean!
     message: String!

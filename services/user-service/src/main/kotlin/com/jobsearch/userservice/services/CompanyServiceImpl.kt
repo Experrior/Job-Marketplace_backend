@@ -8,7 +8,8 @@ import java.util.*
 
 @Service
 class CompanyServiceImpl(
-    private val companyRepository: CompanyRepository
+    private val companyRepository: CompanyRepository,
+    private val fileStorageService: FileStorageService
 ): CompanyService {
     override fun existsByEmail(email: String): Boolean {
         return companyRepository.existsByEmail(email)
@@ -28,11 +29,18 @@ class CompanyServiceImpl(
     }
 
     override fun findCompanyById(companyId: UUID): Company {
-        return companyRepository.findCompanyByCompanyId(companyId)
+        val company = companyRepository.findCompanyByCompanyId(companyId)
             ?: throw CompanyNotFoundException("Company not found with id: $companyId")
+        company.logoUrl = company.s3LogoPath?.let { fileStorageService.getFileUrl(it) }
+        return company
     }
 
     override fun getAllCompanies(): List<Company> {
-        return companyRepository.findAll()
+        val companies = companyRepository.findAll()
+        companies.forEach { company ->
+            company.logoUrl = company.s3LogoPath?.let { fileStorageService.getFileUrl(it) }
+        }
+
+        return companies
     }
 }

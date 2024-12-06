@@ -7,7 +7,9 @@ import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
 import com.jobsearch.jobservice.exceptions.QuizResultNotFoundException
 import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
 import com.jobsearch.jobservice.repositories.ApplicationRepository
+import com.jobsearch.jobservice.responses.ApplicationResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -19,6 +21,8 @@ class JobApplicationServiceImpl(
     private val quizResultService: QuizResultService,
     private val userServiceUtils: UserServiceUtils
 ): JobApplicationService {
+    private val logger = LoggerFactory.getLogger(JobApplicationService::class.java)
+
     override fun applyForJob(jobId: UUID, userId: UUID, resumeId: UUID, quizResultId: UUID?): Application {
         val job = getJob(jobId)
 
@@ -32,11 +36,12 @@ class JobApplicationServiceImpl(
         return applicationRepository.save(application)
     }
 
-    override fun getUserApplications(userId: UUID): List<Application> {
+    override fun getUserApplications(userId: UUID): List<ApplicationResponse> {
+        logger.info("Getting applications for user: $userId")
         val applications = applicationRepository.findApplicationsByUserId(userId)
         setResumeUrls(applications)
         setFullName(applications)
-        return applications
+        return applications.map { mapApplicationToResponse(it) }
     }
 
     override fun getJobApplications(jobId: UUID): List<Application> {
@@ -107,6 +112,20 @@ class JobApplicationServiceImpl(
         if (job.quiz != null && quizResultId == null) {
             throw QuizResultNotFoundException("Quiz result is required for this job")
         }
+    }
+
+    private fun mapApplicationToResponse(application: Application): ApplicationResponse {
+        logger.info("Mapping application to response: ${application.applicationId}")
+        return ApplicationResponse(
+            applicationId = application.applicationId!!,
+            userId = application.userId,
+            job = jobService.mapJobToResponse(application.job),
+            resumeUrl = application.resumeUrl,
+            status = application.status,
+            quizResult = application.quizResult?.let { quizResultService.mapQuizResultToResponse(it) },
+            createdAt = application.createdAt,
+            updatedAt = application.updatedAt
+        )
     }
 
 }
