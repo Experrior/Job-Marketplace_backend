@@ -23,4 +23,5 @@ interface JobService {
     fun restoreJobById(jobId: UUID): JobResponse
     fun toggleFollowJob(jobId: UUID, userId: UUID): FollowJobResponse
     fun getFollowedFilteredJobs(userId: UUID): List<JobResponse>
+    fun mapJobToResponse(job: Job): JobResponse
 }

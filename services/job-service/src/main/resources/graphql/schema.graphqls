@@ -4,10 +4,11 @@ type Job {
     title: String!
     description: String!
     requiredSkills: String!
-    requiredExperience: String!
+    requiredExperience: Int
     location: String!
-    employmentType: String!
-    workLocation: String!
+    employmentType: String
+    workLocation: String
+    level: String
     salary: Float
     createdAt: String!
     isDeleted: Boolean!
@@ -42,7 +43,7 @@ type Query {
     jobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
     followedJobs: [Job]
 
-    userApplications: [Application]
+    userApplications: [ApplicationResponse]
     jobApplications(jobId: ID!, sortOrder: String): [Application]
 
     quizzesByRecruiter: [QuizResponse]
@@ -71,11 +72,12 @@ input JobInput {
     title: String!
     description: String!
     location: String!
-    employmentType: String!
-    workLocation: String!
+    employmentType: String
+    workLocation: String
     salary: Float
     requiredSkills: [SkillInput!]!
-    requiredExperience: String!,
+    requiredExperience: Int,
+    level: String
     quizId: ID
 }
 

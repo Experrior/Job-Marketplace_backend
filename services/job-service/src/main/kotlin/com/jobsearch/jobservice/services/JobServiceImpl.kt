@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.Level
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
@@ -89,6 +90,8 @@ class JobServiceImpl(
 
     override fun restoreJobById(jobId: UUID): JobResponse {
         val job = getJobEntityById(jobId)
+        job.isDeleted = false
+
         val restoredJob = jobRepository.save(job)
         return mapJobToResponse(restoredJob)
     }
@@ -137,11 +140,12 @@ class JobServiceImpl(
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
             requiredExperience = jobRequest.requiredExperience,
+            level = jobRequest.level?.let { Level.valueOf(it.uppercase()) },
             quiz = jobRequest.quizId?.let { quizService.findQuizEntityById(it) },
         )
     }
 
-    private fun mapJobToResponse(job: Job): JobResponse {
+    override fun mapJobToResponse(job: Job): JobResponse {
         return JobResponse(
             jobId = job.jobId ?: throw IllegalArgumentException("Job ID cannot be null"),
             recruiterId = job.recruiterId,
@@ -154,11 +158,12 @@ class JobServiceImpl(
             salary = job.salary,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
+            level = job.level?.name,
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,
             quizId = job.quiz?.quizId,
-            companyName = userServiceUtils.getCompanyName(job.companyId)
+            companyName = userServiceUtils.getCompanyName(job.companyId),
         )
     }
 

@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.entities
 
+import com.jobsearch.jobservice.entities.enums.Level
 import com.jobsearch.jobservice.entities.quizzes.Quiz
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -31,20 +32,23 @@ data class Job(
     @Column(name = "required_skills", columnDefinition = "jsonb", nullable = false)
     var requiredSkills: List<Skill>,
 
-    @Column(name = "required_experience", nullable = false)
-    var requiredExperience: String,
+    @Column(name = "required_experience")
+    var requiredExperience: Int? = null,
 
     @Column(name = "location", nullable = false)
     var location: String,
 
     @Column(name = "employment_type")
-    var employmentType: String,
+    var employmentType: String? = null,
 
     @Column(name = "work_location")
-    var workLocation: String,
+    var workLocation: String? = null,
 
     @Column(name = "salary")
     var salary: Int? = null,
+
+    @Column(name = "level")
+    var level: Level? = null,
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
@@ -65,7 +69,7 @@ data class Job(
         title = "",
         description = "",
         requiredSkills = emptyList(),
-        requiredExperience = "",
+        requiredExperience = null,
         location = "",
         employmentType = "",
         workLocation = ""
