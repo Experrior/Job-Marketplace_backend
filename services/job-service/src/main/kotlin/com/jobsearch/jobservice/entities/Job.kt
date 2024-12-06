@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.entities
 
+import com.jobsearch.jobservice.entities.enums.EmploymentType
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.quizzes.Quiz
@@ -40,7 +41,7 @@ data class Job(
     var location: String,
 
     @Column(name = "employment_type")
-    var employmentType: String? = null,
+    var employmentType: EmploymentType? = null,
 
     @Column(name = "work_location")
     var workLocation: WorkLocation? = null,
@@ -72,10 +73,7 @@ data class Job(
         requiredSkills = emptyList(),
         requiredExperience = null,
         location = "",
-        employmentType = "",
-    ){
-
-    }
+    )
 
     @PrePersist
     fun onCreate() {

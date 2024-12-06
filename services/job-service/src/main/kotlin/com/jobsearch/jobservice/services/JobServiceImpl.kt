@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.EmploymentType
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
@@ -139,7 +140,7 @@ class JobServiceImpl(
             title = jobRequest.title,
             description = jobRequest.description,
             location = jobRequest.location,
-            employmentType = jobRequest.employmentType,
+            employmentType = jobRequest.employmentType?.let { EmploymentType.valueOf(it.uppercase()) },
             workLocation = jobRequest.workLocation?.let { WorkLocation.valueOf(it.uppercase()) },
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
@@ -157,7 +158,7 @@ class JobServiceImpl(
             title = job.title,
             description = job.description,
             location = job.location,
-            employmentType = job.employmentType,
+            employmentType = job.employmentType?.value,
             workLocation = job.workLocation?.value,
             salary = job.salary,
             requiredSkills = job.requiredSkills,

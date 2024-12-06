@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.entities.specifications
 
 
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.EmploymentType
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.requests.JobFilterRequest
@@ -56,7 +57,8 @@ object JobSpecifications {
                 predicates.add(criteriaBuilder.equal(root.get<WorkLocation>("workLocation"), workLocation))
             }
             filter.employmentType?.let {
-                predicates.add(criteriaBuilder.equal(root.get<String>("employmentType"), it))
+                val employmentType = EmploymentType.valueOf(it.uppercase())
+                predicates.add(criteriaBuilder.equal(root.get<EmploymentType>("employmentType"), employmentType))
             }
             filter.experienceLevel?.let {
                 val experienceLevel = ExperienceLevel.valueOf(it.uppercase())
