@@ -2,7 +2,7 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
-import com.jobsearch.jobservice.entities.enums.Level
+import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
@@ -13,6 +13,7 @@ import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.responses.FollowJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
 import jakarta.transaction.Transactional
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -28,6 +29,7 @@ class JobServiceImpl(
     private val userServiceUtils: UserServiceUtils,
     private val viewedJobService: ViewedJobService
 ): JobService {
+    private val logger = LoggerFactory.getLogger(JobServiceImpl::class.java)
 
     override fun createJob(jobRequest: JobRequest): JobResponse {
         val companyId = userServiceUtils.getRecruiterCompany()
@@ -128,6 +130,7 @@ class JobServiceImpl(
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
+        logger.info("Job request: $jobRequest")
         return Job(
             jobId = jobId,
             recruiterId = recruiterId,
@@ -140,7 +143,7 @@ class JobServiceImpl(
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
             requiredExperience = jobRequest.requiredExperience,
-            level = jobRequest.level?.let { Level.valueOf(it.uppercase()) },
+            experienceLevel = jobRequest.experienceLevel?.let { ExperienceLevel.valueOf(it.uppercase()) },
             quiz = jobRequest.quizId?.let { quizService.findQuizEntityById(it) },
         )
     }
@@ -158,7 +161,7 @@ class JobServiceImpl(
             salary = job.salary,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
-            level = job.level?.name,
+            level = job.experienceLevel?.name,
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,

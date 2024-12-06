@@ -1,6 +1,6 @@
 package com.jobsearch.jobservice.entities
 
-import com.jobsearch.jobservice.entities.enums.Level
+import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.quizzes.Quiz
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -47,8 +47,8 @@ data class Job(
     @Column(name = "salary")
     var salary: Int? = null,
 
-    @Column(name = "level")
-    var level: Level? = null,
+    @Column(name = "experience_level")
+    var experienceLevel: ExperienceLevel? = null,
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
