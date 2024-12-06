@@ -3,6 +3,7 @@ package com.jobsearch.jobservice.services
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
@@ -139,7 +140,7 @@ class JobServiceImpl(
             description = jobRequest.description,
             location = jobRequest.location,
             employmentType = jobRequest.employmentType,
-            workLocation = jobRequest.workLocation,
+            workLocation = jobRequest.workLocation?.let { WorkLocation.valueOf(it.uppercase()) },
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
             requiredExperience = jobRequest.requiredExperience,
@@ -157,11 +158,11 @@ class JobServiceImpl(
             description = job.description,
             location = job.location,
             employmentType = job.employmentType,
-            workLocation = job.workLocation,
+            workLocation = job.workLocation?.value,
             salary = job.salary,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
-            level = job.experienceLevel?.name,
+            experienceLevel = job.experienceLevel?.value,
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,

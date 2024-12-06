@@ -1,6 +1,7 @@
 package com.jobsearch.jobservice.entities
 
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.quizzes.Quiz
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -42,7 +43,7 @@ data class Job(
     var employmentType: String? = null,
 
     @Column(name = "work_location")
-    var workLocation: String? = null,
+    var workLocation: WorkLocation? = null,
 
     @Column(name = "salary")
     var salary: Int? = null,
@@ -72,7 +73,6 @@ data class Job(
         requiredExperience = null,
         location = "",
         employmentType = "",
-        workLocation = ""
     ){
 
     }

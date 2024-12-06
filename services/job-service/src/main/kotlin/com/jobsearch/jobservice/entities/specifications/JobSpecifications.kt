@@ -3,6 +3,7 @@ package com.jobsearch.jobservice.entities.specifications
 
 import com.jobsearch.jobservice.entities.Job
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.requests.JobFilterRequest
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
@@ -51,7 +52,8 @@ object JobSpecifications {
                 predicates.add(criteriaBuilder.and(*skillPredicates.toTypedArray()))
             }
             filter.workLocation?.let {
-                predicates.add(criteriaBuilder.equal(root.get<String>("workLocation"), it))
+                val workLocation = WorkLocation.valueOf(it.uppercase())
+                predicates.add(criteriaBuilder.equal(root.get<WorkLocation>("workLocation"), workLocation))
             }
             filter.employmentType?.let {
                 predicates.add(criteriaBuilder.equal(root.get<String>("employmentType"), it))
