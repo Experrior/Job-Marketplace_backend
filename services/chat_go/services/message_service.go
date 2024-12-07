@@ -31,7 +31,6 @@ type Message struct {
 	Content   string `json:"content"`
 
 	CreatedBy string `json:"createdBy" gorm:"references:app_users;type:uuid"`
-	CreatedByDisplay string `json:"createdByDisplay"`
 
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
@@ -67,8 +66,9 @@ type chats struct {
 	ChatId        string    `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	RecruiterId   string    `gorm:"type:uuid;references:app_users"`                                   
 	ApplicantId   string    `gorm:"type:uuid;references:app_users"`                                   
-	RecruiterName string    `gorm:"type:string"`    
-	ApplicantName string    `gorm:"type:string"`                    
+	RecruiterName string    `gorm:"type:string"`                                   
+	ApplicantName string    `gorm:"type:string"`                                   
+	IsDeleted     bool      `gorm:"default:false"`                                 
 	CreatedAt     time.Time `gorm:"type:timestamp;default:now()"`                  
 	UpdatedAt     time.Time `gorm:"type:timestamp;default:now()"`   
 }

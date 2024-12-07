@@ -30,9 +30,6 @@
       "chat_id": "FK_UUID chats.chat_id",
       "content": "long_text",
       "created_by": "FK_UUID app_users.user_id",
-      "created_by_display": "first_name",
-      "read_by": "first_name",
-      "deleted_by": "first_name",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
