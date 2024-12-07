@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.Education
 import com.jobsearch.userservice.exceptions.EducationNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.EducationRepository
+import com.jobsearch.userservice.replica_repositories.EducationRepositoryReplica
 import com.jobsearch.userservice.requests.EducationRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.EducationResponse
@@ -14,13 +15,14 @@ import java.util.*
 @Service
 class EducationServiceImpl(
     private val educationRepository: EducationRepository,
+    private val educationRepositoryReplica: EducationRepositoryReplica,
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): EducationService {
     override fun getEducationsByUserProfile(userId: UUID): List<EducationResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        return educationRepository.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
+        return educationRepositoryReplica.findByUserProfile(profile).map { mapper.toEducationResponse(it) }
     }
 
     @Transactional
@@ -73,7 +75,7 @@ class EducationServiceImpl(
 
     override fun deleteAllUserEducations(userId: UUID): DeleteResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
-        val educations = educationRepository.findByUserProfile(profile)
+        val educations = educationRepositoryReplica.findByUserProfile(profile)
 
         if (educations.isEmpty()) {
             return DeleteResponse(
@@ -90,7 +92,7 @@ class EducationServiceImpl(
     }
 
     private fun getEducationEntity(educationId: UUID): Education {
-        return educationRepository.findById(educationId)
+        return educationRepositoryReplica.findById(educationId)
             .orElseThrow { EducationNotFoundException("Education not found for id: $educationId") }
     }
 

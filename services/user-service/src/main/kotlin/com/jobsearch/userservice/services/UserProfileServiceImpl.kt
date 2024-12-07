@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.UserProfile
 import com.jobsearch.userservice.exceptions.ProfileNotFoundException
 import com.jobsearch.userservice.exceptions.UserNotEligibleForProfileException
 import com.jobsearch.userservice.repositories.UserProfileRepository
+import com.jobsearch.userservice.replica_repositories.UserProfileRepositoryReplica
 import com.jobsearch.userservice.responses.ProfilePictureResponse
 import com.jobsearch.userservice.responses.UserProfileResponse
 import org.springframework.stereotype.Service
@@ -13,6 +14,7 @@ import java.util.*
 @Service
 class UserProfileServiceImpl(
     private val userProfileRepository: UserProfileRepository,
+    private val userProfileRepositoryReplica: UserProfileRepositoryReplica,
     private val userService: UserService,
     private val fileStorageService: FileStorageService,
     private val mapper: UserProfileMapper
@@ -25,7 +27,7 @@ class UserProfileServiceImpl(
     }
 
     override fun getAllProfiles(limit: Int, offset: Int): List<UserProfileResponse> {
-        return userProfileRepository.findAll().map { mapper.toUserProfileResponse(it) }
+        return userProfileRepositoryReplica.findAll().map { mapper.toUserProfileResponse(it) }
     }
 
     override fun createDefaultProfile(userId: UUID): UserProfile {
@@ -84,7 +86,7 @@ class UserProfileServiceImpl(
 
     override fun getUserProfileEntityByUserId(userId: UUID): UserProfile {
         val user = userService.getUserById(userId)
-        return userProfileRepository.findByUser(user)
+        return userProfileRepositoryReplica.findByUser(user)
             ?: throw ProfileNotFoundException("Profile not found for user with id: $userId")
     }
 }

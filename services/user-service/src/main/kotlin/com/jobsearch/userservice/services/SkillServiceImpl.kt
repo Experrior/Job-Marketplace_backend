@@ -5,6 +5,7 @@ import com.jobsearch.userservice.entities.Skill
 import com.jobsearch.userservice.entities.SkillType
 import com.jobsearch.userservice.exceptions.SkillNotFoundException
 import com.jobsearch.userservice.repositories.SkillRepository
+import com.jobsearch.userservice.replica_repositories.SkillRepositoryReplica
 import com.jobsearch.userservice.requests.SkillRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.SkillResponse
@@ -15,13 +16,14 @@ import java.util.*
 @Service
 class SkillServiceImpl(
     private val skillRepository: SkillRepository,
+    private val skillRepositoryReplica: SkillRepositoryReplica,
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): SkillService {
     override fun getUserSkills(userId: UUID): List<SkillResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        return skillRepository.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
+        return skillRepositoryReplica.findByUserProfile(profile).map { mapper.toSkillResponse(it) }
     }
 
     @Transactional

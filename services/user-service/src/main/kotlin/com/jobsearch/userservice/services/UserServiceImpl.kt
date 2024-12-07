@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.User
 import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.UserNotFoundException
 import com.jobsearch.userservice.repositories.UserRepository
+import com.jobsearch.userservice.replica_repositories.UserRepositoryReplica
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -14,6 +15,7 @@ import java.util.*
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val userRepositoryReplica: UserRepositoryReplica,
 ): UserService, UserDetailsService{
     override fun getUserById(userId: UUID): User {
         return userRepository.findById(userId)
@@ -21,7 +23,7 @@ class UserServiceImpl(
     }
 
     override fun getAllUsers(limit: Int, offset: Int): List<User> {
-        return userRepository.findAll();
+        return UserRepositoryReplica.findAll();
     }
 
     override fun save(user: User): User {
@@ -37,11 +39,11 @@ class UserServiceImpl(
     }
 
     override fun existsByUserId(userId: UUID): Boolean {
-        return userRepository.existsById(userId)
+        return UserRepositoryReplica.existsById(userId)
     }
 
     override fun existsByEmail(email: String): Boolean {
-        return userRepository.existsByEmail(email)
+        return UserRepositoryReplica.existsByEmail(email)
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
@@ -50,7 +52,7 @@ class UserServiceImpl(
     }
 
     override fun getUserByEmail(email: String): User {
-        return userRepository.findByEmail(email)
+        return UserRepositoryReplica.findByEmail(email)
             ?: throw UserNotFoundException("Email not found: $email")
     }
 }

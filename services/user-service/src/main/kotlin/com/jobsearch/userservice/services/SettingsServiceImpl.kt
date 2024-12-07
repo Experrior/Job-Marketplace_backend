@@ -3,6 +3,7 @@ package com.jobsearch.userservice.services
 import com.jobsearch.userservice.entities.Settings
 import com.jobsearch.userservice.exceptions.SettingsNotFoundException
 import com.jobsearch.userservice.repositories.SettingsRepository
+import com.jobsearch.userservice.replica_repositories.SettingsRepositoryReplica
 import com.jobsearch.userservice.requests.SettingsRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import org.springframework.stereotype.Service
@@ -11,11 +12,12 @@ import java.util.*
 @Service
 class SettingsServiceImpl(
     private val settingsRepository: SettingsRepository,
+    private val settingsRepositoryReplica: SettingsRepositoryReplica,
     private val userService: UserService
 ): SettingsService {
     override fun getSettingsByUserId(userId: UUID): Settings {
         val user = userService.getUserById(userId)
-        return settingsRepository.findByUser(user) ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
+        return settingsRepositoryReplica.findByUser(user) ?: throw SettingsNotFoundException("Settings not found for user with id: $userId")
     }
 
     override fun createDefaultUserSettings(
