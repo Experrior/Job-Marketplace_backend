@@ -3,6 +3,7 @@ package com.jobsearch.jobservice.services
 import com.jobsearch.jobservice.entities.UserJobId
 import com.jobsearch.jobservice.entities.ViewedJob
 import com.jobsearch.jobservice.repositories.ViewedJobRepository
+import com.jobsearch.jobservice.replica_repositories.ViewedJobRepositoryReplica
 import com.jobsearch.jobservice.responses.ViewedJobResponse
 import org.springframework.stereotype.Service
 import java.util.*
@@ -10,9 +11,10 @@ import java.util.*
 @Service
 class ViewedJobServiceImpl(
     private val viewedJobRepository: ViewedJobRepository
+    private val viewedJobRepositoryReplica: ViewedJobRepositoryReplica
 ): ViewedJobService {
     override fun viewJob(userId: UUID, jobId: UUID) {
-        val viewedJob = viewedJobRepository.findById(UserJobId(userId, jobId)).orElse(
+        val viewedJob = viewedJobRepositoryReplica.findById(UserJobId(userId, jobId)).orElse(
             createViewedJob(userId, jobId)
         )
 
@@ -21,7 +23,7 @@ class ViewedJobServiceImpl(
     }
 
     override fun getViewedJobs(userId: UUID): List<ViewedJobResponse> {
-        return viewedJobRepository.findByUserId(userId).map { createViewedJobResponse(it) }
+        return viewedJobRepositoryReplica.findByUserId(userId).map { createViewedJobResponse(it) }
     }
 
     private fun createViewedJob(userId: UUID, jobId: UUID): ViewedJob {

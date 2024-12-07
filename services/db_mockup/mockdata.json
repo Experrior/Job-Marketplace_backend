@@ -44,7 +44,7 @@
       "required_experience": "integer RANGE(1, 10)",
       "employment_type": "OPTION IN (FULL_TIME,PART_TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
       "work_location": "OPTION IN (ONSITE,REMOTE,HYBRID)",
-      "exprience_level": "OPTION IN (INTERN,JUNIOR,MID,SENIOR,LEAD,MANAGER,DIRECTOR,EXECUTIVE)",
+      "experience_level": "OPTION IN (INTERN,JUNIOR,MID,SENIOR,LEAD,MANAGER,DIRECTOR,EXECUTIVE)",
       "is_deleted": "bool CONST",
       "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
       "salary": "integer RANGE(4000,12000)",
