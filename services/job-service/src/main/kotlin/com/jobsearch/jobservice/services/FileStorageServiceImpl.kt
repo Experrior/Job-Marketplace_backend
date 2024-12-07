@@ -100,7 +100,10 @@ class FileStorageServiceImpl(
         try {
             s3Client.headObject { it.bucket(bucketName).key(filePath) }
             throw FileAlreadyExistsException(filePath)
-        } catch (_: NoSuchKeyException) {
+        } catch (e: S3Exception) {
+            if (e.statusCode() != 404) {
+                throw e
+            }
         }
     }
 }

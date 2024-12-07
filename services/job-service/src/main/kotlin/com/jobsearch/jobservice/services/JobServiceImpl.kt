@@ -2,6 +2,9 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.EmploymentType
+import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
@@ -12,6 +15,7 @@ import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.responses.FollowJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
 import jakarta.transaction.Transactional
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -27,6 +31,7 @@ class JobServiceImpl(
     private val userServiceUtils: UserServiceUtils,
     private val viewedJobService: ViewedJobService
 ): JobService {
+    private val logger = LoggerFactory.getLogger(JobServiceImpl::class.java)
 
     override fun createJob(jobRequest: JobRequest): JobResponse {
         val companyId = userServiceUtils.getRecruiterCompany()
@@ -89,6 +94,8 @@ class JobServiceImpl(
 
     override fun restoreJobById(jobId: UUID): JobResponse {
         val job = getJobEntityById(jobId)
+        job.isDeleted = false
+
         val restoredJob = jobRepository.save(job)
         return mapJobToResponse(restoredJob)
     }
@@ -125,6 +132,7 @@ class JobServiceImpl(
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
+        logger.info("Job request: $jobRequest")
         return Job(
             jobId = jobId,
             recruiterId = recruiterId,
@@ -132,16 +140,17 @@ class JobServiceImpl(
             title = jobRequest.title,
             description = jobRequest.description,
             location = jobRequest.location,
-            employmentType = jobRequest.employmentType,
-            workLocation = jobRequest.workLocation,
+            employmentType = jobRequest.employmentType?.let { EmploymentType.valueOf(it.uppercase()) },
+            workLocation = jobRequest.workLocation?.let { WorkLocation.valueOf(it.uppercase()) },
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
             requiredExperience = jobRequest.requiredExperience,
+            experienceLevel = jobRequest.experienceLevel?.let { ExperienceLevel.valueOf(it.uppercase()) },
             quiz = jobRequest.quizId?.let { quizService.findQuizEntityById(it) },
         )
     }
 
-    private fun mapJobToResponse(job: Job): JobResponse {
+    override fun mapJobToResponse(job: Job): JobResponse {
         return JobResponse(
             jobId = job.jobId ?: throw IllegalArgumentException("Job ID cannot be null"),
             recruiterId = job.recruiterId,
@@ -149,16 +158,17 @@ class JobServiceImpl(
             title = job.title,
             description = job.description,
             location = job.location,
-            employmentType = job.employmentType,
-            workLocation = job.workLocation,
+            employmentType = job.employmentType?.value,
+            workLocation = job.workLocation?.value,
             salary = job.salary,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
+            experienceLevel = job.experienceLevel?.value,
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,
             quizId = job.quiz?.quizId,
-            companyName = userServiceUtils.getCompanyName(job.companyId)
+            companyName = userServiceUtils.getCompanyName(job.companyId),
         )
     }
 

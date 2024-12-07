@@ -4,10 +4,11 @@ type Job {
     title: String!
     description: String!
     requiredSkills: String!
-    requiredExperience: String!
+    requiredExperience: Int
     location: String!
-    employmentType: String!
-    workLocation: String!
+    employmentType: String
+    workLocation: String
+    experienceLevel: String
     salary: Float
     createdAt: String!
     isDeleted: Boolean!
@@ -42,7 +43,7 @@ type Query {
     jobs(filter: JobFilterRequest, limit: Int, offset: Int): JobPage
     followedJobs: [Job]
 
-    userApplications: [Application]
+    userApplications: [ApplicationResponse]
     jobApplications(jobId: ID!, sortOrder: String): [Application]
 
     quizzesByRecruiter: [QuizResponse]
@@ -71,11 +72,12 @@ input JobInput {
     title: String!
     description: String!
     location: String!
-    employmentType: String!
-    workLocation: String!
+    employmentType: String
+    workLocation: String
     salary: Float
     requiredSkills: [SkillInput!]!
-    requiredExperience: String!,
+    requiredExperience: Int,
+    experienceLevel: String
     quizId: ID
 }
 
@@ -88,6 +90,9 @@ input JobFilterRequest {
     hasSalary: Boolean
     minSalary: Int
     maxSalary: Int
+    workLocation: String
+    employmentType: String
+    experienceLevel: String
 }
 
 input SkillInput {
@@ -123,6 +128,17 @@ type QuizResponse {
     s3QuizUrl: String!
     createdAt: String!
     isDeleted: Boolean!
+}
+
+type ApplicationResponse {
+    applicationId: ID!
+    userId: ID!
+    job: Job!
+    status: String!
+    resumeUrl: String
+    quizResult: QuizResult
+    createdAt: String!
+    updatedAt: String
 }
 
 type DeleteQuizResponse {
