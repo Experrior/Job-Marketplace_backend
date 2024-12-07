@@ -19,6 +19,7 @@ venv/
 
 
 # Maven
+target/*
 target/
 pom.xml.tag
 pom.xml.releaseBackup
