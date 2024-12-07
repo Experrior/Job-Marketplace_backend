@@ -96,6 +96,9 @@
       "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
       "industry": "OPTION IN (IT, IT)",
       "description": "first_name",
+      "s3_logo_path": "first_name",
+      "logourl": "first_name",
+      "logo_url": "first_name",
       "is_email_verified": "bool CONST True",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"

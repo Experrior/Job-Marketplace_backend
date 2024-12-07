@@ -23,7 +23,7 @@ class UserServiceImpl(
     }
 
     override fun getAllUsers(limit: Int, offset: Int): List<User> {
-        return UserRepositoryReplica.findAll();
+        return userRepositoryReplica.findAll();
     }
 
     override fun save(user: User): User {
@@ -39,11 +39,11 @@ class UserServiceImpl(
     }
 
     override fun existsByUserId(userId: UUID): Boolean {
-        return UserRepositoryReplica.existsById(userId)
+        return userRepositoryReplica.existsById(userId)
     }
 
     override fun existsByEmail(email: String): Boolean {
-        return UserRepositoryReplica.existsByEmail(email)
+        return userRepositoryReplica.existsByEmail(email)
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
@@ -52,7 +52,7 @@ class UserServiceImpl(
     }
 
     override fun getUserByEmail(email: String): User {
-        return UserRepositoryReplica.findByEmail(email)
+        return userRepositoryReplica.findByEmail(email)
             ?: throw UserNotFoundException("Email not found: $email")
     }
 }
