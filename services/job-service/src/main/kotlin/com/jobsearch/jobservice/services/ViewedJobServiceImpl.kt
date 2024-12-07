@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 class ViewedJobServiceImpl(
-    private val viewedJobRepository: ViewedJobRepository
+    private val viewedJobRepository: ViewedJobRepository,
     private val viewedJobRepositoryReplica: ViewedJobRepositoryReplica
 ): ViewedJobService {
     override fun viewJob(userId: UUID, jobId: UUID) {

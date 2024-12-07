@@ -1,4 +1,4 @@
-package com.jobsearch.jobservice.repositories
+package com.jobsearch.jobservice.replica_repositories
 
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.Job

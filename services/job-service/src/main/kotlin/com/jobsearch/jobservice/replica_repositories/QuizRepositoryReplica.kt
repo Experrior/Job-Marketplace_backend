@@ -1,4 +1,4 @@
-package com.jobsearch.jobservice.repositories
+package com.jobsearch.jobservice.replica_repositories
 
 import com.jobsearch.jobservice.entities.quizzes.Quiz
 import org.springframework.data.jpa.repository.JpaRepository
