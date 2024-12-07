@@ -37,5 +37,4 @@ class LinkController(
         ): DeleteResponse {
         return linkService.deleteAllLinks(userId)
     }
-
 }

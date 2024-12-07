@@ -1,0 +1,6 @@
+sqlalchemy
+scikit-learn
+fastapi[standard]
+apscheduler
+psycopg2-binary==2.9.10
+psycopg

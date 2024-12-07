@@ -8,4 +8,5 @@ import java.util.*
 interface QuizResultService {
     fun saveQuizResult(quizResultRequest: QuizResultRequest, userId: UUID): QuizResultResponse
     fun getQuizResultEntityById(quizResultId: UUID): QuizResult
+    fun mapQuizResultToResponse(quizResult: QuizResult): QuizResultResponse
 }

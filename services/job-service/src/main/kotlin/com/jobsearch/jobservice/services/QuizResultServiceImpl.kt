@@ -16,7 +16,7 @@ class QuizResultServiceImpl(
     override fun saveQuizResult(quizResultRequest: QuizResultRequest, userId: UUID): QuizResultResponse {
         val quizResult = quizResultRepository.save(mapQuizResultRequestToQuizResult(quizResultRequest, userId))
 
-        return mapQuizResultToQuizResultResponse(quizResult)
+        return mapQuizResultToResponse(quizResult)
     }
 
     override fun getQuizResultEntityById(quizResultId: UUID): QuizResult {
@@ -33,7 +33,7 @@ class QuizResultServiceImpl(
         )
     }
 
-    private fun mapQuizResultToQuizResultResponse(quizResult: QuizResult): QuizResultResponse {
+    override fun mapQuizResultToResponse(quizResult: QuizResult): QuizResultResponse {
         return QuizResultResponse(
             quizResultId = quizResult.quizResultId!!,
             quizId = quizResult.quiz.quizId!!,

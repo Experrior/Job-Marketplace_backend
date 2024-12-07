@@ -12,6 +12,12 @@
 .idea/*
 .idea
 
+# Pycharm files
+.venv/
+__pycache__/
+venv/
+
+
 # Maven
 /target/
 

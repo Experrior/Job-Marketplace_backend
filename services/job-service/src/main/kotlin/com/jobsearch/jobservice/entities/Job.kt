@@ -1,5 +1,8 @@
 package com.jobsearch.jobservice.entities
 
+import com.jobsearch.jobservice.entities.enums.EmploymentType
+import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.quizzes.Quiz
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
@@ -31,20 +34,26 @@ data class Job(
     @Column(name = "required_skills", columnDefinition = "jsonb", nullable = false)
     var requiredSkills: List<Skill>,
 
-    @Column(name = "required_experience", nullable = false)
-    var requiredExperience: String,
+    @Column(name = "required_experience")
+    var requiredExperience: Int? = null,
 
     @Column(name = "location", nullable = false)
     var location: String,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "employment_type")
-    var employmentType: String,
+    var employmentType: EmploymentType? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "work_location")
-    var workLocation: String,
+    var workLocation: WorkLocation? = null,
 
     @Column(name = "salary")
     var salary: Int? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "experience_level")
+    var experienceLevel: ExperienceLevel? = null,
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
@@ -65,13 +74,9 @@ data class Job(
         title = "",
         description = "",
         requiredSkills = emptyList(),
-        requiredExperience = "",
+        requiredExperience = null,
         location = "",
-        employmentType = "",
-        workLocation = ""
-    ){
-
-    }
+    )
 
     @PrePersist
     fun onCreate() {

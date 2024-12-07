@@ -68,6 +68,12 @@ class SecurityConfig(
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
                     .uri("ws://172.22.0.1:8088")
             }
+            .route { r: PredicateSpec ->
+                r.path("/analytics/**")
+                    .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
+                    .uri("http://172.22.0.1:8089")  //user service ip
+
+            }
             .build()
     }
 

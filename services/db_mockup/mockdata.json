@@ -48,6 +48,7 @@
       "employment_type": "OPTION IN (full-time,part-time)",
       "work_location": "OPTION IN (remote,hybrid,stationary)",
       "is_deleted": "bool",
+      "level": "OPTION IN (intern,junior,senior,executive)",
       "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
       "salary": "integer RANGE(4000,12000)",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
@@ -67,19 +68,10 @@
       "application_id": "PK UUID",
       "status": "smallint RANGE(1,6)",
       "job_id": "FK_UUID jobs.job_id",
-      "quiz_result_id": "FK_UUID quiz_results.quiz_result_id",
       "user_id": "FK_UUID app_users.user_id",
       "s3_resume_path": "first_name",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
-    },
-    "quiz_results": {
-      "quiz_result_id": "PK UUID",
-      "score": "float RANGE(0,100)",
-      "time_taken": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=60,std=15)",
-      "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
-      "applicant_id": "FK_UUID app_users.user_id",
-      "quiz_id": "FK_UUID quizzes.quiz_id"
     },
     "quizzes": {
       "quiz_id": "PK UUID",
