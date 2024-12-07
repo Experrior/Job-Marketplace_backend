@@ -9,4 +9,5 @@ interface FileStorageService {
     fun storeCompanyLogo(companyId: UUID, logo: MultipartFile): String
     fun getFileUrl(s3FilePath: String): String
     fun deleteFile(s3FilePath: String)
+    fun getFileCachedUrl(s3FilePath: String): String
 }
