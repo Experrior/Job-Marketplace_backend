@@ -55,6 +55,7 @@ class ResumeServiceImpl(
 
     override fun userResumes(userId: UUID): List<ResumeResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
+
         return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
     }
 
