@@ -34,6 +34,7 @@ class ResumeController(
         return ResponseEntity(resumeService.deleteResume(userId, resumeId), HttpStatus.OK)
     }
 
+
     @QueryMapping
     fun userResumes(@AuthenticationPrincipal userId: UUID): List<ResumeResponse> {
         return resumeService.userResumes(userId)

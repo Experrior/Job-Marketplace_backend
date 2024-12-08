@@ -7,6 +7,7 @@ import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
+import com.jobsearch.jobservice.replica_repositories.JobRepositoryReplica
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobFilterRequest
@@ -26,6 +27,7 @@ import java.util.*
 @Service
 class JobServiceImpl(
     private val jobRepository: JobRepository,
+    private val jobRepositoryReplica: JobRepositoryReplica,
     private val followedJobRepository: FollowedJobRepository,
     private val quizService: QuizService,
     private val userServiceUtils: UserServiceUtils,
@@ -68,11 +70,11 @@ class JobServiceImpl(
         return mapJobToResponse(updatedJob)    }
 
     override fun getJobsByRecruiter(recruiterId: UUID): List<JobResponse> {
-        return jobRepository.findJobsByRecruiterId(recruiterId).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findJobsByRecruiterId(recruiterId).map { mapJobToResponse(it) }
     }
 
     override fun getJobEntityById(jobId: UUID): Job {
-        return jobRepository.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId)
+        return jobRepositoryReplica.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId)
     }
 
     override fun getJobById(jobId: UUID): JobResponse {
@@ -91,7 +93,7 @@ class JobServiceImpl(
 
     override fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<JobResponse> {
         val specification: Specification<Job>? = filter?.let { JobSpecifications.getJobsByFilter(it) }
-        return jobRepository.findAll(specification, pageable).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findAll(specification, pageable).map { mapJobToResponse(it) }
     }
 
     override fun restoreJobById(jobId: UUID): JobResponse {
@@ -130,7 +132,7 @@ class JobServiceImpl(
     }
 
     override fun getJobsByCompany(companyId: UUID): List<JobResponse> {
-        return jobRepository.findJobsByCompanyIdAndIsDeletedFalse(companyId).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findJobsByCompanyIdAndIsDeletedFalse(companyId).map { mapJobToResponse(it) }
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
@@ -163,6 +165,7 @@ class JobServiceImpl(
             employmentType = job.employmentType?.value,
             workLocation = job.workLocation?.value,
             salary = job.salary,
+            views = job.views,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
             experienceLevel = job.experienceLevel?.value,

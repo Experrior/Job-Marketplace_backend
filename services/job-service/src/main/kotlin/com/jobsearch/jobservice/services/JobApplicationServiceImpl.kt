@@ -7,6 +7,7 @@ import com.jobsearch.jobservice.exceptions.ApplicationNotFoundException
 import com.jobsearch.jobservice.exceptions.QuizResultNotFoundException
 import com.jobsearch.jobservice.exceptions.UserAlreadyAppliedException
 import com.jobsearch.jobservice.repositories.ApplicationRepository
+import com.jobsearch.jobservice.replica_repositories.ApplicationRepositoryReplica
 import com.jobsearch.jobservice.responses.ApplicationResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import org.slf4j.LoggerFactory
@@ -16,6 +17,7 @@ import java.util.*
 @Service
 class JobApplicationServiceImpl(
     private val applicationRepository: ApplicationRepository,
+    private val applicationRepositoryReplica: ApplicationRepositoryReplica,
     private val jobService: JobService,
     private val fileStorageService: FileStorageService,
     private val quizResultService: QuizResultService,
@@ -38,7 +40,7 @@ class JobApplicationServiceImpl(
 
     override fun getUserApplications(userId: UUID): List<ApplicationResponse> {
         logger.info("Getting applications for user: $userId")
-        val applications = applicationRepository.findApplicationsByUserId(userId)
+        val applications = applicationRepositoryReplica.findApplicationsByUserId(userId)
         setResumeUrls(applications)
         setFullNames(applications)
         return applications.map { mapApplicationToResponse(it) }
@@ -46,7 +48,7 @@ class JobApplicationServiceImpl(
 
     override fun getJobApplications(jobId: UUID): List<Application> {
         val job = getJob(jobId)
-        val applications = applicationRepository.findApplicationsByJob(job)
+        val applications = applicationRepositoryReplica.findApplicationsByJob(job)
         setResumeUrls(applications)
         setFullNames(applications)
         setUserPictureUrls(applications)
@@ -79,7 +81,7 @@ class JobApplicationServiceImpl(
     }
 
     private fun getApplication(applicationId: UUID): Application {
-        val application = applicationRepository.findApplicationByApplicationId(applicationId)
+        val application = applicationRepositoryReplica.findApplicationByApplicationId(applicationId)
             ?: throw ApplicationNotFoundException(applicationId)
 
         setResumeUrls(listOf(application))
@@ -88,7 +90,7 @@ class JobApplicationServiceImpl(
     }
 
     private fun checkUserAlreadyApplied(job: Job, userId: UUID) {
-        if(applicationRepository.findApplicationByJobAndUserId(job, userId) != null)
+        if(applicationRepositoryReplica.findApplicationByJobAndUserId(job, userId) != null)
             throw job.jobId?.let { UserAlreadyAppliedException(userId, it) }!!
     }
 

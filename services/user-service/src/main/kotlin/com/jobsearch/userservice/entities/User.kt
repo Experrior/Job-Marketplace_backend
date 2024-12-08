@@ -16,28 +16,28 @@ class User(
     val userId: UUID? = null,
     @Column(nullable = false)
     var email: String = "",
-    @Column(nullable = false)
+    @Column(name = "first_name",nullable = false)
     var firstName: String = "",
-    @Column(nullable = false)
+    @Column(name = "last_name",nullable = false)
     var lastName: String = "",
     @Column(nullable = false)
     private var password: String = "",
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var role: UserRole = UserRole.APPLICANT,
-    @Column(nullable = true)
+    @Column(name = "company_id", nullable = true)
     var companyId: UUID? = null,
     @OneToOne(mappedBy = "user", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var verificationToken: VerificationToken? = null,
-    @Column(nullable = false)
+    @Column(name = "is_enabled",nullable = false)
     private var isEnabled: Boolean = false,
-    @Column(nullable = false)
+    @Column(name = "is_email_verified",nullable = false)
     var isEmailVerified: Boolean = false,
-    @Column(nullable = false)
+    @Column(name = "is_employee_verified", nullable = false)
     var isEmployeeVerified: Boolean = false,
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp(0),
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
     ): UserDetails {
     @PrePersist

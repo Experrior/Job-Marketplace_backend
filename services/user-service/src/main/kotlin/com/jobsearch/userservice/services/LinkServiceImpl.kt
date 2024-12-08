@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.UserLink
 import com.jobsearch.userservice.exceptions.LinkNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.LinkRepository
+import com.jobsearch.userservice.replica_repositories.LinkRepositoryReplica
 import com.jobsearch.userservice.requests.LinkRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.LinkResponse
@@ -14,6 +15,7 @@ import java.util.*
 @Service
 class LinkServiceImpl(
     private val linkRepository: LinkRepository,
+    private val linkRepositoryReplica: LinkRepositoryReplica,
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): LinkService {
@@ -57,7 +59,7 @@ class LinkServiceImpl(
     }
 
     private fun getLinkById(linkId: UUID): UserLink {
-        return linkRepository.findById(linkId)
+        return linkRepositoryReplica.findById(linkId)
             .orElseThrow { LinkNotFoundException("Link not found with id: $linkId") }
     }
 }

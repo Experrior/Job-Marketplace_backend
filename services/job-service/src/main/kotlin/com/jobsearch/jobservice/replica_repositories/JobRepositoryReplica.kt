@@ -1,4 +1,4 @@
-package com.jobsearch.jobservice.repositories
+package com.jobsearch.jobservice.replica_repositories
 
 import com.jobsearch.jobservice.entities.Job
 import org.springframework.data.domain.Page
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import java.util.*
 
 
-interface JobRepository: JpaRepository<Job, UUID>, JpaSpecificationExecutor<Job> {
+interface JobRepositoryReplica: JpaRepository<Job, UUID>, JpaSpecificationExecutor<Job> {
     fun findJobByJobIdAndIsDeletedFalse(jobId: UUID): Job?
     fun findJobsByRecruiterId(recruiterId: UUID): List<Job>
     fun findJobsByCompanyIdAndIsDeletedFalse(companyId: UUID): List<Job>

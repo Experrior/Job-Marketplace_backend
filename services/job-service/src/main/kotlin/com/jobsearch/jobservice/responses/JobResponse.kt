@@ -18,6 +18,7 @@ data class JobResponse(
     val employmentType: String?,
     val workLocation: String?,
     val salary: Int?,
+    val views: Int?,
     val createdAt: Timestamp,
     val updatedAt: Timestamp?,
     val isDeleted: Boolean,

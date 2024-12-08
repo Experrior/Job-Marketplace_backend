@@ -23,11 +23,11 @@ data class Company(
     var s3LogoPath: String? = null,
     @Transient
     var logoUrl: String? = null,
-    @Column(nullable = false)
+    @Column(name = "is_email_verified",nullable = false)
     var isEmailVerified: Boolean = false,
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp(0),
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
 ) {
     constructor() : this(

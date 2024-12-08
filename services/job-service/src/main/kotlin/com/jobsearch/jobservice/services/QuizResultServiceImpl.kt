@@ -3,6 +3,7 @@ package com.jobsearch.jobservice.services
 import com.jobsearch.jobservice.entities.QuizResult
 import com.jobsearch.jobservice.exceptions.QuizResultNotFoundException
 import com.jobsearch.jobservice.repositories.QuizResultRepository
+import com.jobsearch.jobservice.replica_repositories.QuizResultRepositoryReplica
 import com.jobsearch.jobservice.requests.QuizResultRequest
 import com.jobsearch.jobservice.responses.QuizResultResponse
 import org.springframework.stereotype.Service
@@ -11,6 +12,7 @@ import java.util.*
 @Service
 class QuizResultServiceImpl(
     private val quizResultRepository: QuizResultRepository,
+    private val quizResultRepositoryReplica: QuizResultRepositoryReplica,
     private val quizService: QuizService,
 ): QuizResultService {
     override fun saveQuizResult(quizResultRequest: QuizResultRequest, userId: UUID): QuizResultResponse {
@@ -20,7 +22,7 @@ class QuizResultServiceImpl(
     }
 
     override fun getQuizResultEntityById(quizResultId: UUID): QuizResult {
-        return quizResultRepository.findById(quizResultId)
+        return quizResultRepositoryReplica.findById(quizResultId)
             .orElseThrow { QuizResultNotFoundException("Quiz result not found by id: $quizResultId") }
     }
 

@@ -77,38 +77,48 @@ type app struct {
 
 func (a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
 
-	var userId string = r.URL.Query().Get("userId")
+	var userId = r.Header.Get("X-User-Id")
+
 	println("[DEBUG]234 " + userId)
 	data := a.MessageService.GetAllChats(userId)
 	if len(data) > 0 {
-        println("[DEBUG]2341 " + data[0].ChatID)
+        println("[DEBUG]2341 " + data[0].ChatId)
     } else {
         println("[DEBUG]2342 The user has no chats")
     }
 
-	chatIds := make([]string, len(data))
+	// chatIds := make([]string, len(data))
 
 
-    for iter, chat_struct := range data {
-        chatIds[iter] = chat_struct.ChatID
-    }
+    // for iter, chat_struct := range data {
+    //     chatIds[iter] = chat_struct.ChatId
+    // }
 
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusOK)
 
-	if err := json.NewEncoder(w).Encode(chatIds); err != nil {
+	if err := json.NewEncoder(w).Encode(data); err != nil {
 		http.Error(w, "Unable to encode JSON", http.StatusInternalServerError)
 		return
 	}
 }
 
 func (a *app) StartChat(w http.ResponseWriter, r *http.Request) {
+	//todo add role check
+	//var role = r.Header.Get("X-User-Roles")
 
-	var userId string = r.URL.Query().Get("userId")
-	var targetUserId string = r.URL.Query().Get("userId")
+	var recruiterId = r.Header.Get("X-User-Id")
+	// var userId string = r.URL.Query().Get("userId")
+	var targetUserId string = r.URL.Query().Get("targetUserId")
+	var recruiterName string = r.URL.Query().Get("recruiterName")
+	var applicantName string = r.URL.Query().Get("applicantName")
 
-	newChat := a.MessageService.StartChat(userId, targetUserId)
+	log.Println("testing startChat")
+	log.Println(targetUserId, recruiterName, applicantName)
+	log.Println(recruiterId)
+	log.Println(targetUserId)
+	newChat := a.MessageService.StartChat(recruiterId, targetUserId, recruiterName, applicantName)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -122,6 +132,9 @@ func (a *app) StartChat(w http.ResponseWriter, r *http.Request) {
 
 
 func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
+
+	var userId string = r.URL.Query().Get("userId")
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
@@ -159,9 +172,9 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
-		var userId = newReceivedMessage.MessageValue.CreatedBy
-		a.Connections.Swap(userId, &conn)
+		a.Connections.Swap(userId, conn)
 		defer a.Connections.Delete(userId)
+		log.Println("Saved connection by key: ", userId)
 
 		// listen for following messages
 		for {
@@ -193,6 +206,7 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 					if err != nil {
 						// If there's an error parsing JSON, respond with an error message
 						log.Println("Error parsing JSON:", err)
+						log.Println(newReceivedMessage)
 						errorMessage := fmt.Sprintf("Error: Invalid JSON format: %v", err)
 						if err := conn.WriteMessage(websocket.TextMessage, []byte(errorMessage)); err != nil {
 							log.Println("Error sending error message:", err)
@@ -223,6 +237,9 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 							}
 
 						} else if newReceivedMessage.Operation == "post" {
+							log.Println("testing post operation:")
+							log.Println(&newReceivedMessage.MessageValue)
+							log.Println(newReceivedMessage.MessageValue)
 							//db query to insert chat message, send msg to all corresponding websockets TODO
 							data, _ := a.MessageService.Create(&newReceivedMessage.MessageValue)
 
@@ -230,22 +247,25 @@ func (a *app) HandleWebSocketConn(w http.ResponseWriter, r *http.Request) {
 							print("[DEBUG]943")
 							for _, target_user := range target_users {
 								//send message to each target user
+								log.Println("Trying to retrieve connection by userId: ", target_user)
 								retrieved_conn, ok := a.Connections.Load(target_user)
 								if !ok {
-									print("no active connection found for conn_id: %s", target_user)
+									log.Printf("no active connection found for conn_id: %s", target_user)
 								}
 								conn, ok := retrieved_conn.(*websocket.Conn) // type assertion for value any from sync.Map
 								if !ok {
-									print("[CRITICAL ERROR] The connection stored in sync.Map is not of type: *websocket.Conn")
+									log.Println("[CRITICAL ERROR] The connection stored in sync.Map is not of type: *websocket.Conn")
+								}else{
+									jsonData, err := json.Marshal(newReceivedMessage.MessageValue)
+									if err != nil {
+										log.Println("[ERROR] Couldn't parse json for newReceivedMessage.MessageValue")
+									}
+									if err = conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
+										log.Println("[ERROR] Couldn't send message to target, even though connection existed")
+	
+									}
 								}
-								jsonData, err := json.Marshal(newReceivedMessage.MessageValue)
-								if err != nil {
-									print("[ERROR] Couldn't parse json for newReceivedMessage.MessageValue")
-								}
-								if err = conn.WriteMessage(websocket.TextMessage, jsonData); err != nil {
-									print("[ERROR] Couldn't send message to target, even though connection existed")
 
-								}
 
 							}
 							var msgs []services.Message
