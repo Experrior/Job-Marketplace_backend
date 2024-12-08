@@ -65,6 +65,9 @@ data class Job(
     @Column(name = "updated_at", nullable = true)
     var updatedAt: Timestamp? = null,
 
+    @Column(name = "views", nullable = false)
+    var views: Int = 0,
+
     @Column(name = "is_deleted", nullable = false)
     var isDeleted: Boolean = false
 ) {

@@ -86,6 +86,8 @@ class JobServiceImpl(
         if(userId != null){
             viewedJobService.viewJob(userId, jobId)
         }
+        job.views += 1
+        jobRepository.save(job)
         return mapJobToResponse(job)
     }
 

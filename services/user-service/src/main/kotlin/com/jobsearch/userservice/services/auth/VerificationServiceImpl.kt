@@ -3,6 +3,7 @@ package com.jobsearch.userservice.services.auth
 import com.jobsearch.messagequeue.RabbitMQMessageProducer
 import com.jobsearch.userservice.entities.Company
 import com.jobsearch.userservice.entities.User
+import com.jobsearch.userservice.entities.VerificationResult
 import com.jobsearch.userservice.exceptions.CompanyNotFoundException
 import com.jobsearch.userservice.exceptions.InvalidTokenException
 import com.jobsearch.userservice.exceptions.UserNotFoundException
@@ -91,13 +92,15 @@ class VerificationServiceImpl(
         )
     }
 
-    override fun verifyUserByToken(token: String) {
+    override fun verifyUserByToken(token: String): User {
         val user = getUserFromToken(token)
         user.isEmailVerified = true
         userService.save(user)
         verificationTokenService.deleteVerificationToken(verificationTokenService.getVerificationToken(token))
         userProfileService.createDefaultProfile(user.userId!!)
         settingsService.createDefaultUserSettings(user.userId!!)
+
+        return user
     }
 
     override fun verifyCompanyByToken(token: String): Company {
@@ -108,16 +111,21 @@ class VerificationServiceImpl(
         return company
     }
 
-    override fun verifyByToken(token: String) {
+    override fun verifyByToken(token: String): VerificationResult {
         val verificationToken = verificationTokenService.getVerificationToken(token)
-        if (verificationToken.user != null) {
-            verifyUserByToken(token)
-        } else if (verificationToken.company != null) {
-            verifyCompanyByToken(token)
-        } else {
-            throw InvalidTokenException("Invalid token")
+        return when {
+            verificationToken.user != null -> {
+                val user = verifyUserByToken(token)
+                VerificationResult.UserVerified(user)
+            }
+            verificationToken.company != null -> {
+                val company = verifyCompanyByToken(token)
+                VerificationResult.CompanyVerified(company)
+            }
+            else -> throw InvalidTokenException("Invalid token")
         }
     }
+
 
     private fun generateEmailRequest(to: String, token: String): EmailRequest {
         return EmailRequest(
