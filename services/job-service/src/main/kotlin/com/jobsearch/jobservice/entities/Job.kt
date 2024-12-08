@@ -1,5 +1,6 @@
 package com.jobsearch.jobservice.entities
 
+import com.jobsearch.jobservice.entities.enums.Category
 import com.jobsearch.jobservice.entities.enums.EmploymentType
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
@@ -26,6 +27,10 @@ data class Job(
 
     @Column(name = "job_title", nullable = false)
     var title: String,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    var category: Category,
 
     @Column(name = "job_description", nullable = false, columnDefinition = "TEXT")
     var description: String,
@@ -75,6 +80,7 @@ data class Job(
         companyId = UUID.randomUUID(),
         recruiterId = UUID.randomUUID(),
         title = "",
+        category = Category.WEB_DEVELOPMENT,
         description = "",
         requiredSkills = emptyList(),
         requiredExperience = null,
