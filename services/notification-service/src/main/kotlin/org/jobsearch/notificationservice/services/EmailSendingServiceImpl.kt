@@ -100,7 +100,7 @@ class EmailSendingServiceImpl(
     }
 
     private fun buildUrl(endpoint: String, token: String): String {
-        return "http://$hostName$endpoint?token=$token"
+        return "https://$hostName$endpoint?token=$token"
     }
 
 }

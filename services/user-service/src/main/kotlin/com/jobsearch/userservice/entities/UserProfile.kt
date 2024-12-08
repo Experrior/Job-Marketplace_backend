@@ -40,7 +40,7 @@ data class UserProfile (
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),
 
-    @Column(nullable = true)
+    @Column(name = "updated_at",nullable = true)
     var updatedAt: Timestamp? = null
 ) {
     @PrePersist
