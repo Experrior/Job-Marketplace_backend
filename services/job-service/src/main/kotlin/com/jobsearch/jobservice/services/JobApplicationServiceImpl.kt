@@ -19,7 +19,8 @@ class JobApplicationServiceImpl(
     private val jobService: JobService,
     private val fileStorageService: FileStorageService,
     private val quizResultService: QuizResultService,
-    private val userServiceUtils: UserServiceUtils
+    private val userServiceUtils: UserServiceUtils,
+    private val emailService: EmailService
 ): JobApplicationService {
     private val logger = LoggerFactory.getLogger(JobApplicationService::class.java)
 
@@ -57,6 +58,8 @@ class JobApplicationServiceImpl(
         val application = getApplication(applicationId)
         application.status = status
         applicationRepository.save(application)
+
+        sendStatusUpdateEmail(application, status)
         return SetApplicationStatusResponse(success = true, message = "Application status updated")
     }
 
@@ -131,6 +134,21 @@ class JobApplicationServiceImpl(
             quizResult = application.quizResult?.let { quizResultService.mapQuizResultToResponse(it) },
             createdAt = application.createdAt,
             updatedAt = application.updatedAt
+        )
+    }
+
+    private fun sendStatusUpdateEmail(application: Application, status: ApplicationStatus) {
+        val templateVariables = mapOf(
+            "fullName" to (application.fullName ?: "N/A"),
+            "jobTitle" to (application.job.title),
+            "status" to status.name
+        )
+        val emailBody = emailService.loadTemplate("application-status-update.html", templateVariables)
+
+        emailService.sendEmail(
+            to = userServiceUtils.getApplicantEmail(application.userId),
+            subject = "Application Status Update",
+            body = emailBody
         )
     }
 

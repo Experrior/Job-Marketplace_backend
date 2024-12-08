@@ -118,4 +118,18 @@ class UserServiceUtilsImpl(
         val response = executeGraphQLQuery(query)
         return (response?.get("data") as? Map<*, *>)?.get("userProfileByUserId")?.let { it as? Map<*, *> }?.get("profilePictureUrl") as? String
     }
+
+    override fun getApplicantEmail(userId: UUID): String {
+        val query = """
+            query {
+                userById(userId: "$userId"){
+                    email
+                }
+            }
+        """.trimIndent()
+
+        val response = executeGraphQLQuery(query)
+        return (response?.get("data") as? Map<*, *>)?.get("userById")?.let { it as? Map<*, *> }?.get("email") as? String
+            ?: throw IllegalStateException("User email not found")
+    }
 }

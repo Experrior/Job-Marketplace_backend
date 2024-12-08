@@ -8,4 +8,5 @@ interface UserServiceUtils {
     fun getCompanyName(companyId: UUID): String
     fun getS3ResumePath(resumeId: UUID): String
     fun getApplicantPictureUrl(userId: UUID): String?
+    fun getApplicantEmail(userId: UUID): String
 }

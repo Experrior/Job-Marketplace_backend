@@ -11,7 +11,7 @@ import java.util.*
 
 @Controller
 class UserController(private val userService: UserService) {
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('RECRUITER')")
     @QueryMapping
     fun userById(@Argument userId: UUID): User?{
         return userService.getUserById(userId)
