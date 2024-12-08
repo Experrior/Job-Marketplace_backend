@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
-@Repository
+
 interface ApplicationRepository: JpaRepository<Application, UUID> {
     fun findApplicationsByUserId(userId: UUID): List<Application>
     fun findApplicationByApplicationId(applicationId: UUID): Application?

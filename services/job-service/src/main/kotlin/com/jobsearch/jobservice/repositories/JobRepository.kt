@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.stereotype.Repository
 import java.util.*
 
-@Repository
+
 interface JobRepository: JpaRepository<Job, UUID>, JpaSpecificationExecutor<Job> {
     fun findJobByJobIdAndIsDeletedFalse(jobId: UUID): Job?
     fun findJobsByRecruiterId(recruiterId: UUID): List<Job>
