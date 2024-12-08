@@ -16,7 +16,6 @@
       "is_employee_verified": "bool",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
-      "password_hash": "first_name",
       "password": "first_name"
     },
     "skills": {
@@ -42,15 +41,15 @@
       "job_description": "long_text",
       "recruiter_id": "FK_UUID app_users.user_id",
       "required_skills": "jsonb:json1 value:required_skills",
-      "views": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=1000,std=200)",
-      "required_experience": "integer RANGE(1, 10)",
-      "category": "integer RANGE(1, 10)",
-      "employment_type": "OPTION IN (FULL_TIME,PART_TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
+      "views": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=1000,std=400)",
+      "required_experience": "integer RANGE(0, 15)",
+      "category": "OPTION IN (Web Development,Mobile Development,Gamedev,Embedded,Analytics,Machine Learning,Cloud Computing,Networks,Cybersecurity,Administration,ERP,Consulting,Compilers)",
+      "employment_type": "OPTION IN (FULL TIME,PART TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
       "work_location": "OPTION IN (ONSITE,REMOTE,HYBRID)",
       "experience_level": "OPTION IN (INTERN,JUNIOR,MID,SENIOR,LEAD,MANAGER,DIRECTOR,EXECUTIVE)",
       "is_deleted": "bool CONST",
       "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
-      "salary": "integer RANGE(4000,12000)",
+      "salary": "integer RANGE(4000,25000) DISTRIBUTION(normal,mean=7000,std=1500)",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
@@ -59,7 +58,7 @@
       "profile_id": "FK_UUID user_profiles.profile_id",
       "company_name": "FK_UUID company.company_id",
       "company_logo": "first_name",
-      "role": "first_name",
+      "role": "OPTION IN (Software Engineer,Data Scientist,DevOps Engineer,Cloud Architect,Fullstack Developer,Frontend Developer,Backend Developer,Mobile Developer,UX Designer,UI Designer,Product Manager,Project Manager,IT Consultant,Cyber Security Analyst,Network Engineer,Database Administrator,Systems Analyst,Technical Writer,QA Tester,IT Support Specialist)",
       "start_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "end_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
@@ -86,7 +85,7 @@
       "education_id": "PK UUID",
       "profile_id": "first_name",
       "institution_name": "first_name",
-      "degree": "first_name",
+      "degree": "OPTION IN (BACHELOR,MASTER,PHD,MBA,OTHER)",
       "start_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "end_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
@@ -97,7 +96,7 @@
       "email": "email CONST 259905@student.pwr.edu.pl",
       "logo_path": "first_name",
       "location": "country+city(\"en_US\",\"en_GB\",\"fr_FR\",\"de_DE\",\"it_IT\",\"es_ES\",\"pl_PL\",\"nl_NL\",\"pt_PT\",\"sv_SE\",\"da_DK\",\"fi_FI\",\"no_NO\",\"cs_CZ\",\"hu_HU\",\"en_CA\",\"sk_SK\")",
-      "industry": "OPTION IN (IT, IT)",
+      "industry": "OPTION IN (IT,Retail,Finance,Marketing,Manufacturing,Travel,Beauty,Healthcare,Government,Education,Law,Transport)",
       "description": "first_name",
       "s3_logo_path": "first_name",
       "logourl": "first_name",
@@ -117,8 +116,8 @@
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
     "IntermediaryTable: user_chats":{
-      "chat_id": "FK_UUID chats.chat_id",
-      "user_id": "FK_UUID app_users.user_id"
+      "user_id": "FK_UUID app_users.user_id",
+      "chat_id": "FK_UUID chats.chat_id"
     },
     "user_profiles": {
       "profile_id": "PK UUID",
@@ -139,8 +138,8 @@
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
     "IntermediaryTable: followed_jobs": {
-      "job_id": "FK_UUID jobs.job_id",
       "user_id": "FK_UUID app_users.user_id",
+      "job_id": "FK_UUID jobs.job_id",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
     "verification_tokens": {
@@ -152,8 +151,7 @@
     },
     "IntermediaryTable: viewed_jobs": {
       "user_id": "FK_UUID app_users.user_id",
-      "job_id": "FK_UUID jobs.job_id",
-      "view_count": "integer RANGE(10,200)"
+      "job_id": "FK_UUID jobs.job_id"
     }
   },
   "json_schemas": [
@@ -163,7 +161,7 @@
           {
             "required_skills": {
                "type": "array",
-              "item_count": "RANGE(1, 5)",
+               "item_count": "RANGE(1, 5)",
                "content": {
                   "type": "object",
                   "fields": {
