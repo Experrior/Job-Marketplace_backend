@@ -12,7 +12,7 @@ data class ResetPasswordToken(
     val tokenId: UUID? = null,
     @Column(nullable = false)
     var token: String = UUID.randomUUID().toString(),
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     var expiryDate: Date = calculateExpiryDate(),
     @OneToOne(targetEntity = User::class, fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinColumn(name = "user_id")

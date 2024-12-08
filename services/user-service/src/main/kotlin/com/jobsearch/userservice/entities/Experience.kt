@@ -12,20 +12,26 @@ class Experience(
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "experience_id", updatable = false, nullable = false)
     var experienceId: UUID? = null,
+
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
     var userProfile: UserProfile = UserProfile(),
-    @Column(nullable = false)
+
+    @Column(name = "company_name", nullable = false)
     var companyName: String = "",
+
     @Column(nullable = false)
     var role: String = "",
-    @Column(nullable = false)
+
+    @Column(name = "start_date", nullable = false)
     var startDate: YearMonth = YearMonth.now(),
-    @Column(nullable = false)
+
+    @Column(name = "end_date", nullable = false)
     var endDate: YearMonth = YearMonth.now(),
-    @Column(nullable = false)
-    var updatedAt: Timestamp = Timestamp(0),
-    ) {
+
+    @Column(name = "updated_at", nullable = false)
+    var updatedAt: Timestamp = Timestamp(0)
+) {
     @PreUpdate
     fun onUpdate() {
         val currentTimestamp = Timestamp.from(Instant.now())

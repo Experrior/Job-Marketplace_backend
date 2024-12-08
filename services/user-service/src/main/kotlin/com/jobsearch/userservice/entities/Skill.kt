@@ -14,13 +14,16 @@ class Skill(
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     var userProfile: UserProfile,
-    @Column(nullable = false)
+
+    @Column(name = "skill_name", nullable = false)
     var skillName: String = "",
-    @Column(nullable = false)
+
+    @Column(name = "proficiency_level", nullable = false)
     var proficiencyLevel: Int = 0,
-    @Column(nullable = false)
+
+    @Column(name = "updated_at", nullable = false)
     var updatedAt: Timestamp = Timestamp(0)
-){
+) {
     constructor() : this(
         userProfile = UserProfile(),
         skillName = "",
