@@ -11,6 +11,7 @@
       "phone": "first_name",
       "is_blocked": "bool",
       "is_enabled": "bool",
+      "verification_token": "first_name",
       "is_email_verified": "bool CONST True",
       "is_employee_verified": "bool",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
@@ -140,12 +141,12 @@
       "user_id": "FK_UUID app_users.user_id",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
-    "employee_verification_tokens": {
+    "verification_tokens": {
       "token_id": "PK UUID",
-      "token": "uuid",
+      "token": "first_name",
       "user_id": "FK_UUID app_users.user_id",
       "company_id": "FK_UUID company.company_id",
-      "expiry_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
+      "expirydate": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
     "IntermediaryTable: viewed_jobs": {
       "user_id": "FK_UUID app_users.user_id",
@@ -197,6 +198,6 @@
     "applications": 1,
     "followed_jobs": 1,
     "viewed_jobs": 1,
-    "employee_verification_tokens": 1
+    "verification_tokens": 1
   }
 }

@@ -165,6 +165,7 @@ class JobServiceImpl(
             employmentType = job.employmentType?.value,
             workLocation = job.workLocation?.value,
             salary = job.salary,
+            views = job.views,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
             experienceLevel = job.experienceLevel?.value,
