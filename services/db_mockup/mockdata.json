@@ -44,6 +44,7 @@
       "required_skills": "jsonb:json1 value:required_skills",
       "views": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=1000,std=200)",
       "required_experience": "integer RANGE(1, 10)",
+      "category": "integer RANGE(1, 10)",
       "employment_type": "OPTION IN (FULL_TIME,PART_TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
       "work_location": "OPTION IN (ONSITE,REMOTE,HYBRID)",
       "experience_level": "OPTION IN (INTERN,JUNIOR,MID,SENIOR,LEAD,MANAGER,DIRECTOR,EXECUTIVE)",
@@ -124,6 +125,7 @@
       "user_id": "FK_UUID app_users.user_id",
       "resume_path": "first_name",
       "profile_picture_path": "first_name",
+      "s3_picture_path": "first_name",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "created_at":"timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },

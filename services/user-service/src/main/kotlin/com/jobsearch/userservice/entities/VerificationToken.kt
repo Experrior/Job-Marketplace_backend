@@ -12,7 +12,7 @@ data class VerificationToken(
     val tokenId: UUID? = null,
     @Column(nullable = false)
     var token: String = UUID.randomUUID().toString(),
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     var expiryDate: Date = calculateExpiryDate(),
     @OneToOne(targetEntity = User::class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
