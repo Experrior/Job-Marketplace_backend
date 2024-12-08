@@ -20,7 +20,7 @@ data class FollowedJobs(
     @JoinColumn(name = "job_id", referencedColumnName = "job_id", insertable = false, updatable = false)
     var job: Job? = null,
 
-    @Column(nullable = false)
+    @Column(name = "created_at",nullable = false)
     var createdAt: Timestamp = Timestamp(0),
 ) {
     constructor() : this(
