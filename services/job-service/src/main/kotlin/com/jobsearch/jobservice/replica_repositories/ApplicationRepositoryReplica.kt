@@ -3,7 +3,6 @@ package com.jobsearch.jobservice.replica_repositories
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.Job
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
 import java.util.*
 
 
