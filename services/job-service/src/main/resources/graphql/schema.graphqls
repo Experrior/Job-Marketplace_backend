@@ -19,6 +19,7 @@ type Job {
 type Application {
     applicationId: ID!
     userId: ID!
+    userPictureUrl: String
     job: Job!
     status: String!
     resumeUrl: String!

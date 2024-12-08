@@ -105,4 +105,17 @@ class UserServiceUtilsImpl(
                 ?: throw ResumeNotFoundException("Resume not found by id: $resumeId")
         }
     }
+
+    override fun getApplicantPictureUrl(userId: UUID): String? {
+        val query = """
+            query {
+                userProfileByUserId(userId: "$userId"){
+                    profilePictureUrl
+                }
+            }
+        """.trimIndent()
+
+        val response = executeGraphQLQuery(query)
+        return (response?.get("data") as? Map<*, *>)?.get("userProfileByUserId")?.let { it as? Map<*, *> }?.get("profilePictureUrl") as? String
+    }
 }

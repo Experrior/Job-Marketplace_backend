@@ -48,4 +48,12 @@ class UserProfileController(private val userProfileService: UserProfileService) 
     ): Boolean {
         return userProfileService.deleteProfileByUserId(userId)
     }
+
+    @PreAuthorize("hasRole('RECRUITER')")
+    @QueryMapping
+    fun userProfileByUserId(
+        @Argument userId: UUID
+    ): UserProfileResponse {
+        return userProfileService.getProfileByUserId(userId)
+    }
 }

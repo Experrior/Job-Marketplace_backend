@@ -57,7 +57,7 @@ class UserProfileMapper(private val fileStorageService: FileStorageService) {
         return UserProfileResponse(
             profileId = userProfile.profileId!!,
             user = userProfile.user,
-            profilePictureUrl = userProfile.s3ProfilePicturePath?.let { fileStorageService.getFileUrl(it) } ?: "",
+            profilePictureUrl = userProfile.s3ProfilePicturePath?.let { fileStorageService.getFileCachedUrl(it) },
             resumes = userProfile.resumes.map { toResumeResponse(it) },
             skills = userProfile.skills.map { toSkillResponse(it) },
             experiences = userProfile.experiences.map { toExperienceResponse(it) },

@@ -32,7 +32,7 @@ class JobApplicationServiceImpl(
 
         val application = createApplication(job, userId, resumeId, quizResultId)
         setResumeUrls(listOf(application))
-        setFullName(listOf(application))
+        setFullNames(listOf(application))
         return applicationRepository.save(application)
     }
 
@@ -40,7 +40,7 @@ class JobApplicationServiceImpl(
         logger.info("Getting applications for user: $userId")
         val applications = applicationRepository.findApplicationsByUserId(userId)
         setResumeUrls(applications)
-        setFullName(applications)
+        setFullNames(applications)
         return applications.map { mapApplicationToResponse(it) }
     }
 
@@ -48,7 +48,8 @@ class JobApplicationServiceImpl(
         val job = getJob(jobId)
         val applications = applicationRepository.findApplicationsByJob(job)
         setResumeUrls(applications)
-        setFullName(applications)
+        setFullNames(applications)
+        setUserPictureUrls(applications)
         return applications
     }
 
@@ -82,7 +83,7 @@ class JobApplicationServiceImpl(
             ?: throw ApplicationNotFoundException(applicationId)
 
         setResumeUrls(listOf(application))
-        setFullName(listOf(application))
+        setFullNames(listOf(application))
         return application
     }
 
@@ -97,9 +98,15 @@ class JobApplicationServiceImpl(
         }
     }
 
-    private fun setFullName(applications: List<Application>) {
+    private fun setFullNames(applications: List<Application>) {
         applications.forEach { application ->
             application.fullName = application.userId.let { userServiceUtils.getApplicantFullName(it) }
+        }
+    }
+
+    private fun setUserPictureUrls(applications: List<Application>) {
+        applications.forEach { application ->
+            application.userPictureUrl = application.userId.let { userServiceUtils.getApplicantPictureUrl(it) }
         }
     }
 
@@ -115,7 +122,6 @@ class JobApplicationServiceImpl(
     }
 
     private fun mapApplicationToResponse(application: Application): ApplicationResponse {
-        logger.info("Mapping application to response: ${application.applicationId}")
         return ApplicationResponse(
             applicationId = application.applicationId!!,
             userId = application.userId,
