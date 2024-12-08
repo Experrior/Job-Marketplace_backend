@@ -1,6 +1,7 @@
 type Job {
     jobId: ID!
     companyId: ID!
+    category: String!
     title: String!
     description: String!
     requiredSkills: String!
@@ -71,6 +72,7 @@ type Mutation {
 
 input JobInput {
     title: String!
+    category: String!
     description: String!
     location: String!
     employmentType: String
