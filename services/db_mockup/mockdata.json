@@ -44,7 +44,7 @@
       "required_skills": "jsonb:json1 value:required_skills",
       "views": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=1000,std=200)",
       "required_experience": "integer RANGE(1, 10)",
-      "category": "integer RANGE(1, 10)",
+      "category": "OPTION IN (WEB_DEVELOPMENT,MOBILE_DEVELOPMENT,GAME_DEVELOPMENT,EMBEDDED,ANALYTICS,MACHINE_LEARNING,CLOUD_COMPUTING,NETWORKS,CYBERSECURITY,ADMINISTRATION,ERP,CONSULTING,COMPILERS)",
       "employment_type": "OPTION IN (FULL_TIME,PART_TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
       "work_location": "OPTION IN (ONSITE,REMOTE,HYBRID)",
       "experience_level": "OPTION IN (INTERN,JUNIOR,MID,SENIOR,LEAD,MANAGER,DIRECTOR,EXECUTIVE)",
@@ -148,7 +148,7 @@
       "token": "first_name",
       "user_id": "FK_UUID app_users.user_id",
       "company_id": "FK_UUID company.company_id",
-      "expiry_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
+      "expirydate": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
     "IntermediaryTable: viewed_jobs": {
       "user_id": "FK_UUID app_users.user_id",
