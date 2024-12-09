@@ -69,6 +69,7 @@
       "status": "smallint RANGE(1,6)",
       "job_id": "FK_UUID jobs.job_id",
       "user_id": "FK_UUID app_users.user_id",
+      "quiz_result_id": "first_name",
       "s3_resume_path": "first_name",
       "created_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)",
       "updated_at": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
