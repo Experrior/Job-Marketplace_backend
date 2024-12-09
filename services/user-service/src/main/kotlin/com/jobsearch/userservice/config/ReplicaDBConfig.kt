@@ -2,6 +2,7 @@ package com.jobsearch.userservice.config
 
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
@@ -24,12 +25,18 @@ import javax.sql.DataSource
         "com.jobsearch.userservice.replica_repositories",
     ]
 )
-open class ReplicaDBConfig {
+open class ReplicaDBConfig(
+    @Value("\${spring.datasource.replica.url}") private val dbUrl: String,
+    @Value("\${spring.datasource.replica.username}") private val dbUsername: String,
+    @Value("\${spring.datasource.replica.password}") private val dbPassword: String,
+    @Value("\${spring.datasource.replica.driver-class-name}") private val dbDriver: String,
+    @Value("\${spring.jpa.master.hibernate.dialect}") private val dbDialect: String,
+) {
 
     @Autowired
     private val env: Environment? = null
 
-    @Bean(name=["replicaSource"])
+    @Bean(name = ["replicaSource"])
     open fun productDataSource(): DataSource {
         val dataSource = DriverManagerDataSource()
         dataSource.setDriverClassName(
