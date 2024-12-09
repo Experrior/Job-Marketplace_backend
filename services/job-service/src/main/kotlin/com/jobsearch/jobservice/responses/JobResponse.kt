@@ -9,6 +9,7 @@ data class JobResponse(
     val recruiterId: UUID,
     val companyId: UUID,
     val companyName: String,
+    val category: String,
     val title: String,
     val description: String,
     val requiredSkills: List<Skill>,

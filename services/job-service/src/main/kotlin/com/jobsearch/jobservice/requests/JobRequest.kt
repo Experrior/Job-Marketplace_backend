@@ -5,6 +5,7 @@ import java.util.*
 
 data class JobRequest(
     val title: String,
+    val category: String,
     val description: String,
     val location: String,
     val salary: Int?,

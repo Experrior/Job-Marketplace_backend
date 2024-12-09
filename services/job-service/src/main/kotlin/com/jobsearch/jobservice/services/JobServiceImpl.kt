@@ -2,6 +2,7 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.Category
 import com.jobsearch.jobservice.entities.enums.EmploymentType
 import com.jobsearch.jobservice.entities.enums.ExperienceLevel
 import com.jobsearch.jobservice.entities.enums.WorkLocation
@@ -136,12 +137,12 @@ class JobServiceImpl(
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
-        logger.info("Job request: $jobRequest")
         return Job(
             jobId = jobId,
             recruiterId = recruiterId,
             companyId = companyId,
             title = jobRequest.title,
+            category = jobRequest.category.let { Category.valueOf(it.uppercase()) },
             description = jobRequest.description,
             location = jobRequest.location,
             employmentType = jobRequest.employmentType?.let { EmploymentType.valueOf(it.uppercase()) },
@@ -160,6 +161,7 @@ class JobServiceImpl(
             recruiterId = job.recruiterId,
             companyId = job.companyId,
             title = job.title,
+            category = job.category.value,
             description = job.description,
             location = job.location,
             employmentType = job.employmentType?.value,
