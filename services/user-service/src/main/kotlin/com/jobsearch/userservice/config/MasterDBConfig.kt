@@ -30,7 +30,7 @@ open class MasterDBConfig(
     @Value("\${spring.datasource.master.url}") private val dbUrl: String,
     @Value("\${spring.datasource.master.username}") private val dbUsername: String,
     @Value("\${spring.datasource.master.password}") private val dbPassword: String,
-    @Value("\${spring.datasource.master.driver-class-name}") private val dbDriver: String,
+    @Value("\${spring.datasource.driver-class-name}") private val dbDriver: String,
     @Value("\${spring.jpa.master.hibernate.dialect}") private val dbDialect: String,
 ) {
 

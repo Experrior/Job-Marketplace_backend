@@ -29,7 +29,7 @@ open class ReplicaDBConfig(
     @Value("\${spring.datasource.replica.url}") private val dbUrl: String,
     @Value("\${spring.datasource.replica.username}") private val dbUsername: String,
     @Value("\${spring.datasource.replica.password}") private val dbPassword: String,
-    @Value("\${spring.datasource.replica.driver-class-name}") private val dbDriver: String,
+    @Value("\${spring.datasource.driver-class-name}") private val dbDriver: String,
     @Value("\${spring.jpa.master.hibernate.dialect}") private val dbDialect: String,
 ) {
 
