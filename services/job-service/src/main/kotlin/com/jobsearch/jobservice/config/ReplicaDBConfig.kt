@@ -25,7 +25,7 @@ import javax.sql.DataSource
         "com.jobsearch.jobservice.replica_repositories",
     ]
 )
-open class MasterDBConfig(
+open class ReplicaDBConfig(
     @Value("\${spring.datasource.master.url}") private val dbUrl: String,
     @Value("\${spring.datasource.master.username}") private val dbUsername: String,
     @Value("\${spring.datasource.master.password}") private val dbPassword: String,
@@ -49,7 +49,7 @@ open class MasterDBConfig(
 //         return dataSource
 //     }
 
-    @Bean(name = ["masterSource"])
+    @Bean(name = ["replicaSource"])
     fun replicaDataSource(): DataSource {
         val dataSource = DriverManagerDataSource()
         dataSource.setDriverClassName(dbDriver)
