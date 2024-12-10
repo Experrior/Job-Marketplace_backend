@@ -3,4 +3,4 @@ tqdm
 sqlalchemy
 psycopg
 numpy
-db_mockdata==0.4.4
+db_mockdata==0.4.5
