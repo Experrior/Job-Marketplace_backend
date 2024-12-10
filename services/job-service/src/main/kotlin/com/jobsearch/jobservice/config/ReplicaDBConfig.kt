@@ -30,7 +30,7 @@ open class ReplicaDBConfig(
     @Value("\${spring.datasource.replica.username}") private val dbUsername: String,
     @Value("\${spring.datasource.replica.password}") private val dbPassword: String,
     @Value("\${spring.datasource.driver-class-name}") private val dbDriver: String,
-    @Value("\${spring.jpa.replica.hibernate.dialect}") private val dbDialect: String,
+    @Value("\${spring.jpa.hibernate.dialect}") private val dbDialect: String,
 ) {
     @Autowired
     private val env: Environment? = null
