@@ -29,7 +29,7 @@ functions = [
 ]
 
 
-@router.get("/scheduler/charts")
+@router.get("/scheduler/trigger")
 def trigger_functions(db: Session = Depends(get_db)):
     for function in functions:
         try:
@@ -43,6 +43,8 @@ procedure_scheduler.add_job(trigger_functions, 'cron', hour=10, minute=50)
 
 
 def start_scheduler():
+    with next(get_db()) as db:
+        trigger_functions(db=db)
     if not procedure_scheduler.running:
         procedure_scheduler.add_job(trigger_functions, 'cron', hour=4)
         procedure_scheduler.start()

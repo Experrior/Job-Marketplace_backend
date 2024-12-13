@@ -5,11 +5,14 @@ from sqlalchemy.exc import OperationalError
 from fastapi import APIRouter
 import os
 
+
 router = APIRouter()
 
 URL = os.getenv('DATASOURCE_PYTHON_URL')
-DATABASE_URL = URL.split('://')[0]+"://"+os.getenv('DATASOURCE_USERNAME')+":"+os.getenv('DATASOURCE_PASSWORD')+"@"+URL.split('://')[1]
-engine = create_engine(DATABASE_URL)
+if URL is None:
+    URL = "postgresql://admin:test@localhost:5432/JobMarketDB"
+URL = str(URL).split('://')[0]+"://"+str(os.getenv('DATASOURCE_USERNAME'))+":"+str(os.getenv('DATASOURCE_PASSWORD'))+"@"+str(URL).split('://')[1]
+engine = create_engine(URL)
 
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
