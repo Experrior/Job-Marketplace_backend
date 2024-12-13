@@ -2,19 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func, text, and_, Integer, cast, Float
 from db import get_db, Chart
-from models import Job, Application, Company, Viewed, User, Experience
+from models import Job, Application, Company, Viewed, User, Experience, Profile
 
 router = APIRouter()
 save_dir = 'charts'
 
 
-@router.get("/charts/get-jsons", response_model=dict)
+@router.get("/charts/get-json", response_model=dict)
 def get_jsons(db: Session = Depends(get_db)):
     charts = db.query(Chart).all()
 
     data = {chart.name: chart.content for chart in charts}
-
-    return data
 
     return data
 
@@ -126,24 +124,24 @@ def get_avg_applications_by_user(db: Session = Depends(get_db)):
 def get_avg_applications_by_level(db: Session = Depends(get_db)):
     job_application_counts = (
         db.query(
-            Job.level,
+            Job.experience_level,
             func.count(Job.job_id).label("job_count"),
             func.count(Application.application_id).label("application_count")
         )
         .join(Application, Application.job_id == Job.job_id)
-        .group_by(Job.level)
+        .group_by(Job.experience_level)
         .subquery()
     )
 
     levels = (
         db.query(
-            job_application_counts.c.level,
+            job_application_counts.c.experience_level,
             cast(job_application_counts.c.application_count / job_application_counts.c.job_count, Float).label("avg_applications")
         )
         .all()
     )
 
-    data = {"data": [{"level": level, "average_applications": float(avg)} for level, avg in levels]}
+    data = {"data": [{"level": experience_level, "average_applications": float(avg)} for experience_level, avg in levels]}
 
     chart_name = "avg_applications_by_level"
     try:
@@ -252,16 +250,16 @@ def get_offers_amount_percentage_change_month_to_month_by_industry(db: Session =
 def get_number_of_offers_per_seniority_with_avg_salary(db: Session = Depends(get_db)):
     offers = (
         db.query(
-            Job.level,
+            Job.experience_level,
             func.count(Job.job_id).label("offer_count"),
             func.avg(Job.salary).label("average_salary")
         )
-        .group_by(Job.level)
+        .group_by(Job.experience_level)
         .order_by(func.count(Job.job_id).desc())
         .all()
     )
 
-    data = {"data": [{"seniority": level, "offer_count": count, "average_salary": float(avg_salary)} for level, count, avg_salary in offers]}
+    data = {"data": [{"level": experience_level, "offer_count": count, "average_salary": float(avg_salary)} for experience_level, count, avg_salary in offers]}
 
     chart_name = "number_of_offers_per_seniority_with_avg_salary"
     try:
@@ -284,7 +282,8 @@ def get_required_experience_histogram(db: Session = Depends(get_db)):
     for bin_start, bin_end in bins:
         count = (
             db.query(func.count(User.user_id))
-            .join(Experience, Experience.profile_id == User.user_id)
+            .join(Profile, Profile.user_id == User.user_id)
+            .join(Experience, Experience.profile_id == Profile.profile_id)
             .filter(
                 func.extract('day', func.now() - Experience.start_date) / 365 >= bin_start,
                 func.extract('day', func.now() - Experience.start_date) / 365 < bin_end
@@ -310,10 +309,10 @@ def get_required_experience_histogram(db: Session = Depends(get_db)):
 def get_avg_required_experience_by_seniority(db: Session = Depends(get_db)):
     required_experience = (
         db.query(
-            Job.level,
+            Job.experience_level,
             func.avg(func.cast(Job.required_experience, Integer)).label("average_required_experience")
         )
-        .group_by(Job.level)
+        .group_by(Job.experience_level)
         .all()
     )
 
@@ -441,19 +440,19 @@ def get_ratio_of_levels_by_industry(db: Session = Depends(get_db)):
     levels_by_industry = (
         db.query(
             Company.industry,
-            Job.level,
+            Job.experience_level,
             func.count(Job.job_id).label("count")
         )
         .join(Job, Job.company_id == Company.company_id)
-        .group_by(Company.industry, Job.level)
+        .group_by(Company.industry, Job.experience_level)
         .all()
     )
 
     industry_data = {}
-    for industry, level, count in levels_by_industry:
+    for industry, experience_level, count in levels_by_industry:
         if industry not in industry_data:
             industry_data[industry] = {}
-        industry_data[industry][level] = count
+        industry_data[industry][experience_level] = count
 
     data = {"data": [{"industry": industry, "level_ratio": levels} for industry, levels in industry_data.items()]}
 

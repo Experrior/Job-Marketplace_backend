@@ -1,60 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, not_
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from db import get_db
 from models import Job, Application, Followed, Viewed
-from collections import Counter
 
 router = APIRouter()
-
-
-@router.get("/recommendation/{user_id}")
-async def get_job_recommendations(user_id: str, limit: int = 10, db: Session = Depends(get_db)):
-    applied_jobs = db.query(Application.job_id).filter(Application.user_id == user_id).subquery()
-    followed_jobs = db.query(Followed.job_id).filter(Followed.user_id == user_id).subquery()
-
-    viewed_jobs = db.query(Viewed.job_id).filter(Viewed.user_id == user_id).all()
-
-    viewed_job_ids = [job.job_id for job in viewed_jobs]
-
-    weights = Counter()
-
-    applied_jobs_details = db.query(Job).filter(Job.job_id.in_(applied_jobs)).all()
-    for job in applied_jobs_details:
-        weights[job.category] += 3
-
-    followed_jobs_details = db.query(Job).filter(Job.job_id.in_(followed_jobs)).all()
-    for job in followed_jobs_details:
-        weights[job.category] += 2
-
-    viewed_jobs_details = db.query(Job).filter(Job.job_id.in_(viewed_job_ids)).all()
-    for job in viewed_jobs_details:
-        weights[job.category] += 1
-
-    excluded_jobs = db.query(Job.job_id).filter(
-        or_(
-            Job.job_id.in_(applied_jobs),
-            Job.job_id.in_(followed_jobs)
-        )
-    ).subquery()
-
-    recommended_jobs = (
-        db.query(Job)
-        .filter(and_(
-            not_(Job.job_id.in_(excluded_jobs)),
-            Job.category.in_(weights.keys())
-        ))
-        .order_by(
-            weights[Job.category].desc()
-        )
-        .limit(limit)
-        .all()
-    )
-
-    return recommended_jobs
 
 
 @router.get("/recommendations/{user_id}")
@@ -80,15 +32,16 @@ def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int 
         "Machine Learning", "Cloud Computing", "Networks", "Cybersecurity",
         "Administration", "ERP", "Consulting", "Compilers"
     ]
-    levels = ["intern", "junior", "regular", "senior", "manager"]
-    work_settings = ["stationary", "hybrid", "remote"]
+    levels = ["INTERN", "JUNIOR", "MID", "SENIOR", "LEAD", "MANAGER", "DIRECTOR", "EXECUTIVE"]
+    employment_types = ["FULL TIME", "PART TIME", "CONTRACT", "INTERNSHIP", "TEMPORARY", "FREELANCE"]
+    work_settings = ["ONSITE", "REMOTE", "HYBRID"]
 
-    encoder = OneHotEncoder(categories=[categories, levels, ["full-time", "part-time"], work_settings], sparse_output=False)
-    scaler = MinMaxScaler(feature_range=(0, 1))
+    encoder = OneHotEncoder(categories=[categories, levels, employment_types, work_settings], sparse_output=False)
+    scaler = MinMaxScaler(feature_range=(-1, 1))
 
     job_data = [
         [
-            job.category, job.level, job.employment_type, job.work_setting, job.salary
+            job.category, job.experience_level, job.employment_type, job.work_location, job.salary
         ]
         for job in jobs
     ]
@@ -117,6 +70,65 @@ def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int 
     )[:count]
 
     return [
-        {f"job_{index}": job}
-        for index, job in enumerate(recommendations)
+        {f"{index}": entry[0]}
+        for index, entry in enumerate(recommendations)
+    ]
+
+
+@router.get("/similar_jobs/{job_id}")
+def get_similar_jobs(job_id: str, db: Session = Depends(get_db), count: int = 10):
+    target_job = db.query(Job).filter(Job.job_id == job_id).first()
+
+    if not target_job:
+        raise HTTPException(status_code=404, detail="Job not found.")
+
+    jobs = db.query(Job).all()
+    if not jobs:
+        raise HTTPException(status_code=404, detail="No jobs available for recommendation.")
+
+    categories = [
+        "Web Development", "Mobile Development", "Gamedev", "Embedded", "Analytics",
+        "Machine Learning", "Cloud Computing", "Networks", "Cybersecurity",
+        "Administration", "ERP", "Consulting", "Compilers"
+    ]
+    levels = ["intern", "junior", "regular", "senior", "manager"]
+    employment_types = ["FULL TIME", "PART TIME", "CONTRACT", "INTERNSHIP", "TEMPORARY", "FREELANCE"]
+    work_settings = ["stationary", "hybrid", "remote"]
+
+    encoder = OneHotEncoder(categories=[categories, levels, employment_types, work_settings],
+                            sparse_output=False)
+    scaler = MinMaxScaler(feature_range=(-1, 1))
+
+    job_data = [
+        [
+            job.category, job.experience_level, job.employment_type, job.work_location, job.salary
+        ]
+        for job in jobs
+    ]
+
+    encoded_jobs = encoder.fit_transform([data[:4] for data in job_data])
+    normalized_salaries = scaler.fit_transform(np.array([data[4] for data in job_data]).reshape(-1, 1))
+    job_vectors = np.hstack((encoded_jobs, normalized_salaries))
+
+    target_job_index = next((i for i, job in enumerate(jobs) if str(job.job_id) == job_id), None)
+    if target_job_index is None:
+        raise HTTPException(status_code=404, detail="Target job not found in dataset.")
+
+    target_job_vector = job_vectors[target_job_index]
+
+    similarities = cosine_similarity([target_job_vector], job_vectors)[0]
+
+    similar_jobs = sorted(
+        [
+            (jobs[i], similarities[i])
+            for i in range(len(jobs))
+            if str(jobs[i].job_id) != job_id
+        ],
+        key=lambda x: x[1],
+        reverse=True
+    )[:count]
+
+    return [
+        {f"{index}": entry[0]}
+        for index, entry in enumerate(similar_jobs)
     ]
