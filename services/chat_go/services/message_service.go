@@ -24,18 +24,6 @@ type MessageService interface {
 	StartChat(creatorId string, targetId string, recruiterName string, applicantName string) (chatObj chats)
 }
 
-type Message struct {
-	
-	MessageId string    `json:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
-	ChatId    string    `json:"chatId" gorm:"references:Chat;type:uuid"`
-	Content   string `json:"content"`
-
-	CreatedBy string `json:"createdBy" gorm:"references:app_users;type:uuid"`
-
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-}
-
 type app_users struct {
 	UserID           string    `json:"user_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	CompanyID        string    `json:"company_id" gorm:"references:Company;type:uuid"`
@@ -51,16 +39,25 @@ type app_users struct {
 	PasswordHash     string    `json:"password_hash"`
 }
 
+type Message struct {
+	
+	MessageId string    `json:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	ChatId    string    `json:"chatId" gorm:"references:Chat;type:uuid"`
+	Content   string `json:"content"`
+
+	CreatedBy string `json:"createdBy" gorm:"references:app_users;type:uuid"`
+
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+
+
 type user_chats struct {
 	UserID           string    `json:"user_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid();references:app_users"`
 	ChatID           string    `json:"chat_id" gorm:"primaryKey;type:uuid;default:gen_random_uuid();"`
 }
 
-type Chat struct {
-
-	ChatId			string 	`json:"chatId" gorm:"PrimaryKey;type:uuid;default:gen_random_uuid()"`
-	CreatedBy		string 	`json:"createdBy" gorm:"PrimaryKey;type:uuid;references:app_users"`
-}
 
 type chats struct {
 	ChatId        string    `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
@@ -73,6 +70,12 @@ type chats struct {
 	UpdatedAt     time.Time `gorm:"type:timestamp;default:now()"`   
 }
 
+
+type Chat struct {
+
+	ChatId			string 	`json:"chatId" gorm:"PrimaryKey;type:uuid;default:gen_random_uuid()"`
+	CreatedBy		string 	`json:"createdBy" gorm:"PrimaryKey;type:uuid;references:app_users"`
+}
 func (p *DbMessageService) Create(message *Message) (Message, error) {
 	_, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
