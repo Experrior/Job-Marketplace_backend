@@ -9,6 +9,16 @@ from models import Job, Application, Followed, Viewed
 router = APIRouter()
 
 
+categories = [
+        "WEB_DEVELOPMENT", "MOBILE_DEVELOPMENT", "GAME_DEVELOPMENT", "EMBEDDED", "ANALYTICS",
+        "MACHINE_LEARNING", "CLOUD_COMPUTING", "NETWORKS",
+        "CYBERSECURITY", "ADMINISTRATION", "ERP", "CONSULTING", "COMPILERS"
+    ]
+levels = ["INTERN", "JUNIOR", "MID", "SENIOR", "LEAD", "MANAGER", "DIRECTOR", "EXECUTIVE"]
+employment_types = ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP", "TEMPORARY", "FREELANCE"]
+work_settings = ["ONSITE", "REMOTE", "HYBRID"]
+
+
 @router.get("/recommendations/{user_id}")
 def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int = 10):
     applied_jobs = db.query(Application.job_id).filter(Application.user_id == user_id).all()
@@ -26,15 +36,6 @@ def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int 
     jobs = db.query(Job).all()
     if not jobs:
         raise HTTPException(status_code=404, detail="No jobs available for recommendation.")
-
-    categories = [
-        "Web Development", "Mobile Development", "Gamedev", "Embedded", "Analytics",
-        "Machine Learning", "Cloud Computing", "Networks", "Cybersecurity",
-        "Administration", "ERP", "Consulting", "Compilers"
-    ]
-    levels = ["INTERN", "JUNIOR", "MID", "SENIOR", "LEAD", "MANAGER", "DIRECTOR", "EXECUTIVE"]
-    employment_types = ["FULL TIME", "PART TIME", "CONTRACT", "INTERNSHIP", "TEMPORARY", "FREELANCE"]
-    work_settings = ["ONSITE", "REMOTE", "HYBRID"]
 
     encoder = OneHotEncoder(categories=[categories, levels, employment_types, work_settings], sparse_output=False)
     scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -83,17 +84,9 @@ def get_similar_jobs(job_id: str, db: Session = Depends(get_db), count: int = 10
         raise HTTPException(status_code=404, detail="Job not found.")
 
     jobs = db.query(Job).all()
+    
     if not jobs:
         raise HTTPException(status_code=404, detail="No jobs available for recommendation.")
-
-    categories = [
-        "Web Development", "Mobile Development", "Gamedev", "Embedded", "Analytics",
-        "Machine Learning", "Cloud Computing", "Networks", "Cybersecurity",
-        "Administration", "ERP", "Consulting", "Compilers"
-    ]
-    levels = ["intern", "junior", "regular", "senior", "manager"]
-    employment_types = ["FULL TIME", "PART TIME", "CONTRACT", "INTERNSHIP", "TEMPORARY", "FREELANCE"]
-    work_settings = ["stationary", "hybrid", "remote"]
 
     encoder = OneHotEncoder(categories=[categories, levels, employment_types, work_settings],
                             sparse_output=False)
