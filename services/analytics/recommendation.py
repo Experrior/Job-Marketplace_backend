@@ -70,10 +70,7 @@ def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int 
         reverse=True
     )[:count]
 
-    return [
-        {f"{index}": entry[0]}
-        for index, entry in enumerate(recommendations)
-    ]
+    return [x[0] for x in recommendations]
 
 
 @router.get("/similar_jobs/{job_id}")
@@ -121,7 +118,4 @@ def get_similar_jobs(job_id: str, db: Session = Depends(get_db), count: int = 10
         reverse=True
     )[:count]
 
-    return [
-        {f"{index}": entry[0]}
-        for index, entry in enumerate(similar_jobs)
-    ]
+    return [ x[0] for x in similar_jobs]

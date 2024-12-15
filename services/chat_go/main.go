@@ -10,7 +10,7 @@ import (
 	"os"
 	"sync"
 	"time"
-
+    "strings"
 	"chat/services"
 
 	"github.com/gorilla/mux"
@@ -105,11 +105,14 @@ func (a *app) GetAllChats(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *app) StartChat(w http.ResponseWriter, r *http.Request) {
-	//todo add role check
-	//var role = r.Header.Get("X-User-Roles")
+
+	var roles = r.Header.Get("X-User-Roles")
+	if !strings.Contains(roles, "ROLE_RECRUITER") {
+		http.Error(w, "Unauthorized: insufficient permissions", http.StatusUnauthorized)
+		return
+	}
 
 	var recruiterId = r.Header.Get("X-User-Id")
-	// var userId string = r.URL.Query().Get("userId")
 	var targetUserId string = r.URL.Query().Get("targetUserId")
 	var recruiterName string = r.URL.Query().Get("recruiterName")
 	var applicantName string = r.URL.Query().Get("applicantName")
