@@ -54,7 +54,7 @@ def get_recommendations(user_id: str, db: Session = Depends(get_db), count: int 
     interacted_jobs = [job for job in jobs if job.job_id in interacted_job_ids]
     if not interacted_jobs:
         raise HTTPException(status_code=404, detail="No job interactions found for the user.")
-
+    
     interacted_vectors = np.array([job_vectors[i] for i, job in enumerate(jobs) if job.job_id in interacted_job_ids])
     user_vector = interacted_vectors.mean(axis=0)
 
