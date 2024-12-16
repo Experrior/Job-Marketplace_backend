@@ -9,7 +9,7 @@ import java.util.*
 @IdClass(UserJobId::class)
 data class FollowedJobs(
     @Id
-    @Column(nullable = false)
+    @Column(name = "user_id",nullable = false)
     var userId: UUID,
 
     @Id
