@@ -35,20 +35,6 @@ open class ReplicaDBConfig(
     @Autowired
     private val env: Environment? = null
 
-//     @Bean(name=["replicaSource"])
-//     open fun productDataSource(): DataSource {
-//         val dataSource = DriverManagerDataSource()
-//         dataSource.setDriverClassName(
-//             "org.postgresql.Driver"
-//         )
-//         dataSource.url = "jdbc:postgresql://172.22.0.1:5434/JobMarketDB"
-// //        dataSource.url = env?.getProperty("spring.datasource.replica1.url")
-//         dataSource.username = "admin"
-//         dataSource.password = "test"
-
-//         return dataSource
-//     }
-
     @Bean(name = ["replicaSource"])
     fun replicaDataSource(): DataSource {
         val dataSource = DriverManagerDataSource()
@@ -61,7 +47,7 @@ open class ReplicaDBConfig(
 
 
     @Bean(name = ["replicaEntityManager"])
-    open fun productEntityManager(): LocalContainerEntityManagerFactoryBean {
+    open fun replicaEntityManager(): LocalContainerEntityManagerFactoryBean {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = replicaDataSource()
         em.setPackagesToScan(
@@ -71,16 +57,15 @@ open class ReplicaDBConfig(
         val vendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = HashMap<String, Any?>()
-//        properties["hibernate.hbm2ddl.auto"] = env.getProperty("hibernate.hbm2ddl.auto")
         properties["hibernate.dialect"] = dbDialect
         em.setJpaPropertyMap(properties)
         return em
     }
 
     @Bean(name = ["replicaTransactionManager"])
-    open fun productTransactionManager(): PlatformTransactionManager {
+    open fun replicaTransactionManager(): PlatformTransactionManager {
         val transactionManager = JpaTransactionManager()
-        transactionManager.entityManagerFactory = productEntityManager().getObject()
+        transactionManager.entityManagerFactory = replicaEntityManager().getObject()
         return transactionManager
     }
 

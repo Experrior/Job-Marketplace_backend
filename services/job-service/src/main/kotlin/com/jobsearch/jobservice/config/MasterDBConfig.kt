@@ -49,7 +49,7 @@ open class MasterDBConfig(
     }
 
     @Bean(name = ["masterEntityManager"])
-    open fun productEntityManager(): LocalContainerEntityManagerFactoryBean {
+    open fun masterEntityManager(): LocalContainerEntityManagerFactoryBean {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = masterDataSource()
         em.setPackagesToScan(
@@ -58,16 +58,16 @@ open class MasterDBConfig(
         val vendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = HashMap<String, Any?>()
-//        properties["hibernate.hbm2ddl.auto"] = env.getProperty("hibernate.hbm2ddl.auto")
         properties["hibernate.dialect"] = dbDialect
+        properties["hibernate.hbm2ddl.auto"] = "update"
         em.setJpaPropertyMap(properties)
         return em
     }
     @Primary
     @Bean(name = ["masterTransactionManager"])
-    open fun productTransactionManager(): PlatformTransactionManager {
+    open fun masterTransactionManager(): PlatformTransactionManager {
         val transactionManager = JpaTransactionManager()
-        transactionManager.entityManagerFactory = productEntityManager().getObject()
+        transactionManager.entityManagerFactory = masterEntityManager().getObject()
         return transactionManager
     }
 }

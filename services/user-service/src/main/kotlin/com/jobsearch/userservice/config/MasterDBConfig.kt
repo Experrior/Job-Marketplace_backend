@@ -38,21 +38,6 @@ open class MasterDBConfig(
     @Autowired
     private val env: Environment? = null
 
-//     @Bean(name=["masterSource"])
-//     open fun productDataSource(): DataSource {
-//         val dataSource = DriverManagerDataSource()
-//         dataSource.setDriverClassName(
-//             "org.postgresql.Driver"
-//         )
-//         dataSource.url = "jdbc:postgresql://172.22.0.1:5432/JobMarketDB"
-// //        dataSource.url = env?.getProperty("spring.datasource.url")
-//         dataSource.username = "admin"
-//         dataSource.password = "test"
-
-//         return dataSource
-//     }
-
-
     @Bean(name = ["masterSource"])
     fun masterDataSource(): DataSource {
         val dataSource = DriverManagerDataSource()
@@ -75,6 +60,7 @@ open class MasterDBConfig(
         val properties = HashMap<String, Any?>()
 //        properties["hibernate.hbm2ddl.auto"] = env.getProperty("hibernate.hbm2ddl.auto")
         properties["hibernate.dialect"] = dbDialect
+        properties["hibernate.hbm2ddl.auto"] = "update"
         em.setJpaPropertyMap(properties)
         return em
     }

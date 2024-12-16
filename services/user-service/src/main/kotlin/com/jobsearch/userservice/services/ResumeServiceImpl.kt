@@ -5,18 +5,18 @@ import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.ResumeNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.ResumeRepository
-import com.jobsearch.userservice.replica_repositories.ResumeRepositoryReplica
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.ResumeResponse
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
 class ResumeServiceImpl(
     private val resumeRepository: ResumeRepository,
-    private val resumeRepositoryReplica: ResumeRepositoryReplica,
     private val userProfileService: UserProfileService,
     private val fileStorageService: FileStorageService,
     private val mapper: UserProfileMapper
@@ -39,7 +39,7 @@ class ResumeServiceImpl(
     @Transactional
     override fun deleteResume(userId: UUID, resumeId: UUID): DeleteResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
-        val resumeToRemove = resumeRepositoryReplica.findById(resumeId)
+        val resumeToRemove = resumeRepository.findById(resumeId)
             .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
 
         if (resumeToRemove.userProfile != profile) {
@@ -58,15 +58,15 @@ class ResumeServiceImpl(
     override fun userResumes(userId: UUID): List<ResumeResponse> {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
-        return resumeRepositoryReplica.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
+        return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
     }
 
     override fun getResumeById(userId: UUID, resumeId: UUID): ResumeResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
-        val resume = resumeRepositoryReplica.findById(resumeId)
+        val resume = resumeRepository.findById(resumeId)
             .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
 
-        if (profile.user.role != UserRole.RECRUITER && resume.userProfile != profile) {
+        if (profile.user.role != UserRole.RECRUITER && resume.userProfile?.profileId != profile.profileId) {
             throw UnauthorizedAccessException("Resume does not belong to the user's profile")
         }
 

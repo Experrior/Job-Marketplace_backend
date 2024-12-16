@@ -48,20 +48,17 @@ class SecurityConfig(
             .route { r: PredicateSpec ->
                 r.path("/user-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
-                    .uri("http://172.22.0.1:8081")  //user service ip
-                //todo change ip:port to env vars
+                    .uri("http://172.22.0.1:8081")
             }
             .route { r: PredicateSpec ->
                 r.path("/job-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
-                    .uri("http://172.22.0.1:8083")  //user service ip
-                //todo change ip:port to env vars
+                    .uri("http://172.22.0.1:8083")
             }
             .route { r: PredicateSpec ->
                 r.path("/chat-service/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
-                    .uri("http://172.22.0.1:8088")  //user service ip
-                    //todo change ip:port to env vars
+                    .uri("http://172.22.0.1:8088")
             }
             .route { r: PredicateSpec ->
                 r.path("/chat_service/**")
@@ -71,7 +68,7 @@ class SecurityConfig(
             .route { r: PredicateSpec ->
                 r.path("/analytics/**")
                     .filters { f: GatewayFilterSpec -> f.stripPrefix(1) }
-                    .uri("http://172.22.0.1:8089")  //user service ip
+                    .uri("http://172.22.0.1:8089")
 
             }
             .build()
