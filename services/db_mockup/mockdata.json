@@ -42,7 +42,7 @@
       "recruiter_id": "FK_UUID app_users.user_id",
       "required_skills": "jsonb:json1 value:required_skills",
       "views": "integer RANGE(20,2000) DISTRIBUTION(normal,mean=1000,std=400)",
-      "required_experience": "integer RANGE(0,15)",
+      "required_experience": "integer RANGE(0,10)",
       "category": "OPTION IN (WEB_DEVELOPMENT,MOBILE_DEVELOPMENT,GAME_DEVELOPMENT,EMBEDDED,ANALYTICS,MACHINE_LEARNING,CLOUD_COMPUTING,NETWORKS,CYBERSECURITY,ADMINISTRATION,ERP,CONSULTING,COMPILERS)",
       "employment_type": "OPTION IN (FULL_TIME,PART_TIME,CONTRACT,INTERNSHIP,TEMPORARY,FREELANCE)",
       "work_location": "OPTION IN (ONSITE,REMOTE,HYBRID)",
@@ -150,9 +150,17 @@
       "company_id": "FK_UUID company.company_id",
       "expiry_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
     },
+    "employee_verification_tokens": {
+      "token_id": "PK UUID",
+      "token": "first_name",
+      "user_id": "FK_UUID app_users.user_id",
+      "company_id": "FK_UUID company.company_id",
+      "expiry_date": "timestamp RANGE(2023-01-01 00:00:00,2024-12-01 22:12:00)"
+    },
     "IntermediaryTable: viewed_jobs": {
       "user_id": "FK_UUID app_users.user_id",
-      "job_id": "FK_UUID jobs.job_id"
+      "job_id": "FK_UUID jobs.job_id",
+      "view_count": "integer RANGE(10,200)"
     }
   },
   "json_schemas": [
@@ -199,6 +207,7 @@
     "applications": 800,
     "followed_jobs": 200,
     "viewed_jobs": 3000,
-    "verification_tokens": 1
+    "verification_tokens": 1,
+    "employee_verification_tokens": 1
   }
 }
