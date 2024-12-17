@@ -1,0 +1,31 @@
+
+services:
+  locust_master:
+    image: locust_test3
+    container_name: locust_master
+    command: ["locust", "-f", "main4.py", "--master"]
+    ports:
+      - "8089:8089"
+    networks:
+      locust_test_network:
+        ipv4_address: 172.23.0.7
+
+  locust_slaves:
+    image: locust_test3
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        locust -f main4.py  --worker --master-host 172.23.0.7
+    deploy:
+      mode: replicated
+      replicas: 3
+    networks:
+      - locust_test_network
+
+networks:
+  locust_test_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16

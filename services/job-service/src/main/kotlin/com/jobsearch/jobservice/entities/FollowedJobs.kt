@@ -9,7 +9,7 @@ import java.util.*
 @IdClass(UserJobId::class)
 data class FollowedJobs(
     @Id
-    @Column(nullable = false)
+    @Column(name = "user_id",nullable = false)
     var userId: UUID,
 
     @Id
@@ -20,7 +20,7 @@ data class FollowedJobs(
     @JoinColumn(name = "job_id", referencedColumnName = "job_id", insertable = false, updatable = false)
     var job: Job? = null,
 
-    @Column(nullable = false)
+    @Column(name = "created_at",nullable = false)
     var createdAt: Timestamp = Timestamp(0),
 ) {
     constructor() : this(

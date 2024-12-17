@@ -1,5 +1,6 @@
 package com.jobsearch.userservice.controllers
 
+import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.ResumeResponse
 import com.jobsearch.userservice.services.ResumeService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -21,7 +22,7 @@ class ResumeController(
     fun addResume(
         @AuthenticationPrincipal userId: UUID,
         @RequestParam("resume") resume: MultipartFile
-    ): ResponseEntity<List<ResumeResponse>> {
+    ): ResponseEntity<ResumeResponse> {
         return ResponseEntity(resumeService.addResume(userId, resume), HttpStatus.OK)
     }
 
@@ -29,9 +30,10 @@ class ResumeController(
     fun removeResume(
         @AuthenticationPrincipal userId: UUID,
         @RequestParam("resumeId") resumeId: UUID
-    ): ResponseEntity<List<ResumeResponse>> {
+    ): ResponseEntity<DeleteResponse> {
         return ResponseEntity(resumeService.deleteResume(userId, resumeId), HttpStatus.OK)
     }
+
 
     @QueryMapping
     fun userResumes(@AuthenticationPrincipal userId: UUID): List<ResumeResponse> {

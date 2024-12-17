@@ -5,9 +5,12 @@ import com.jobsearch.userservice.entities.UserRole
 import com.jobsearch.userservice.exceptions.ResumeNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.ResumeRepository
+import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.ResumeResponse
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
@@ -20,7 +23,7 @@ class ResumeServiceImpl(
 ): ResumeService {
 
     @Transactional
-    override fun addResume(userId: UUID, resume: MultipartFile): List<ResumeResponse> {
+    override fun addResume(userId: UUID, resume: MultipartFile): ResumeResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
 
         val resumePath = fileStorageService.storeResume(userId, resume)
@@ -30,12 +33,11 @@ class ResumeServiceImpl(
             s3ResumePath = resumePath
         )
 
-        resumeRepository.save(newResume)
-        return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
+        return mapper.toResumeResponse(resumeRepository.save(newResume))
     }
 
     @Transactional
-    override fun deleteResume(userId: UUID, resumeId: UUID): List<ResumeResponse> {
+    override fun deleteResume(userId: UUID, resumeId: UUID): DeleteResponse {
         val profile = userProfileService.getUserProfileEntityByUserId(userId)
         val resumeToRemove = resumeRepository.findById(resumeId)
             .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
@@ -47,7 +49,10 @@ class ResumeServiceImpl(
         resumeToRemove.s3ResumePath?.let { fileStorageService.deleteFile(it) }
         resumeRepository.delete(resumeToRemove)
 
-        return resumeRepository.findByUserProfile(profile).map { mapper.toResumeResponse(it) }
+        return DeleteResponse(
+            success = true,
+            message = "Resume deleted successfully"
+        )
     }
 
     override fun userResumes(userId: UUID): List<ResumeResponse> {
@@ -61,7 +66,7 @@ class ResumeServiceImpl(
         val resume = resumeRepository.findById(resumeId)
             .orElseThrow { ResumeNotFoundException("Resume not found with id: $resumeId") }
 
-        if (profile.user.role != UserRole.RECRUITER && resume.userProfile != profile) {
+        if (profile.user.role != UserRole.RECRUITER && resume.userProfile?.profileId != profile.profileId) {
             throw UnauthorizedAccessException("Resume does not belong to the user's profile")
         }
 

@@ -2,8 +2,13 @@ package com.jobsearch.jobservice.services
 
 import com.jobsearch.jobservice.entities.FollowedJobs
 import com.jobsearch.jobservice.entities.Job
+import com.jobsearch.jobservice.entities.enums.Category
+import com.jobsearch.jobservice.entities.enums.EmploymentType
+import com.jobsearch.jobservice.entities.enums.ExperienceLevel
+import com.jobsearch.jobservice.entities.enums.WorkLocation
 import com.jobsearch.jobservice.entities.specifications.JobSpecifications
 import com.jobsearch.jobservice.exceptions.JobNotFoundException
+import com.jobsearch.jobservice.replica_repositories.JobRepositoryReplica
 import com.jobsearch.jobservice.repositories.FollowedJobRepository
 import com.jobsearch.jobservice.repositories.JobRepository
 import com.jobsearch.jobservice.requests.JobFilterRequest
@@ -12,6 +17,7 @@ import com.jobsearch.jobservice.responses.DeleteJobResponse
 import com.jobsearch.jobservice.responses.FollowJobResponse
 import com.jobsearch.jobservice.responses.JobResponse
 import jakarta.transaction.Transactional
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -22,11 +28,13 @@ import java.util.*
 @Service
 class JobServiceImpl(
     private val jobRepository: JobRepository,
+    private val jobRepositoryReplica: JobRepositoryReplica,
     private val followedJobRepository: FollowedJobRepository,
     private val quizService: QuizService,
     private val userServiceUtils: UserServiceUtils,
     private val viewedJobService: ViewedJobService
 ): JobService {
+    private val logger = LoggerFactory.getLogger(JobServiceImpl::class.java)
 
     override fun createJob(jobRequest: JobRequest): JobResponse {
         val companyId = userServiceUtils.getRecruiterCompany()
@@ -63,11 +71,11 @@ class JobServiceImpl(
         return mapJobToResponse(updatedJob)    }
 
     override fun getJobsByRecruiter(recruiterId: UUID): List<JobResponse> {
-        return jobRepository.findJobsByRecruiterId(recruiterId).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findJobsByRecruiterId(recruiterId).map { mapJobToResponse(it) }
     }
 
     override fun getJobEntityById(jobId: UUID): Job {
-        return jobRepository.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId)
+        return jobRepositoryReplica.findJobByJobId(jobId) ?: throw JobNotFoundException(jobId)
     }
 
     override fun getJobById(jobId: UUID): JobResponse {
@@ -79,16 +87,20 @@ class JobServiceImpl(
         if(userId != null){
             viewedJobService.viewJob(userId, jobId)
         }
+        job.views += 1
+        jobRepository.save(job)
         return mapJobToResponse(job)
     }
 
     override fun getFilteredJobs(filter: JobFilterRequest?, pageable: Pageable): Page<JobResponse> {
         val specification: Specification<Job>? = filter?.let { JobSpecifications.getJobsByFilter(it) }
-        return jobRepository.findAll(specification, pageable).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findAll(specification, pageable).map { mapJobToResponse(it) }
     }
 
     override fun restoreJobById(jobId: UUID): JobResponse {
         val job = getJobEntityById(jobId)
+        job.isDeleted = false
+
         val restoredJob = jobRepository.save(job)
         return mapJobToResponse(restoredJob)
     }
@@ -121,7 +133,7 @@ class JobServiceImpl(
     }
 
     override fun getJobsByCompany(companyId: UUID): List<JobResponse> {
-        return jobRepository.findJobsByCompanyIdAndIsDeletedFalse(companyId).map { mapJobToResponse(it) }
+        return jobRepositoryReplica.findJobsByCompanyIdAndIsDeletedFalse(companyId).map { mapJobToResponse(it) }
     }
 
     private fun mapRequestToJob(jobRequest: JobRequest, companyId: UUID, recruiterId: UUID, jobId: UUID? = null): Job {
@@ -130,35 +142,40 @@ class JobServiceImpl(
             recruiterId = recruiterId,
             companyId = companyId,
             title = jobRequest.title,
+            category = jobRequest.category.let { Category.valueOf(it.uppercase()) },
             description = jobRequest.description,
             location = jobRequest.location,
-            employmentType = jobRequest.employmentType,
-            workLocation = jobRequest.workLocation,
+            employmentType = jobRequest.employmentType?.let { EmploymentType.valueOf(it.uppercase()) },
+            workLocation = jobRequest.workLocation?.let { WorkLocation.valueOf(it.uppercase()) },
             salary = jobRequest.salary,
             requiredSkills = jobRequest.requiredSkills,
             requiredExperience = jobRequest.requiredExperience,
+            experienceLevel = jobRequest.experienceLevel?.let { ExperienceLevel.valueOf(it.uppercase()) },
             quiz = jobRequest.quizId?.let { quizService.findQuizEntityById(it) },
         )
     }
 
-    private fun mapJobToResponse(job: Job): JobResponse {
+    override fun mapJobToResponse(job: Job): JobResponse {
         return JobResponse(
             jobId = job.jobId ?: throw IllegalArgumentException("Job ID cannot be null"),
             recruiterId = job.recruiterId,
             companyId = job.companyId,
             title = job.title,
+            category = job.category.value,
             description = job.description,
             location = job.location,
-            employmentType = job.employmentType,
-            workLocation = job.workLocation,
+            employmentType = job.employmentType?.value,
+            workLocation = job.workLocation?.value,
             salary = job.salary,
+            views = job.views,
             requiredSkills = job.requiredSkills,
             requiredExperience = job.requiredExperience,
+            experienceLevel = job.experienceLevel?.value,
             createdAt = job.createdAt,
             updatedAt = job.updatedAt,
             isDeleted = job.isDeleted,
             quizId = job.quiz?.quizId,
-            companyName = userServiceUtils.getCompanyName(job.companyId)
+            companyName = userServiceUtils.getCompanyName(job.companyId),
         )
     }
 

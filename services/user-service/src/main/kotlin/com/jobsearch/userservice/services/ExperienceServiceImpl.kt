@@ -4,6 +4,7 @@ import com.jobsearch.userservice.entities.Experience
 import com.jobsearch.userservice.exceptions.ExperienceNotFoundException
 import com.jobsearch.userservice.exceptions.UnauthorizedAccessException
 import com.jobsearch.userservice.repositories.ExperienceRepository
+import com.jobsearch.userservice.replica_repositories.ExperienceRepositoryReplica
 import com.jobsearch.userservice.requests.ExperienceRequest
 import com.jobsearch.userservice.responses.DeleteResponse
 import com.jobsearch.userservice.responses.ExperienceResponse
@@ -14,6 +15,7 @@ import java.util.*
 @Service
 class ExperienceServiceImpl(
     private val experienceRepository: ExperienceRepository,
+    private val experienceRepositoryReplica: ExperienceRepositoryReplica,
     private val userProfileService: UserProfileService,
     private val mapper: UserProfileMapper
 ): ExperienceService {
@@ -50,7 +52,7 @@ class ExperienceServiceImpl(
     @Transactional
     override fun deleteAllUserExperiences(userId: UUID): DeleteResponse {
         val userProfile = userProfileService.getUserProfileEntityByUserId(userId)
-        val experiences = experienceRepository.findByUserProfile(userProfile)
+        val experiences = experienceRepositoryReplica.findByUserProfile(userProfile)
 
         return try {
             experienceRepository.deleteAll(experiences)
@@ -67,7 +69,7 @@ class ExperienceServiceImpl(
     }
 
     private fun getExperienceEntity(experienceId: UUID): Experience {
-        return experienceRepository.findById(experienceId)
+        return experienceRepositoryReplica.findById(experienceId)
             .orElseThrow { ExperienceNotFoundException("Experience not found by id: $experienceId") }
     }
 

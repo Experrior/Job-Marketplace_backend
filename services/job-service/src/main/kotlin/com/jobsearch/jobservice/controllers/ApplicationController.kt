@@ -2,9 +2,10 @@ package com.jobsearch.jobservice.controllers
 
 import com.jobsearch.jobservice.entities.Application
 import com.jobsearch.jobservice.entities.enums.ApplicationStatus
-import com.jobsearch.jobservice.responses.ApplyForJobResponse
+import com.jobsearch.jobservice.responses.ApplicationResponse
 import com.jobsearch.jobservice.responses.SetApplicationStatusResponse
 import com.jobsearch.jobservice.services.JobApplicationService
+import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -19,6 +20,8 @@ import java.util.*
 class ApplicationController(
     private val jobApplicationService: JobApplicationService
 ) {
+    private val logger = LoggerFactory.getLogger(ApplicationController::class.java)
+
     @PreAuthorize("hasRole('APPLICANT')")
     @MutationMapping
     fun applyForJob(
@@ -34,7 +37,8 @@ class ApplicationController(
     @QueryMapping
     fun userApplications(
         @AuthenticationPrincipal userId: UUID
-    ): List<Application> {
+    ): List<ApplicationResponse> {
+        logger.info("Getting applications for user: $userId")
         return jobApplicationService.getUserApplications(userId)
     }
 

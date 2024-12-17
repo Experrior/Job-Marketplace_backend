@@ -16,19 +16,19 @@ data class UserProfile (
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     var user: User = User(),
 
-    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var resumes: MutableList<Resume> = mutableListOf(),
 
-    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var skills: MutableList<Skill> = mutableListOf(),
 
-    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var experiences: MutableList<Experience> = mutableListOf(),
 
-    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var educations: MutableList<Education> = mutableListOf(),
 
-    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "userProfile", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var links: MutableList<UserLink> = mutableListOf(),
 
     @Column(name = "s3_picture_path", nullable = true)
@@ -40,7 +40,7 @@ data class UserProfile (
     @Column(name = "created_at", nullable = false)
     var createdAt: Timestamp = Timestamp.from(Instant.now()),
 
-    @Column(nullable = true)
+    @Column(name = "updated_at",nullable = true)
     var updatedAt: Timestamp? = null
 ) {
     @PrePersist

@@ -26,6 +26,9 @@ data class Application(
     @Transient
     var resumeUrl: String? = null,
 
+    @Transient
+    var userPictureUrl: String? = null,
+
     @Column(name = "status", nullable = false)
     var status: ApplicationStatus,
 

@@ -12,7 +12,7 @@ data class UserProfileResponse(
     val experiences: List<ExperienceResponse>,
     val educations: List<EducationResponse>,
     val links: List<LinkResponse>,
-    val profilePictureUrl: String,
+    val profilePictureUrl: String?,
     val createdAt: Timestamp,
     val updatedAt: Timestamp?
 )

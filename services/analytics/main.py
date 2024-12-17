@@ -8,14 +8,6 @@ from db import create_charts_table
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 app.include_router(charts.router, tags=["charts"])
 app.include_router(recommendation.router, tags=["recommendation"])
 app.include_router(scheduler.router, tags=["scheduler"])

@@ -1,0 +1,4 @@
+locust==2.32.1
+locust-plugins==4.5.3
+locust-plugins[websocket]
+websockets

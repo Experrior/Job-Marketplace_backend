@@ -103,7 +103,7 @@ type Query{
 
     ### UserProfile ###
     currentUserProfile: UserProfile
-    userProfileById(profileId: ID!): UserProfile
+    userProfileByUserId(userId: ID!): UserProfile
     allUserProfiles(limit: Int, offset: Int): [UserProfile]
 
     ### UserSettings ###

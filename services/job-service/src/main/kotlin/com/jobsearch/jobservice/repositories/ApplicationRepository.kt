@@ -5,6 +5,7 @@ import com.jobsearch.jobservice.entities.Job
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
+
 interface ApplicationRepository: JpaRepository<Application, UUID> {
     fun findApplicationsByUserId(userId: UUID): List<Application>
     fun findApplicationByApplicationId(applicationId: UUID): Application?

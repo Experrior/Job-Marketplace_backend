@@ -27,6 +27,9 @@ class FileStorageServiceImpl(
     @Value("\${aws.s3.bucket}")
     val bucketName: String? = null
 
+    @Value("\${aws.cloudfront.domain}")
+    val cloudfront: String? = null
+
     companion object {
         private val VALID_PICTURE_TYPES = listOf("image/jpeg", "image/png")
         private val VALID_RESUME_TYPES = listOf("application/pdf")
@@ -75,6 +78,10 @@ class FileStorageServiceImpl(
             logger.error("Failed to delete file", e)
             throw FailedToStoreFileException("Failed to delete file")
         }
+    }
+
+    override fun getFileCachedUrl(s3FilePath: String): String {
+        return "$cloudfront/$s3FilePath"
     }
 
     private fun saveFile(filePath: String, file: MultipartFile): String {
